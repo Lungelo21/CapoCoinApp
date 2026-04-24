@@ -19,6 +19,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 // import for shared layout referenced from the designUI folder
 import com.example.capocoinapp.designUI.components.CapoCoinSharedLayout
+// import for authentication layout referenced from the designUI folder
+import com.example.capocoinapp.designUI.components.CapoCoinAuthenticationLayout
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -33,7 +35,7 @@ class MainActivity : ComponentActivity() {
 
                 // Nav Host wraps all composable routes
                 NavHost(
-                    navController = navController, startDestination = "home"
+                    navController = navController, startDestination = "Login"
                 ){
                     // Top Navigation Bar Elements (User Profile, Settings)
 
@@ -91,6 +93,22 @@ class MainActivity : ComponentActivity() {
                         // Ensures the Global UI layout is applied to the More Screen
                         CapoCoinSharedLayout(screenTitle = "More", navController = navController){ padding ->
                             Text("More Content", modifier = Modifier.padding(padding))
+                        }
+                    }
+
+                    // composable route to Login Screen
+                    composable("Login"){
+                        // Ensures the Authentication layout is applied to the Login Screen
+                        CapoCoinAuthenticationLayout(screenTitle = "Login", navController = navController){ padding ->
+                            Text("Login Content", modifier = Modifier.padding(padding))
+                        }
+                    }
+
+                    // composable route to Register Screen
+                    composable("Register"){
+                        // Ensures the Authentication layout is applied to the Login Screen
+                        CapoCoinAuthenticationLayout(screenTitle = "Register", navController = navController){ padding ->
+                            Text("Register Content", modifier = Modifier.padding(padding))
                         }
                     }
 
