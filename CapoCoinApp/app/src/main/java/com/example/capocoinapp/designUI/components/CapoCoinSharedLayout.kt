@@ -32,6 +32,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
+import androidx.compose.ui.unit.sp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -96,7 +97,7 @@ fun CapoCoinSharedLayout (
                 )
                 NavigationBarItem (
                     icon = { Icon(Icons.Outlined.Sell, "Transactions", tint = Color(0xFFE9B44C)) },
-                    label = { Text("Transactions", color = Color(0xFFD4AF37), maxLines = 1) },
+                    label = { Text("Transactions", color = Color(0xFFD4AF37), maxLines = 1, fontSize = 11.sp) },
 
                     selected = false,
                     onClick = { navController.navigate("Transactions") }
