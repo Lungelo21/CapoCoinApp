@@ -29,6 +29,9 @@ import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
+import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -132,5 +135,14 @@ fun CapoCoinSharedLayout (
     )
     {
         paddingValues -> content(paddingValues)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun GreetingPreview() {
+    CapoCoinAppTheme {
+        val navController = rememberNavController()
+        CapoCoinSharedLayout(screenTitle = "home", navController = navController) { }
     }
 }
