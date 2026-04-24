@@ -67,7 +67,7 @@ class MainActivity : ComponentActivity() {
                     // composable route to Transactions Screen
                     composable("Transactions"){
                         // Ensures the Global UI layout is applied to the Transactions Screen
-                        CapoCoinSharedLayout(screenTitle = "Settings", navController = navController){ padding ->
+                        CapoCoinSharedLayout(screenTitle = "Transactions", navController = navController){ padding ->
                             Text("Transactions Content", modifier = Modifier.padding(padding))
                         }
                     }
@@ -83,8 +83,8 @@ class MainActivity : ComponentActivity() {
                     // composable route to Analytics Screen
                     composable("Analytics"){
                         // Ensures the Global UI layout is applied to the Analytics Screen
-                        CapoCoinSharedLayout(screenTitle = "Settings", navController = navController){ padding ->
-                            Text("Transactions Content", modifier = Modifier.padding(padding))
+                        CapoCoinSharedLayout(screenTitle = "Analytics", navController = navController){ padding ->
+                            Text("Analytics Content", modifier = Modifier.padding(padding))
                         }
                     }
 
