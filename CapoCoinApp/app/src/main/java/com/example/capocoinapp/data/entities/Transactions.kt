@@ -1,19 +1,19 @@
-package com.example.capocoinapp.database
+package com.example.capocoinapp.data.entities
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import java.util.Locale.Category
+import java.util.Locale
 
 @Entity(
     tableName = "Transactions",
     foreignKeys = [
         ForeignKey(
-            entity = Category::class,
+            entity = Locale.Category::class,
             parentColumns = ["categoryId"],
             childColumns = ["categoryId_fk"],
-            onDelete = ForeignKey.CASCADE // If a category is deleted, its transactions are removed
+            onDelete = ForeignKey.Companion.CASCADE // If a category is deleted, its transactions are removed
         )
     ],
     indices = [Index(value = ["categoryId_fk"])]
