@@ -29,6 +29,10 @@ import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
+import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
+import androidx.compose.ui.unit.sp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,7 +49,7 @@ fun CapoCoinSharedLayout (
                     Text(
                         text = screenTitle,
                         style = MaterialTheme.typography.titleLarge,
-                        color = Color(0xFFD4AF37)
+                        color = Color(0xFF292929)
                     )
                 },
                 navigationIcon = {
@@ -75,7 +79,7 @@ fun CapoCoinSharedLayout (
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFF1A2421),
+                    containerColor = Color(0xFF292929),
                     navigationIconContentColor = Color(0xFFD9D9D9),
                     actionIconContentColor = Color(0xFFD9D9D9)
                 )
@@ -83,17 +87,18 @@ fun CapoCoinSharedLayout (
         },
 
         bottomBar = {
-            NavigationBar(containerColor = Color(0xFF1A2421))
+            NavigationBar(containerColor = Color(0xFF292929))
             {
                 NavigationBarItem (
                     icon = { Icon(Icons.Outlined.Home, "Home", tint = Color(0xFFE9B44C)) },
-                    label = { Text("Home") },
+                    label = { Text("Home", color = Color(0xFFD4AF37)) },
                     selected = false,
                     onClick = { navController.navigate("Home") }
                 )
                 NavigationBarItem (
                     icon = { Icon(Icons.Outlined.Sell, "Transactions", tint = Color(0xFFE9B44C)) },
-                    label = { Text("Transactions") },
+                    label = { Text("Transactions", color = Color(0xFFD4AF37), maxLines = 1, fontSize = 11.sp) },
+
                     selected = false,
                     onClick = { navController.navigate("Transactions") }
                 )
@@ -108,7 +113,7 @@ fun CapoCoinSharedLayout (
                                 imageVector = Icons.Default.Add,
                                 contentDescription = "Add Transactions",
                                 modifier = Modifier.size(28.dp),
-                                tint = Color(0xFFE9B44C)
+                                tint = Color(0xFF1A2421)
                             )
                         }
                     },
@@ -117,13 +122,13 @@ fun CapoCoinSharedLayout (
                 )
                 NavigationBarItem (
                     icon = { Icon(Icons.Outlined.PieChart, "Analytics", tint = Color(0xFFE9B44C)) },
-                    label = { Text("Analytics") },
+                    label = { Text("Analytics", color = Color(0xFFD4AF37)) },
                     selected = false,
                     onClick = { navController.navigate("Analytics") }
                 )
                 NavigationBarItem (
                     icon = { Icon(Icons.Outlined.MoreHoriz, "More", tint = Color(0xFFE9B44C)) },
-                    label = { Text("More") },
+                    label = { Text("More", color = Color(0xFFD4AF37)) },
                     selected = false,
                     onClick = { navController.navigate("More") }
                 )
@@ -132,5 +137,14 @@ fun CapoCoinSharedLayout (
     )
     {
         paddingValues -> content(paddingValues)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun GreetingPreview() {
+    CapoCoinAppTheme {
+        val navController = rememberNavController()
+        CapoCoinSharedLayout(screenTitle = "home", navController = navController) { }
     }
 }
