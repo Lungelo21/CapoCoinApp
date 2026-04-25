@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.capocoinapp.designUI.components.CardBox
 import com.example.capocoinapp.designUI.components.CardComponent
-import com.example.capocoinapp.designUI.components.PageHeader
+import com.example.capocoinapp.designUI.components.HeadingText
 import com.example.capocoinapp.ui.theme.BackgroundColor
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 
@@ -26,7 +26,7 @@ fun MoreScreen() {
             CardBox(
                 cards = listOf(
                     {
-                        PageHeader("More")
+                        HeadingText("More")
                     },
                     {
                         CardComponent(

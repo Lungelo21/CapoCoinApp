@@ -1,12 +1,20 @@
 package com.example.capocoinapp.designUI.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.MoreHoriz
@@ -31,18 +39,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 import com.example.capocoinapp.ui.theme.CapoType
+import com.example.capocoinapp.ui.theme.TextWhite
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CapoCoinSharedLayout (
+fun CapoCoinSharedLayout(
     screenTitle: String,
     navController: NavController,
     content: @Composable (PaddingValues) -> Unit
-)
-{
+) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -54,10 +61,11 @@ fun CapoCoinSharedLayout (
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick =
-                        {
-                            navController.navigate("UserProfile")
-                        }) {
+                    IconButton(
+                        onClick =
+                            {
+                                navController.navigate("UserProfile")
+                            }) {
                         Icon(
                             imageVector = Icons.Outlined.AccountCircle,
                             contentDescription = "User Profile",
@@ -67,10 +75,11 @@ fun CapoCoinSharedLayout (
                     }
                 },
                 actions = {
-                    IconButton(onClick =
-                        {
-                            navController.navigate("Settings")
-                        }) {
+                    IconButton(
+                        onClick =
+                            {
+                                navController.navigate("Settings")
+                            }) {
                         Icon(
                             imageVector = Icons.Outlined.Settings,
                             contentDescription = "Settings",
@@ -90,22 +99,30 @@ fun CapoCoinSharedLayout (
         bottomBar = {
             NavigationBar(containerColor = Color(0xFF292929))
             {
-                NavigationBarItem (
+                NavigationBarItem(
                     icon = { Icon(Icons.Outlined.Home, "Home", tint = Color(0xFFE9B44C)) },
                     label = { Text("Home", color = Color(0xFFD4AF37)) },
                     selected = false,
                     onClick = { navController.navigate("Home") }
                 )
-                NavigationBarItem (
+                NavigationBarItem(
                     icon = { Icon(Icons.Outlined.Sell, "Transactions", tint = Color(0xFFE9B44C)) },
-                    label = { Text("Transactions", color = Color(0xFFD4AF37), maxLines = 1, fontSize = 11.sp) },
+                    label = {
+                        Text(
+                            "Transactions",
+                            color = Color(0xFFD4AF37),
+                            maxLines = 1,
+                            fontSize = 11.sp
+                        )
+                    },
 
                     selected = false,
                     onClick = { navController.navigate("Transactions") }
                 )
                 NavigationBarItem(
                     icon = {
-                        Box(modifier = Modifier
+                        Box(
+                            modifier = Modifier
                                 .size(48.dp)
                                 .background(Color(0xFFD4AF37), CircleShape),
                             contentAlignment = Alignment.Center
@@ -121,13 +138,13 @@ fun CapoCoinSharedLayout (
                     selected = false,
                     onClick = { navController.navigate("AddTransactions") },
                 )
-                NavigationBarItem (
+                NavigationBarItem(
                     icon = { Icon(Icons.Outlined.PieChart, "Analytics", tint = Color(0xFFE9B44C)) },
                     label = { Text("Analytics", color = Color(0xFFD4AF37)) },
                     selected = false,
                     onClick = { navController.navigate("Analytics") }
                 )
-                NavigationBarItem (
+                NavigationBarItem(
                     icon = { Icon(Icons.Outlined.MoreHoriz, "More", tint = Color(0xFFE9B44C)) },
                     label = { Text("More", color = Color(0xFFD4AF37)) },
                     selected = false,
@@ -136,18 +153,58 @@ fun CapoCoinSharedLayout (
             }
         }
     )
-    {
-        paddingValues -> content(paddingValues)
+    { paddingValues ->
+        content(paddingValues)
     }
 }
 
 @Composable
-fun PageBox(){
+fun HeaderNavBar() {
+    val iconSize = 50.dp
+    Box(
+        modifier = Modifier
+            .background(
+                color = Color(0xFF292929),
+                shape = RoundedCornerShape(
+                    bottomEnd = 20.dp,
+                    bottomStart = 20.dp
+                )
+            )
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 32.dp, vertical = 16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = Icons.Default.AccountCircle,
+                contentDescription = null,
+                tint = TextWhite,
+                modifier = Modifier
+                    .size(iconSize)
+                    .clickable{
+                        //ToDo: Add path to accounts screen
+                    }
+            )
 
+            Icon(
+                imageVector = Icons.Default.Settings,
+                contentDescription = null,
+                tint = TextWhite,
+                modifier = Modifier
+                    .size(iconSize)
+                    .clickable{
+                        //ToDo: Add path to settings screen
+                    }
+            )
+        }
+    }
 }
 
 @Composable
-fun PageHeader(titleText: String){
+fun HeadingText(titleText: String) {
     Text(
         text = titleText,
         style = CapoType.heading,
@@ -158,7 +215,6 @@ fun PageHeader(titleText: String){
 @Composable
 fun GreetingPreview() {
     CapoCoinAppTheme {
-        val navController = rememberNavController()
-        CapoCoinSharedLayout(screenTitle = "home", navController = navController) { }
+        HeaderNavBar()
     }
 }
