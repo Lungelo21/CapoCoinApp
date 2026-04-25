@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import com.example.capocoinapp.Calculator.CalculatorFunctions
 import com.example.capocoinapp.Calculator.CalculatorOperation
+import com.example.capocoinapp.designUI.components.CalculatorButtonDesign
 import com.example.capocoinapp.ui.theme.CardBG
 import com.example.capocoinapp.ui.theme.NavBarBG
 import com.example.capocoinapp.ui.theme.Primary
@@ -28,7 +29,7 @@ fun CalculatorButtons(
             horizontalArrangement = Arrangement.spacedBy(buttonSpacing)
         ) {
             // Calculator button for AC
-            CalculatorButton(
+            CalculatorButtonDesign(
                 symbol = "AC",
                 modifier = Modifier
                     .background(NavBarBG)
@@ -40,7 +41,7 @@ fun CalculatorButtons(
                 }
             )
             // Calculator button for Del
-            CalculatorButton(
+            CalculatorButtonDesign(
                 symbol = "Del",
                 modifier = Modifier
                     .background(Primary)
@@ -52,7 +53,7 @@ fun CalculatorButtons(
                 }
             )
             // Calculator button for /
-            CalculatorButton(
+            CalculatorButtonDesign(
                 symbol = "/",
                 modifier = Modifier
                     .background(Primary)
@@ -71,7 +72,7 @@ fun CalculatorButtons(
             horizontalArrangement = Arrangement.spacedBy(buttonSpacing)
         ) {
             // Calculator button for 7
-            CalculatorButton(
+            CalculatorButtonDesign(
                 symbol = "7",
                 modifier = Modifier
                     .background(CardBG)
@@ -84,7 +85,7 @@ fun CalculatorButtons(
             )
 
             // Calculator button for 8
-            CalculatorButton(
+            CalculatorButtonDesign(
                 symbol = "8",
                 modifier = Modifier
                     .background(CardBG)
@@ -97,7 +98,7 @@ fun CalculatorButtons(
             )
 
             // Calculator button for 9
-            CalculatorButton(
+            CalculatorButtonDesign(
                 symbol = "9",
                 modifier = Modifier
                     .background(CardBG)
@@ -110,7 +111,7 @@ fun CalculatorButtons(
             )
 
             // Calculator button for x
-            CalculatorButton(
+            CalculatorButtonDesign(
                 symbol = "x",
                 modifier = Modifier
                     .background(Primary)
@@ -129,7 +130,7 @@ fun CalculatorButtons(
             horizontalArrangement = Arrangement.spacedBy(buttonSpacing)
         ) {
             // Calculator button for 4
-            CalculatorButton(
+            CalculatorButtonDesign(
                 symbol = "4",
                 modifier = Modifier
                     .background(CardBG)
@@ -142,7 +143,7 @@ fun CalculatorButtons(
             )
 
             // Calculator button for 5
-            CalculatorButton(
+            CalculatorButtonDesign(
                 symbol = "5",
                 modifier = Modifier
                     .background(CardBG)
@@ -155,7 +156,7 @@ fun CalculatorButtons(
             )
 
             // Calculator button for 6
-            CalculatorButton(
+            CalculatorButtonDesign(
                 symbol = "6",
                 modifier = Modifier
                     .background(CardBG)
@@ -168,7 +169,7 @@ fun CalculatorButtons(
             )
 
             // Calculator button for -
-            CalculatorButton(
+            CalculatorButtonDesign(
                 symbol = "-",
                 modifier = Modifier
                     .background(Primary)
@@ -187,7 +188,7 @@ fun CalculatorButtons(
             horizontalArrangement = Arrangement.spacedBy(buttonSpacing)
         ) {
             // Calculator button for 1
-            CalculatorButton(
+            CalculatorButtonDesign(
                 symbol = "1",
                 modifier = Modifier
                     .background(CardBG)
@@ -200,7 +201,7 @@ fun CalculatorButtons(
             )
 
             // Calculator button for 2
-            CalculatorButton(
+            CalculatorButtonDesign(
                 symbol = "2",
                 modifier = Modifier
                     .background(CardBG)
@@ -213,7 +214,7 @@ fun CalculatorButtons(
             )
 
             // Calculator button for 3
-            CalculatorButton(
+            CalculatorButtonDesign(
                 symbol = "3",
                 modifier = Modifier
                     .background(CardBG)
@@ -226,7 +227,7 @@ fun CalculatorButtons(
             )
 
             // Calculator button for +
-            CalculatorButton(
+            CalculatorButtonDesign(
                 symbol = "+",
                 modifier = Modifier
                     .background(Primary)
@@ -246,7 +247,7 @@ fun CalculatorButtons(
         ) {
 
             // Calculator button for 0
-            CalculatorButton(
+            CalculatorButtonDesign(
                 symbol = "0",
                 modifier = Modifier
                     .background(CardBG)
@@ -259,7 +260,7 @@ fun CalculatorButtons(
             )
 
             // Calculator button for .
-            CalculatorButton(
+            CalculatorButtonDesign(
                 symbol = ".",
                 modifier = Modifier
                     .background(CardBG)
@@ -272,7 +273,7 @@ fun CalculatorButtons(
             )
 
             // Calculator button for =
-            CalculatorButton(
+            CalculatorButtonDesign(
                 symbol = "=",
                 modifier = Modifier
                     .background(Primary)
