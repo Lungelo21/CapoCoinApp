@@ -89,18 +89,11 @@ fun CardComponent (
 
                     )
 
-                    // Sets amount text to green or red depending on income or expense
-                    val amountText: Color = when (cardTransactionType){
-                        "income" -> TextGreen
-                        "expense" -> TextRed
-                        else -> TextWhite
-                    }
-
                     if (cardAmount != null) {
                         Text(
-                            text = cardAmount,
+                            text = formatAmount(cardAmount, cardTransactionType),
                             style = CapoType.cardTitle,
-                            color = amountText
+                            color = colorAmount(cardTransactionType)
                         )
                     }
                 }
@@ -145,6 +138,30 @@ fun CardBox(cards: List<@Composable () -> Unit>) {
             card()
         }
     }
+}
+
+// If the entry is a transaction, the amount will be formatted,
+// If not, the raw string will be displayed
+fun formatAmount(amount: String, type: String?): String{
+
+    val prefix: String = when (type){
+        "income" -> "+ R"
+        "expense" -> "- R"
+        else -> ""
+    }
+
+    return "$prefix${amount}"
+}
+
+// Sets amount text to green or red depending on income or expense
+fun colorAmount(type: String?): Color{
+    val amountColor: Color = when (type){
+        "income" -> TextGreen
+        "expense" -> TextRed
+        else -> TextWhite
+    }
+
+    return amountColor
 }
 
 @Preview(showBackground = true)
