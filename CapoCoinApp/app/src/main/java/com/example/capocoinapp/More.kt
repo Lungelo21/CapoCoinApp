@@ -1,63 +1,72 @@
 package com.example.capocoinapp
 
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Fastfood
-import androidx.compose.material.icons.filled.Movie
-import androidx.compose.material.icons.filled.Payments
-import androidx.compose.material3.Surface
+import androidx.compose.material.icons.filled.ContentPaste
+import androidx.compose.material.icons.filled.Flag
+import androidx.compose.material.icons.filled.PieChart
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.capocoinapp.designUI.components.AppScaffold
+import com.example.capocoinapp.designUI.components.BottomNavBar
 import com.example.capocoinapp.designUI.components.CardBox
 import com.example.capocoinapp.designUI.components.CardComponent
-import com.example.capocoinapp.designUI.components.HeadingText
-import com.example.capocoinapp.ui.theme.BackgroundColor
+import com.example.capocoinapp.designUI.components.TopNavBar
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 
+//ToDo: this screen will need to be updated as more screens are added
 @Composable
 fun MoreScreen() {
-    CapoCoinAppTheme() {
-        Surface(
-            color = BackgroundColor,
-            modifier = Modifier.fillMaxSize()
-        ) {
-            //ToDo: top and bottom nav bar
+    CapoCoinAppTheme {
+        AppScaffold(
+            topBar = { TopNavBar() },
+            bottomBar = { BottomNavBar() },
+            pageTitle = "More"
+        ) { _ ->
+
             CardBox(
                 cards = listOf(
                     {
-                        HeadingText("More")
-                    },
-                    {
                         CardComponent(
-                            "Dinner Night",
-                            "Empire Steak",
-                            "- R200",
-                            "5:00 PM",
-                            Icons.Default.Fastfood,
-                            "expense"
+                            "Settings",
+                            "Change app settings",
+                            null,
+                            null,
+                            Icons.Default.Settings,
+                            null
                         )
                     },
                     {
                         CardComponent(
-                            "Movie",
-                            "Pavillion",
-                            "- R150",
-                            "7:45 AM",
-                            Icons.Default.Movie,
-                            "expense"
+                            "User's budget",
+                            "Change app settings",
+                            null,
+                            null,
+                            Icons.Default.PieChart,
+                            null
                         )
                     },
                     {
                         CardComponent(
-                            "Salary",
-                            "Dunder Mifflin",
-                            "+ R30 000",
-                            "9:45 AM",
-                            Icons.Default.Payments,
-                            "income"
+                            "User Spending Report",
+                            "Change app settings",
+                            null,
+                            null,
+                            Icons.Default.ContentPaste,
+                            null
+                        )
+                    },
+                    {
+                        CardComponent(
+                            "User Goals",
+                            "Change app settings",
+                            null,
+                            null,
+                            Icons.Default.Flag,
+                            null
                         )
                     }
+
                 )
             )
         }
