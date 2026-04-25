@@ -4,9 +4,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -39,6 +43,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.capocoinapp.ui.theme.BackgroundColor
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 import com.example.capocoinapp.ui.theme.CapoType
 import com.example.capocoinapp.ui.theme.TextWhite
@@ -159,7 +164,47 @@ fun CapoCoinSharedLayout(
 }
 
 @Composable
-fun HeaderNavBar() {
+fun AppScaffold(
+    topBar: @Composable () -> Unit,
+    bottomBar: @Composable () -> Unit,
+    pageTitle: String?,
+    content: @Composable (PaddingValues) -> Unit
+) {
+    Scaffold(
+        topBar = topBar,
+        bottomBar = bottomBar,
+        containerColor = BackgroundColor
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
+            if (pageTitle != null){
+                PageTitleText(pageTitle)
+            }
+            content(paddingValues)
+        }
+    }
+}
+
+//@Composable
+//fun Screen() {
+//    CapoCoinAppTheme {
+//        AppScaffold(
+//            topBar = { TopNavBar() },
+//            bottomBar = { BottomNavBar() },
+//            pageTitle = "More"
+//        ) { paddingValues ->
+//
+//            //Content goes here
+
+//        }
+//    }
+//}
+
+@Composable
+fun TopNavBar() {
     val iconSize = 50.dp
     Box(
         modifier = Modifier
@@ -174,7 +219,8 @@ fun HeaderNavBar() {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 32.dp, vertical = 16.dp),
+                .padding(horizontal = 32.dp, vertical = 16.dp)
+                .align(Alignment.TopCenter),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -184,7 +230,7 @@ fun HeaderNavBar() {
                 tint = TextWhite,
                 modifier = Modifier
                     .size(iconSize)
-                    .clickable{
+                    .clickable {
                         //ToDo: Add path to accounts screen
                     }
             )
@@ -195,7 +241,54 @@ fun HeaderNavBar() {
                 tint = TextWhite,
                 modifier = Modifier
                     .size(iconSize)
-                    .clickable{
+                    .clickable {
+                        //ToDo: Add path to settings screen
+                    }
+            )
+        }
+    }
+}
+
+//Placeholder bottom bar
+@Composable
+fun BottomNavBar() {
+    val iconSize = 50.dp
+    Box(
+        modifier = Modifier
+            .background(
+                color = Color(0xFF292929),
+                shape = RoundedCornerShape(
+                    bottomEnd = 20.dp,
+                    bottomStart = 20.dp
+                )
+            )
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 32.dp, vertical = 16.dp)
+                .align(Alignment.BottomCenter),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = Icons.Default.AccountCircle,
+                contentDescription = null,
+                tint = TextWhite,
+                modifier = Modifier
+                    .size(iconSize)
+                    .clickable {
+                        //ToDo: Add path to accounts screen
+                    }
+            )
+
+            Icon(
+                imageVector = Icons.Default.Settings,
+                contentDescription = null,
+                tint = TextWhite,
+                modifier = Modifier
+                    .size(iconSize)
+                    .clickable {
                         //ToDo: Add path to settings screen
                     }
             )
@@ -204,10 +297,14 @@ fun HeaderNavBar() {
 }
 
 @Composable
-fun HeadingText(titleText: String) {
+fun PageTitleText(titleText: String) {
+
+    Spacer(Modifier.height(16.dp))
+
     Text(
         text = titleText,
         style = CapoType.heading,
+        modifier = Modifier.padding(horizontal = 16.dp)
     )
 }
 
@@ -215,6 +312,6 @@ fun HeadingText(titleText: String) {
 @Composable
 fun GreetingPreview() {
     CapoCoinAppTheme {
-        HeaderNavBar()
+
     }
 }
