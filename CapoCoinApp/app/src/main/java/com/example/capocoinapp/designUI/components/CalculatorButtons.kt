@@ -17,6 +17,12 @@ import com.example.capocoinapp.ui.theme.NavBarBG
 import com.example.capocoinapp.ui.theme.Primary
 
 
+/*
+    * Author: Phillip Lackner
+    * Link: https://www.youtube.com/watch?v=-aTcFJWxEQA
+    * DateAccessed: 14/04/2026
+    * */
+
 @Composable
 fun CalculatorButtons(
     onAction: (CalculatorFunctions) -> Unit,
