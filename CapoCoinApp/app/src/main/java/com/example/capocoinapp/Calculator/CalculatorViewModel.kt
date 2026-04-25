@@ -11,4 +11,12 @@ class CalculatorViewModel: ViewModel() {
     var state by mutableStateOf(CalculatorState())
 
         private set
+
+    fun onAction(action: CalculatorFunctions){
+        when(action){
+            is CalculatorFunctions.Number -> enterNumber(action.number)
+            is CalculatorFunctions.DecimalFunction -> enterDecimal()
+            is CalculatorFunctions.Number -> enterNumber(action.number)
+        }
+    }
 }
