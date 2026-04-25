@@ -4,19 +4,18 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import java.util.Locale
 
 @Entity(
     tableName = "transactions",
     foreignKeys = [
         ForeignKey(
-            entity = Locale.Category::class,
-            parentColumns = ["categoryId"],
-            childColumns = ["categoryId_fk"],
-            onDelete = ForeignKey.Companion.CASCADE // If a category is deleted, its transactions are removed
+            entity = Category::class,
+            parentColumns = ["categoryID"],
+            childColumns = ["categoryID"],
+            onDelete = ForeignKey.CASCADE // If a category is deleted, its transactions are removed
         )
     ],
-    indices = [Index(value = ["categoryId_fk"])]
+    indices = [Index(value = ["categoryID"])]
 )
 data class Transactions(
     @PrimaryKey(autoGenerate = true)
