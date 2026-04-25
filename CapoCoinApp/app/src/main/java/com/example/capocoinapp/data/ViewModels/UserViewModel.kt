@@ -36,7 +36,7 @@ class UserViewModel (
         val validatePassword = Regex("^(?=.*[A-Z])(?=.*\\d).{6,}$")
 
         viewModelScope.launch {
-            //Stats a coroutine tied the the lifecycle of this vm
+            //States a coroutine tied the the lifecycle of this vm
             message = when {
                 name.isBlank() ||
                         username.isBlank() ||
