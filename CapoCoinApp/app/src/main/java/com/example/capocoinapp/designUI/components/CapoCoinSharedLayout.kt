@@ -13,11 +13,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.LocalOffer
+import androidx.compose.material.icons.filled.MoreHoriz
+import androidx.compose.material.icons.filled.PieChart
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Home
@@ -38,7 +43,10 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -258,41 +266,91 @@ fun BottomNavBar() {
             .background(
                 color = Color(0xFF292929),
                 shape = RoundedCornerShape(
-                    bottomEnd = 20.dp,
-                    bottomStart = 20.dp
+                    topEnd = 20.dp,
+                    topStart = 20.dp
                 )
             )
+            .fillMaxWidth()
     ) {
+
+        // Main bar
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 32.dp, vertical = 16.dp)
-                .align(Alignment.BottomCenter),
+                .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                imageVector = Icons.Default.AccountCircle,
-                contentDescription = null,
-                tint = TextWhite,
-                modifier = Modifier
-                    .size(iconSize)
-                    .clickable {
-                        //ToDo: Add path to accounts screen
-                    }
+
+            BottomIcon(
+                icon = Icons.Default.Home,
+                label = "Home",
+                selected = true
             )
 
-            Icon(
-                imageVector = Icons.Default.Settings,
-                contentDescription = null,
-                tint = TextWhite,
-                modifier = Modifier
-                    .size(iconSize)
-                    .clickable {
-                        //ToDo: Add path to settings screen
-                    }
+            BottomIcon(
+                icon = Icons.Default.LocalOffer,
+                label = "Transactions"
+            )
+
+            Spacer(modifier = Modifier.width(55.dp)) // space for center FAB
+
+            BottomIcon(
+                icon = Icons.Default.PieChart,
+                label = "Analytics"
+            )
+
+            BottomIcon(
+                icon = Icons.Default.MoreHoriz,
+                label = "More"
             )
         }
+
+        // Floating center button
+        Box(
+            modifier = Modifier
+                .size(55.dp)
+                .align(Alignment.Center)
+                .clip(CircleShape)
+                .background(Color(0xFFE9B44C))
+                .clickable { }
+        ) {
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = "Add",
+
+                tint = Color.Black,
+                modifier = Modifier
+                    .size(40.dp)
+                    .align(Alignment.Center)
+            )
+        }
+    }
+}
+
+@Composable
+fun BottomIcon(
+    icon: ImageVector,
+    label: String,
+    selected: Boolean = false
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(6.dp)
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = label,
+            tint = if (selected) Color(0xFFE9B44C) else Color.Gray,
+            modifier = Modifier.size(28.dp)
+        )
+
+        Text(
+            text = label,
+            fontSize = 12.sp,
+            fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
+            color = if (selected) Color(0xFFE9B44C) else Color.Gray
+        )
     }
 }
 
@@ -312,6 +370,16 @@ fun PageTitleText(titleText: String) {
 @Composable
 fun GreetingPreview() {
     CapoCoinAppTheme {
+        CapoCoinAppTheme {
+            AppScaffold(
+                topBar = { TopNavBar() },
+                bottomBar = { BottomNavBar() },
+                pageTitle = "Preview"
+            ) { paddingValues ->
 
+                //Content goes here
+
+            }
+        }
     }
 }
