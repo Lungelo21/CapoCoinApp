@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 import java.util.Locale
 
 @Entity(
-    tableName = "Transactions",
+    tableName = "transactions",
     foreignKeys = [
         ForeignKey(
             entity = Locale.Category::class,
@@ -20,19 +20,18 @@ import java.util.Locale
 )
 data class Transactions(
     @PrimaryKey(autoGenerate = true)
-    val transactionId: Int = 0,
+    val transactionID: Int = 0,
 
     val transactionName: String,
     val transactionAmount: Double,
-    val categoryId_fk: Int,
+    val categoryID: Int, //FK -> Category
 
     // The "Scheduled" time (user-selected)
     val transactionDate: String,
     val transactionTime: String,
 
-    // The "System" time (auto-logged)
-    val dateLogged: String,
-    val timeLogged: String,
+    val dateLogged: String, //Should be set to current date
+    val timeLogged: String, //Should be set to current time
 
     val uploadedPhotoPath: String?
 )
