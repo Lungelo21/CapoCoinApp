@@ -1,6 +1,6 @@
 package com.example.capocoinapp
 
-import android.R
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -44,7 +44,10 @@ fun Register(
     var confirmPassword by rememberSaveable() { mutableStateOf("") }
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(8.dp).verticalScroll(rememberScrollState()),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(8.dp)
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ){

@@ -100,7 +100,15 @@ class MainActivity : ComponentActivity() {
                     composable("Login"){
                         // Ensures the Authentication layout is applied to the Login Screen
                         CapoCoinAuthenticationLayout(screenTitle = "Login", navController = navController){ padding ->
-                            Text("Login Content", modifier = Modifier.padding(padding))
+                            Login(
+                                modifier = Modifier.padding(padding),
+                                onLoginClick = { email, password ->
+                                    navController.navigate("Home")
+                                },
+                                onRegisterClick = {
+                                    navController.navigate("Register")
+                                }
+                            )
                         }
                     }
 
@@ -108,7 +116,13 @@ class MainActivity : ComponentActivity() {
                     composable("Register"){
                         // Ensures the Authentication layout is applied to the Login Screen
                         CapoCoinAuthenticationLayout(screenTitle = "Register", navController = navController){ padding ->
-                            Text("Register Content", modifier = Modifier.padding(padding))
+                            Register(
+                                modifier = Modifier.padding(padding),
+                                onRegisterClick = { name, username, email, password, confirmPassword ->
+                                    // Example: navigate after register
+                                    navController.navigate("Home")
+                                }
+                            )
                         }
                     }
 

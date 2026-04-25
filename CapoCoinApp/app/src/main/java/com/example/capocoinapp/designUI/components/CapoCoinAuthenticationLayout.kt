@@ -10,5 +10,5 @@ fun CapoCoinAuthenticationLayout
   navController: NavController,
   content: @Composable (PaddingValues) -> Unit)
 {
-
+    content(PaddingValues())
 }
