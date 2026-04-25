@@ -12,7 +12,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Fastfood
 import androidx.compose.material.icons.filled.Movie
@@ -133,8 +135,10 @@ fun CardBox(cards: List<@Composable () -> Unit>) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .wrapContentHeight()
             .background(BackgroundColor)
-            .padding(16.dp),
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         cards.forEach { card ->
