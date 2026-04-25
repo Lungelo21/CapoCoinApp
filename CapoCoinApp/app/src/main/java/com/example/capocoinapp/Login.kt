@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
@@ -79,8 +80,8 @@ fun Login(
         Spacer(modifier = Modifier.height(32.dp))
 
         // button to login
-        Button(onClick = {
-            Log.i("Credentials","Email: $email Password : $password")
+        FilledTonalButton(onClick = {
+            onLoginClick(email,password)
         }) {
             Text(text="Login")
         }
