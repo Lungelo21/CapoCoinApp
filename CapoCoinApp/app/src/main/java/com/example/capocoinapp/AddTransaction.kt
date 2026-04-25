@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,10 +30,13 @@ import com.example.capocoinapp.Calculator.CalculatorOperation
 import com.example.capocoinapp.Calculator.CalculatorState
 import com.example.capocoinapp.Calculator.CalculatorViewModel
 import com.example.capocoinapp.designUI.components.CalculatorSection
+import com.example.capocoinapp.ui.theme.Accent
 import com.example.capocoinapp.ui.theme.BackgroundColor
+import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 import com.example.capocoinapp.ui.theme.CardBG
 import com.example.capocoinapp.ui.theme.NavBarBG
 import com.example.capocoinapp.ui.theme.Primary
+import com.example.capocoinapp.ui.theme.RobotoSlab
 
 
 @Composable
@@ -40,25 +44,31 @@ fun AddTransaction(){
     val viewModel = viewModel<CalculatorViewModel>()
     val state = viewModel.state
 
+    var isAmountConfirmed by remember { mutableStateOf(false) }
+
     var showCalculator by remember{ mutableStateOf(true) }
+
+//    CapoCoinAppTheme{
+//        AppScaffold(
+//            topBar = { TopNavBar() },
+//            bottomBar = { BottomNavBar() },
+//            pageTitle = "Add Transaction"
+//        )
+//    }
 
     Column(modifier = Modifier.fillMaxSize()){
 
-        Box(
-            modifier = Modifier
+            Column(modifier = Modifier
                 .weight(1f)
                 .fillMaxWidth()
-        ){
-            AddTransactionTopContent(
-                state = state,
-                onConfirm = {
-                    showCalculator = false
-                }
-            )
+            ){
+                Text("Add a Transaction", color = Accent, fontFamily = RobotoSlab, fontWeight = FontWeight.Bold)
 
-        }
 
-        if(showCalculator){
+            }
+
+        if(!isAmountConfirmed){
+
             CalculatorSection(
                 state = state,
                 onAction = viewModel::onAction,
@@ -66,7 +76,23 @@ fun AddTransaction(){
                     .weight(1f)
                     .fillMaxWidth()
             )
+
+//            ConfirmButton{
+//                isAmountConfirmed = true
+//            }
         }
+        else{
+
+//            FinalAmountSection(
+//                state = state
+//            )
+
+//            AddTransactionButton{
+//
+//            }
+        }
+
+
     }
 }
 
