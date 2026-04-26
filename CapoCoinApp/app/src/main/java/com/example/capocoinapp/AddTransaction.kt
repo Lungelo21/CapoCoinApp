@@ -10,6 +10,12 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material.icons.filled.AttachFile
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.LibraryAdd
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -37,24 +43,39 @@ import com.example.capocoinapp.ui.theme.CardBG
 import com.example.capocoinapp.ui.theme.NavBarBG
 import com.example.capocoinapp.ui.theme.Primary
 import com.example.capocoinapp.ui.theme.RobotoSlab
-
+import com.example.capocoinapp.designUI.components.AppScaffold
+import com.example.capocoinapp.designUI.components.CardBox
+import com.example.capocoinapp.designUI.components.CardComponent
+import com.example.capocoinapp.designUI.components.inputCard
 
 @Composable
 fun AddTransaction(){
     val viewModel = viewModel<CalculatorViewModel>()
     val state = viewModel.state
 
+    var title by remember { mutableStateOf("") }
+
     var isAmountConfirmed by remember { mutableStateOf(false) }
 
     var showCalculator by remember{ mutableStateOf(true) }
 
-//    CapoCoinAppTheme{
-//        AppScaffold(
-//            topBar = { TopNavBar() },
-//            bottomBar = { BottomNavBar() },
-//            pageTitle = "Add Transaction"
-//        )
-//    }
+    CapoCoinAppTheme{
+        AppScaffold(
+            topBar = { TopNavBar() },
+            bottomBar = { BottomNavBar() },
+            pageTitle = "Add Transaction"
+        ){ _ ->
+
+            inputCard(
+                value = title,
+                onValueChange = { title = it},
+                placeholder = "Add a title",
+                icon = Icons.Default.Edit,
+                enabled = isAmountConfirmed
+            )
+
+        }
+    }
 
     Column(modifier = Modifier.fillMaxSize()){
 

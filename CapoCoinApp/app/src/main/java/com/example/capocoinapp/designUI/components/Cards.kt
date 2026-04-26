@@ -21,11 +21,13 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.capocoinapp.ui.theme.BackgroundColor
@@ -143,6 +145,46 @@ fun CardBox(cards: List<@Composable () -> Unit>) {
     }
 }
 
+@Composable
+fun inputCard(
+    value: String,
+    placeholder: String,
+    icon: ImageVector,
+    enabled: Boolean,
+    onValueChange: (String) -> Unit
+){
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = CardBG),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                modifier = Modifier.size(44.dp),
+                tint = TextWhite
+            )
+
+            Spacer(modifier = Modifier.width(12.dp))
+
+            TextField(
+                value = value,
+                onValueChange = onValueChange,
+                enabled = enabled,
+                placeholder = { Text(placeholder, style = CapoType.cardTitle)},
+                textStyle = CapoType.cardTitle,
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+        }
+    }
+}
 @Preview(showBackground = true)
 @Composable
 fun CardPreview() {
