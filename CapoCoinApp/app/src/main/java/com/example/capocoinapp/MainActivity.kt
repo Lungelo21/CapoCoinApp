@@ -4,11 +4,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 // import for nav host
@@ -22,11 +24,32 @@ import com.example.capocoinapp.designUI.components.CapoCoinSharedLayout
 // import for authentication layout referenced from the designUI folder
 import com.example.capocoinapp.designUI.components.CapoCoinAuthenticationLayout
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
+import androidx.room.Room
+import androidx.lifecycle.lifecycleScope
+import com.example.capocoinapp.data.DB.AppDatabase
+import kotlinx.coroutines.launch
+
+import com.example.capocoinapp.data.entities.User
+
+import com.example.capocoinapp.data.ViewModels.UserViewModel
+import com.example.capocoinapp.data.ViewModels.ViewModelFactory
 
 class MainActivity : ComponentActivity() {
+
+    private val userViewModel: UserViewModel by viewModels {
+        val db = AppDatabase.getDatabase(applicationContext)
+        ViewModelFactory(db.userDao())
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        val db = Room.databaseBuilder(
+            applicationContext,
+            AppDatabase::class.java,
+            "capocoin_database"
+        ).build()
+
         setContent {
             CapoCoinAppTheme {
 
@@ -100,15 +123,56 @@ class MainActivity : ComponentActivity() {
                     composable("Login"){
                         // Ensures the Authentication layout is applied to the Login Screen
                         CapoCoinAuthenticationLayout(screenTitle = "Login", navController = navController){ padding ->
-                            Text("Login Content", modifier = Modifier.padding(padding))
+                            Login(
+                                modifier = Modifier.padding(padding),
+                                onLoginClick = { username, password ->
+
+                                    val validLogin = userViewModel.loginUser(
+                                        username = username,
+                                        password = password
+                                    )
+
+                                    if (validLogin) {
+                                        navController.navigate("Home")
+                                    }
+                                },
+                                onRegisterClick = {
+                                    navController.navigate("Register")
+                                }
+                            )
                         }
                     }
 
                     // composable route to Register Screen
                     composable("Register"){
                         // Ensures the Authentication layout is applied to the Login Screen
-                        CapoCoinAuthenticationLayout(screenTitle = "Register", navController = navController){ padding ->
-                            Text("Register Content", modifier = Modifier.padding(padding))
+                        CapoCoinAuthenticationLayout(
+                            screenTitle = "Register",
+                            navController = navController
+                        ){ padding ->
+                            LaunchedEffect(userViewModel.message) {
+                                if (userViewModel.message == "User registered successfully") {
+                                    navController.navigate("Login")
+                                    userViewModel.clearMessage()
+                                }
+                            }
+                            Register(
+                                modifier = Modifier.padding(padding),
+                                message = userViewModel.message,
+                                onRegisterClick = { name, username, email, password, confirmPassword ->
+
+                                    userViewModel.registerUser(
+                                        name = name,
+                                        username = username,
+                                        email = email,
+                                        password = password,
+                                        confirmPassword = confirmPassword
+                                    )
+
+
+                                }
+                            )
+
                         }
                     }
 
