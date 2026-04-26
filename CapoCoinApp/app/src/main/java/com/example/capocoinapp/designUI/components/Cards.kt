@@ -12,7 +12,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Fastfood
 import androidx.compose.material.icons.filled.Movie
@@ -21,11 +23,13 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.capocoinapp.ui.theme.BackgroundColor
@@ -87,18 +91,11 @@ fun CardComponent (
 
                     )
 
-                    // Sets amount text to green or red depending on income or expense
-                    val amountText: Color = when (cardTransactionType){
-                        "income" -> TextGreen
-                        "expense" -> TextRed
-                        else -> TextWhite
-                    }
-
                     if (cardAmount != null) {
                         Text(
-                            text = cardAmount,
+                            text = formatAmount(cardAmount, cardTransactionType),
                             style = CapoType.cardTitle,
-                            color = amountText
+                            color = colorAmount(cardTransactionType)
                         )
                     }
                 }
@@ -133,12 +130,80 @@ fun CardBox(cards: List<@Composable () -> Unit>) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .wrapContentHeight()
             .background(BackgroundColor)
-            .padding(16.dp),
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         cards.forEach { card ->
             card()
+        }
+    }
+}
+
+
+// If the entry is a transaction, the amount will be formatted,
+// If not, the raw string will be displayed
+fun formatAmount(amount: String, type: String?): String{
+
+    val prefix: String = when (type){
+        "income" -> "+ R"
+        "expense" -> "- R"
+        else -> ""
+    }
+
+    return "$prefix${amount}"
+}
+
+// Sets amount text to green or red depending on income or expense
+fun colorAmount(type: String?): Color{
+    val amountColor: Color = when (type){
+        "income" -> TextGreen
+        "expense" -> TextRed
+        else -> TextWhite
+    }
+
+    return amountColor
+}
+
+@Composable
+fun inputCard(
+    value: String,
+    placeholder: String,
+    icon: ImageVector,
+    enabled: Boolean,
+    onValueChange: (String) -> Unit
+){
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = CardBG),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                modifier = Modifier.size(44.dp),
+                tint = TextWhite
+            )
+
+            Spacer(modifier = Modifier.width(12.dp))
+
+            TextField(
+                value = value,
+                onValueChange = onValueChange,
+                enabled = enabled,
+                placeholder = { Text(placeholder, style = CapoType.cardTitle)},
+                textStyle = CapoType.cardTitle,
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth()
+            )
+
         }
     }
 }
