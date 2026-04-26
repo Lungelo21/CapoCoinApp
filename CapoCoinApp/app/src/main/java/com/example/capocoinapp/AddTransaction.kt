@@ -38,6 +38,7 @@ import com.example.capocoinapp.designUI.components.BottomNavBar
 import com.example.capocoinapp.designUI.components.CardBox
 import com.example.capocoinapp.designUI.components.CardComponent
 import com.example.capocoinapp.designUI.components.SelectCategoryDropDown
+import com.example.capocoinapp.designUI.components.SelectTransactionTypeDropDown
 import com.example.capocoinapp.designUI.components.TopNavBar
 import com.example.capocoinapp.designUI.components.inputCard
 
@@ -49,9 +50,13 @@ fun AddTransaction(){
 
     var title by remember { mutableStateOf("") }
 
+    //
     var categories by CategoryDAO.getAllCategories()
 
     var selectedCategory by remember { mutableStateOf("") }
+    //
+    var transactionType by TransactionsDAO.getAllTransactions()
+    var chosenTransactionType by remember { mutableStateOf("") }
 
     var isAmountConfirmed by remember { mutableStateOf(false) }
 
@@ -65,13 +70,13 @@ fun AddTransaction(){
         ){ _ ->
 
             // Dropdown for Transaction Type
-//            SelectCategoryDropDown(
-//                categories = transactionType,
-//                selectedTransactionType = chosenTransactionType,
-//                onTransactionTypeSelected = { chosenTransactionType = it },
-//                placeholderText = "Select Transaction Type",
-//                ena
-//            )
+            SelectTransactionTypeDropDown(
+                transactionTypes = transactionType,
+                selectedTransactionType = chosenTransactionType,
+                onTransactionTypeSelected = { chosenTransactionType = it },
+                placeholderText = "Select Transaction Type",
+                enabled = isAmountConfirmed
+            )
 
             // input for Transaction Title
             inputCard(
