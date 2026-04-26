@@ -42,6 +42,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.capocoinapp.data.entities.Category
 import com.example.capocoinapp.ui.theme.BackgroundColor
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 import com.example.capocoinapp.ui.theme.CapoType
@@ -223,10 +224,11 @@ fun SelectCategoryDropDown(
     categories: List<String>,
     selectedCategory: String,
     onCategorySelected: (String) -> Unit,
-    enabled: Boolean
+    placeholderText: String,
+    enabled: Boolean,
+    fallbackIcon: ImageVector = Icons.Default.Fastfood
 ){
     var dropdownExpand by remember { mutableStateOf(false) }
-
     val context = LocalContext.current
 
     Card(
@@ -239,8 +241,16 @@ fun SelectCategoryDropDown(
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ){
-            //val selectedIconID = selectedCategory?.let { context.resources.getIdentifier(it.icon, 'drawable', context.packageName) }
-//            Icon(imageVector =  selectedCategory?.let { ImageVector.vectorResource() },
+            //val selectedIconid = selectedCategory?.let{ context.resources.getIdentifier(it.entertainmentIcon, "drawable", context.packageName)}?: 0
+
+//            Icon(imageVector =  if(selectedIconId != 0)
+//            {
+//                ImageVector.vectorResource(selectedIconId)
+//            }
+//            else
+//            {
+//                fallbackIcon
+//            },
 //                contentDescription = null,
 //                modifier = Modifier.size(44.dp),
 //                tint = TextWhite
@@ -260,7 +270,7 @@ fun SelectCategoryDropDown(
                     onValueChange = {},
                     readOnly = true,
                     enabled = enabled,
-                    placeholder = { Text("Select a category", style = CapoType.cardTitle)},
+                    placeholder = { Text(placeholderText, style = CapoType.cardTitle)},
 
                     textStyle = CapoType.cardTitle,
                     modifier = Modifier.menuAnchor().fillMaxWidth()
@@ -271,13 +281,35 @@ fun SelectCategoryDropDown(
                     onDismissRequest = { dropdownExpand = false }
                 ){
                     categories.forEach { category ->
-                        DropdownMenuItem(
-                            text = { Text(category)},
-                            onClick = {
-                                onCategorySelected(category)
-                                dropdownExpand = false
-                            }
-                        )
+
+                        //val iconId = context.resources.getIdentifier(category.entertainmentIcon, "drawable", context.packageName)
+
+//                        DropdownMenuItem(
+//                            text = {
+//                                Row(verticalAlignment = Alignment.CenterVertically){
+//
+//                                Icon(
+//                                    imageVector = if(iconId != 0)
+//                                    {
+//                                        ImageVector.vectorResource(iconId)
+//                                    }
+//                                    else
+//                                    {
+//                                        fallbackIcon
+//                                    },
+//                                    contentDescription = null,
+//                                    modifier = Modifier.size(20.dp)
+//                                )
+//
+//                                Spacer(modifier = Modifier.width(8.dp))
+//
+//                                //Text(Category.name)
+//                            } },
+//                            onClick = {
+//                                onCategorySelected(category)
+//                                dropdownExpand = false
+//                            }
+//                        )
                     }
                 }
             }

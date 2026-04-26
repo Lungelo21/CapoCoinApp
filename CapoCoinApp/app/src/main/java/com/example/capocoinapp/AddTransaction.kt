@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.capocoinapp.Calculator.CalculatorViewModel
 import com.example.capocoinapp.data.dao.CategoryDAO
+import com.example.capocoinapp.data.dao.TransactionsDAO
 import com.example.capocoinapp.designUI.components.CalculatorSection
 import com.example.capocoinapp.ui.theme.Accent
 import com.example.capocoinapp.ui.theme.BackgroundColor
@@ -49,6 +50,7 @@ fun AddTransaction(){
     var title by remember { mutableStateOf("") }
 
     var categories by CategoryDAO.getAllCategories()
+
     var selectedCategory by remember { mutableStateOf("") }
 
     var isAmountConfirmed by remember { mutableStateOf(false) }
@@ -62,6 +64,16 @@ fun AddTransaction(){
             pageTitle = "Add Transaction"
         ){ _ ->
 
+            // Dropdown for Transaction Type
+//            SelectCategoryDropDown(
+//                categories = transactionType,
+//                selectedTransactionType = chosenTransactionType,
+//                onTransactionTypeSelected = { chosenTransactionType = it },
+//                placeholderText = "Select Transaction Type",
+//                ena
+//            )
+
+            // input for Transaction Title
             inputCard(
                 value = title,
                 onValueChange = { title = it},
@@ -70,11 +82,13 @@ fun AddTransaction(){
                 enabled = isAmountConfirmed
             )
 
+            // Dropdown for Category Selection
             SelectCategoryDropDown(
                 categories = categories,
                 selectedCategory = selectedCategory,
                 onCategorySelected = { selectedCategory = it },
-                icon = Icons.Default
+                placeholderText = "Select Category",
+                enabled = isAmountConfirmed
             )
 
 
