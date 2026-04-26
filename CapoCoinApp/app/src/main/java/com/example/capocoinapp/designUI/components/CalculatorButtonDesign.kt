@@ -11,6 +11,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
 
+
+/*
+    * Author: Phillip Lackner
+    * Link: https://www.youtube.com/watch?v=-aTcFJWxEQA
+    * DateAccessed: 14/04/2026
+    * */
+
 @Composable
 fun CalculatorButtonDesign(
     symbol: String,
