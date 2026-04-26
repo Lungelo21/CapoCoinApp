@@ -66,13 +66,6 @@ fun AddTransaction(){
         }
     }
 
-    Column(modifier = Modifier.fillMaxSize()){
-
-            Column(modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth()
-            }
-
         if(!isAmountConfirmed){
 
             CalculatorSection(
@@ -82,6 +75,7 @@ fun AddTransaction(){
                     .weight(1f)
                     .fillMaxWidth()
             )
+
 
 //            ConfirmButton{
 //                isAmountConfirmed = true
@@ -100,5 +94,5 @@ fun AddTransaction(){
 
 
     }
-}
+
 
