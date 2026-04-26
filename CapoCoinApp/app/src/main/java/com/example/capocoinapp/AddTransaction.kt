@@ -40,6 +40,7 @@ import com.example.capocoinapp.designUI.components.CardComponent
 import com.example.capocoinapp.designUI.components.DatePickerCard
 import com.example.capocoinapp.designUI.components.SelectCategoryDropDown
 import com.example.capocoinapp.designUI.components.SelectTransactionTypeDropDown
+import com.example.capocoinapp.designUI.components.TimePickerCard
 import com.example.capocoinapp.designUI.components.TopNavBar
 import com.example.capocoinapp.designUI.components.inputCard
 
@@ -60,6 +61,10 @@ fun AddTransaction(){
     var chosenTransactionType by remember { mutableStateOf("") }
 
     var selectedDate by remember { mutableStateOf("") }
+
+    var selectedTime by remember { mutableStateOf("") }
+
+
 
     var isAmountConfirmed by remember { mutableStateOf(false) }
 
@@ -106,7 +111,12 @@ fun AddTransaction(){
                 enabled = isAmountConfirmed
             )
 
-
+            TimePickerCard(
+                selectedTransactionTime = selectedTime,
+                onTransactionTimeSelected = { selectedTime = it},
+                placeholderText = "Select time of Transaction",
+                enabled = isAmountConfirmed
+            )
 
 
         }

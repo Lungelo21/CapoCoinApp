@@ -56,6 +56,11 @@ import com.example.capocoinapp.ui.theme.TextGreen
 import com.example.capocoinapp.ui.theme.TextRed
 import com.example.capocoinapp.ui.theme.TextWhite
 import android.app.DatePickerDialog
+import android.app.TimePickerDialog
+import androidx.compose.material.icons.filled.AccessTime
+import kotlin.compareTo
+import kotlin.rem
+
 @Composable
 fun CardComponent (
     cardTitle: String,
@@ -440,6 +445,73 @@ fun DatePickerCard(
                 text = if(selectedTransactionDate.isEmpty()) placeholderText else selectedTransactionDate,
                 style = CapoType.cardTitle,
                 color = if(selectedTransactionDate.isEmpty()) Color.Gray else TextWhite
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TimePickerCard(
+    selectedTransactionTime: String,
+    onTransactionTimeSelected: (String) -> Unit,
+    placeholderText: String,
+    enabled: Boolean,
+    icon: ImageVector = Icons.Default.AccessTime
+){
+    val context = LocalContext.current
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(enabled = enabled){
+
+                if(enabled){
+
+                    TimePickerDialog (
+                        context,
+                        {
+                                _, hourOfDay, minute ->
+
+                            // Converts to 12 hr format
+                            var amPM = if(hourOfDay >=12) "PM" else "AM"
+
+                            val hour12 = when{
+                                hourOfDay == 0 -> 12
+                                hourOfDay > 12 -> hourOfDay - 12
+                                else -> hourOfDay
+                        }
+
+                            val formatted = String.format("%02d:%02d %s", hour12, minute, amPM)
+                            onTransactionTimeSelected(formatted)
+                        },
+                        12,
+                        0,
+                        true
+                    ).show()
+                }
+            },
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = CardBG),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                modifier = Modifier.size((44.dp)),
+                tint = TextWhite
+            )
+
+            Spacer(modifier = Modifier.width(12.dp))
+
+            Text(   // If the entered time hasnt been shown yet, show the placeholderText otherwise show the selectedTime for the Transaction
+                text = if(selectedTransactionTime.isEmpty()) placeholderText else selectedTransactionTime,
+                style = CapoType.cardTitle,
+                color = if(selectedTransactionTime.isEmpty()) Color.Gray else TextWhite // sets chosen time to TextWhite otherwise it remains gray
             )
         }
     }
