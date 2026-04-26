@@ -8,6 +8,9 @@ data class Category(
     @PrimaryKey(autoGenerate = true)
     val categoryID: Int = 0,
 
+    //Adding a val to hold transaction type for category
+    val transactionType: String,
+
     val categoryTitle: String,
 
     // Store the color as a String Hex (e.g., "#D4AF37")
