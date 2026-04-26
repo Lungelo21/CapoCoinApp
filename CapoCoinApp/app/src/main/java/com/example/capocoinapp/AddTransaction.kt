@@ -37,6 +37,7 @@ import com.example.capocoinapp.designUI.components.AppScaffold
 import com.example.capocoinapp.designUI.components.BottomNavBar
 import com.example.capocoinapp.designUI.components.CardBox
 import com.example.capocoinapp.designUI.components.CardComponent
+import com.example.capocoinapp.designUI.components.DatePickerCard
 import com.example.capocoinapp.designUI.components.SelectCategoryDropDown
 import com.example.capocoinapp.designUI.components.SelectTransactionTypeDropDown
 import com.example.capocoinapp.designUI.components.TopNavBar
@@ -57,6 +58,8 @@ fun AddTransaction(){
     //
     var transactionType by TransactionsDAO.getAllTransactions()
     var chosenTransactionType by remember { mutableStateOf("") }
+
+    var selectedDate by remember { mutableStateOf("") }
 
     var isAmountConfirmed by remember { mutableStateOf(false) }
 
@@ -96,6 +99,12 @@ fun AddTransaction(){
                 enabled = isAmountConfirmed
             )
 
+            DatePickerCard(
+                selectedTransactionDate = selectedDate,
+                onTransactionDateSelected = { selectedDate = it},
+                placeholderText = "Select the date of Transaction",
+                enabled = isAmountConfirmed
+            )
 
 
 

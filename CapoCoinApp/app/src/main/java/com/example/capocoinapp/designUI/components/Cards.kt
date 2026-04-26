@@ -1,5 +1,6 @@
 package com.example.capocoinapp.designUI.components
 
+import android.icu.util.Calendar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -17,11 +18,13 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Fastfood
 import androidx.compose.material.icons.filled.Movie
 import androidx.compose.material.icons.filled.Payments
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -37,6 +40,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.Placeholder
@@ -51,7 +55,7 @@ import com.example.capocoinapp.ui.theme.CardBG
 import com.example.capocoinapp.ui.theme.TextGreen
 import com.example.capocoinapp.ui.theme.TextRed
 import com.example.capocoinapp.ui.theme.TextWhite
-
+import android.app.DatePickerDialog
 @Composable
 fun CardComponent (
     cardTitle: String,
@@ -379,6 +383,64 @@ fun SelectTransactionTypeDropDown(
                     }
                 }
             }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DatePickerCard(
+    selectedTransactionDate: String,
+    onTransactionDateSelected: (String) -> Unit,
+    placeholderText: String,
+    enabled: Boolean,
+    icon: ImageVector = Icons.Default.DateRange
+){
+    val context = LocalContext.current
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(enabled = enabled){
+
+                if(enabled){
+                    val calendar = Calendar.getInstance()
+
+                    DatePickerDialog (
+                        context,
+                        {
+                            _, year, month, dayOfMonth ->
+                            val formatted = "$dayOfMonth/${month + 1}/$year"
+                            onTransactionDateSelected(formatted)
+                        },
+                        calendar.get(Calendar.YEAR),
+                        calendar.get(Calendar.MONTH),
+                        calendar.get(Calendar.DAY_OF_MONTH)
+                    ).show()
+                }
+        },
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = CardBG),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                modifier = Modifier.size((44.dp)),
+                tint = TextWhite
+            )
+
+            Spacer(modifier = Modifier.width(12.dp))
+
+            Text(
+                text = if(selectedTransactionDate.isEmpty()) placeholderText else selectedTransactionDate,
+                style = CapoType.cardTitle,
+                color = if(selectedTransactionDate.isEmpty()) Color.Gray else TextWhite
+            )
         }
     }
 }
