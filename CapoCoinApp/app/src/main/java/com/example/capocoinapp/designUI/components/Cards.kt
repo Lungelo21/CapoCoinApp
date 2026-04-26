@@ -12,7 +12,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Fastfood
 import androidx.compose.material.icons.filled.Movie
@@ -89,18 +91,11 @@ fun CardComponent (
 
                     )
 
-                    // Sets amount text to green or red depending on income or expense
-                    val amountText: Color = when (cardTransactionType){
-                        "income" -> TextGreen
-                        "expense" -> TextRed
-                        else -> TextWhite
-                    }
-
                     if (cardAmount != null) {
                         Text(
-                            text = cardAmount,
+                            text = formatAmount(cardAmount, cardTransactionType),
                             style = CapoType.cardTitle,
-                            color = amountText
+                            color = colorAmount(cardTransactionType)
                         )
                     }
                 }
@@ -135,14 +130,41 @@ fun CardBox(cards: List<@Composable () -> Unit>) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .wrapContentHeight()
             .background(BackgroundColor)
-            .padding(16.dp),
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         cards.forEach { card ->
             card()
         }
     }
+}
+
+
+// If the entry is a transaction, the amount will be formatted,
+// If not, the raw string will be displayed
+fun formatAmount(amount: String, type: String?): String{
+
+    val prefix: String = when (type){
+        "income" -> "+ R"
+        "expense" -> "- R"
+        else -> ""
+    }
+
+    return "$prefix${amount}"
+}
+
+// Sets amount text to green or red depending on income or expense
+fun colorAmount(type: String?): Color{
+    val amountColor: Color = when (type){
+        "income" -> TextGreen
+        "expense" -> TextRed
+        else -> TextWhite
+    }
+
+    return amountColor
 }
 
 @Composable
@@ -185,6 +207,7 @@ fun inputCard(
         }
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 fun CardPreview() {

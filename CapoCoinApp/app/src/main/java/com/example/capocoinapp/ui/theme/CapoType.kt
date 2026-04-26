@@ -17,11 +17,16 @@ object CapoType {
         fontWeight = FontWeight.Bold,
         color = TextWhite
     )
-
     val cardSubTitle = TextStyle(
         fontSize = 16.sp,
         fontFamily = RobotoSlab,
         fontWeight = FontWeight.Medium,
         color = SubTextWhite
+    )
+    val heading = TextStyle(
+        fontSize = 32.sp,
+        fontFamily = RobotoSlab,
+        fontWeight = FontWeight.Bold,
+        color = Accent
     )
 }
