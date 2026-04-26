@@ -32,8 +32,10 @@ import com.example.capocoinapp.ui.theme.NavBarBG
 import com.example.capocoinapp.ui.theme.Primary
 import com.example.capocoinapp.ui.theme.RobotoSlab
 import com.example.capocoinapp.designUI.components.AppScaffold
+import com.example.capocoinapp.designUI.components.BottomNavBar
 import com.example.capocoinapp.designUI.components.CardBox
 import com.example.capocoinapp.designUI.components.CardComponent
+import com.example.capocoinapp.designUI.components.TopNavBar
 import com.example.capocoinapp.designUI.components.inputCard
 
 
@@ -63,6 +65,8 @@ fun AddTransaction(){
                 enabled = isAmountConfirmed
             )
 
+
+
         }
     }
 
@@ -72,7 +76,6 @@ fun AddTransaction(){
                 state = state,
                 onAction = viewModel::onAction,
                 modifier = Modifier
-                    .weight(1f)
                     .fillMaxWidth()
             )
 
