@@ -43,6 +43,7 @@ import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.capocoinapp.data.entities.Category
+import com.example.capocoinapp.data.entities.Transactions
 import com.example.capocoinapp.ui.theme.BackgroundColor
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 import com.example.capocoinapp.ui.theme.CapoType
@@ -316,6 +317,72 @@ fun SelectCategoryDropDown(
         }
     }
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SelectTransactionTypeDropDown(
+    transactionTypes: List<String>,
+    selectedTransactionType: String,
+    onTransactionTypeSelected: (String) -> Unit,
+    placeholderText: String,
+    enabled: Boolean
+){
+    var dropdownExpand by remember { mutableStateOf(false) }
+
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = CardBG),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ){
+
+            ExposedDropdownMenuBox(
+                expanded = dropdownExpand,
+                onExpandedChange = {
+                    if(enabled) dropdownExpand = !dropdownExpand
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                TextField(
+                    value = selectedTransactionType,
+                    onValueChange = {},
+                    readOnly = true,
+                    enabled = enabled,
+                    placeholder = { Text(placeholderText, style = CapoType.cardTitle)},
+
+                    textStyle = CapoType.cardTitle,
+                    modifier = Modifier.menuAnchor().fillMaxWidth()
+                )
+
+                ExposedDropdownMenu(
+                    expanded = dropdownExpand,
+                    onDismissRequest = { dropdownExpand = false }
+                ){
+                    transactionTypes.forEach { transactionTypes ->
+
+                        DropdownMenuItem(
+                            text = {
+                                Row(verticalAlignment = Alignment.CenterVertically){
+
+                                    Text(Transactions.transactionType)
+                            } },
+                            onClick = {
+                                onTransactionTypeSelected(transactionTypes)
+                                dropdownExpand = false
+                            }
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
 
 @Preview(showBackground = true)
 @Composable
