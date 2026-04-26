@@ -11,11 +11,12 @@ data class Category(
     //Adding a val to hold transaction type for category
     val transactionType: String,
 
+    //Store the user selected name for the category
     val categoryTitle: String,
 
     // Store the color as a String Hex (e.g., "#D4AF37")
     val categoryColour: String,
 
-    // Store the name of the icon (e.g., "shopping_cart"")
+    // Store the name of the icon naming convention (e.g., "shopping_cart"")
     val categoryIcon: String
 )
