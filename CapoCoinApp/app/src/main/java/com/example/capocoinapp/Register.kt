@@ -1,6 +1,7 @@
 package com.example.capocoinapp
 
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -26,7 +28,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.capocoinapp.ui.theme.Accent
+import com.example.capocoinapp.ui.theme.BackgroundColor
+import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
+import com.example.capocoinapp.ui.theme.Primary
+import com.example.capocoinapp.ui.theme.SubTextWhite
+import com.example.capocoinapp.ui.theme.TextWhite
 
 
 @Composable
@@ -48,6 +57,7 @@ fun Register(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(color = BackgroundColor)
             .verticalScroll(rememberScrollState())
             .imePadding()
             .padding(16.dp),
@@ -56,7 +66,8 @@ fun Register(
     ){
         Text(
             text = "Create account",
-            style= MaterialTheme.typography.displayLarge,
+            style= MaterialTheme.typography.displayMedium,
+            color = Accent,
             fontWeight = FontWeight.Bold
             )
 
@@ -64,6 +75,7 @@ fun Register(
 
         Text(
             text= "Name",
+            color=TextWhite,
             style= MaterialTheme.typography.titleLarge,
             modifier= Modifier.align(Alignment.Start)
         )
@@ -75,7 +87,7 @@ fun Register(
                 name = it
             },
             label = {
-                Text("Enter your name.")
+                Text("Enter your name.", color = SubTextWhite)
             }
         )
 
@@ -83,6 +95,7 @@ fun Register(
 
         Text(
             text= "Email",
+            color=TextWhite,
             style= MaterialTheme.typography.titleLarge,
             modifier= Modifier.align(Alignment.Start)
         )
@@ -94,7 +107,7 @@ fun Register(
                 email = it
             },
             label = {
-                Text("Enter your email.")
+                Text("Enter your email.", color = SubTextWhite)
             }
         )
 
@@ -102,6 +115,7 @@ fun Register(
 
         Text(
             text= "Username",
+            color=TextWhite,
             style= MaterialTheme.typography.titleLarge,
             modifier= Modifier.align(Alignment.Start)
         )
@@ -113,13 +127,14 @@ fun Register(
                 username = it
             },
             label = {
-                Text("Enter your username.")
+                Text("Enter your username.", color = SubTextWhite)
             }
         )
         Spacer(modifier = Modifier.height(32.dp))
 
         Text(
             text= "Password",
+            color=TextWhite,
             style= MaterialTheme.typography.titleLarge,
             modifier= Modifier.align(Alignment.Start)
         )
@@ -132,7 +147,7 @@ fun Register(
                 password = it
             },
             label = {
-                Text("Enter your password.")
+                Text("Enter your password.", color = SubTextWhite)
             }
         )
 
@@ -142,6 +157,7 @@ fun Register(
 
         Text(
             text= "Confirm Password",
+            color=TextWhite,
             style= MaterialTheme.typography.titleLarge,
             modifier= Modifier.align(Alignment.Start)
         )
@@ -161,7 +177,7 @@ fun Register(
                 passwordError = it != password
             },
             label = {
-                Text("Enter your password.")
+                Text("Enter your password.", color = SubTextWhite)
             }
         )
 
@@ -177,8 +193,24 @@ fun Register(
                 email,
                 password,
                 confirmPassword)
-        }){Text("Register")}
+        },
+            colors = ButtonDefaults.filledTonalButtonColors(
+                containerColor = Primary,
+                contentColor = Accent
+            )
+        ){
+            Text("Register")
+        }
 
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun RegisterPreview() {
+    CapoCoinAppTheme {
+        Register()
     }
 }
 
