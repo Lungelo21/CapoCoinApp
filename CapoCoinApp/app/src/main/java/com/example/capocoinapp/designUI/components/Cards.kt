@@ -294,21 +294,21 @@ fun CardPreview() {
                 CardComponent(
                 "Dinner Night",
                 "Empire Steak",
-                "- R200",
+                "200",
                 "5:00 PM",
                 Icons.Default.Fastfood,
                 "expense")},
             {CardComponent(
                     "Movie",
                     "Pavillion",
-                    "- R150",
+                    "150",
                     "7:45 AM",
                     Icons.Default.Movie,
                     "expense")},
             {CardComponent(
                     "Salary",
                     "Dunder Mifflin",
-                    "+ R30 000",
+                    "30 000",
                     "9:45 AM",
                     Icons.Default.Payments,
                     "income")
