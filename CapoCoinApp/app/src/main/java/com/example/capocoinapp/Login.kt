@@ -79,7 +79,7 @@ fun Login(
             value = email,
             onValueChange = {email = it},
             label = {
-            Text(text = "Email address:")
+            Text("Email address:", color = SubTextWhite)
             })
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -90,7 +90,7 @@ fun Login(
 
             onValueChange = {password = it},
             label = {
-            Text(text = "Password:")
+            Text( "Password:", color = SubTextWhite)
             },visualTransformation = PasswordVisualTransformation())
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -116,6 +116,8 @@ fun Login(
             modifier=Modifier.clickable{
 
         })
+
+        Spacer(modifier= Modifier.height(20.dp))
 
         Row{
             // Clickable text if user needs to register
