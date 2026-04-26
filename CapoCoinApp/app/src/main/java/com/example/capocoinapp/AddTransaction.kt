@@ -23,6 +23,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.capocoinapp.Calculator.CalculatorViewModel
+import com.example.capocoinapp.data.dao.CategoryDAO
 import com.example.capocoinapp.designUI.components.CalculatorSection
 import com.example.capocoinapp.ui.theme.Accent
 import com.example.capocoinapp.ui.theme.BackgroundColor
@@ -35,6 +36,7 @@ import com.example.capocoinapp.designUI.components.AppScaffold
 import com.example.capocoinapp.designUI.components.BottomNavBar
 import com.example.capocoinapp.designUI.components.CardBox
 import com.example.capocoinapp.designUI.components.CardComponent
+import com.example.capocoinapp.designUI.components.SelectCategoryDropDown
 import com.example.capocoinapp.designUI.components.TopNavBar
 import com.example.capocoinapp.designUI.components.inputCard
 
@@ -45,6 +47,9 @@ fun AddTransaction(){
     val state = viewModel.state
 
     var title by remember { mutableStateOf("") }
+
+    var categories by CategoryDAO.getAllCategories()
+    var selectedCategory by remember { mutableStateOf("") }
 
     var isAmountConfirmed by remember { mutableStateOf(false) }
 
@@ -64,6 +69,15 @@ fun AddTransaction(){
                 icon = Icons.Default.Edit,
                 enabled = isAmountConfirmed
             )
+
+            SelectCategoryDropDown(
+                categories = categories,
+                selectedCategory = selectedCategory,
+                onCategorySelected = { selectedCategory = it },
+                icon = Icons.Default
+            )
+
+
 
 
 
