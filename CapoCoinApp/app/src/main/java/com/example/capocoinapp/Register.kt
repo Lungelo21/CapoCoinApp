@@ -12,12 +12,14 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
+
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,12 +32,8 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.capocoinapp.ui.theme.Accent
-import com.example.capocoinapp.ui.theme.BackgroundColor
-import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
-import com.example.capocoinapp.ui.theme.Primary
-import com.example.capocoinapp.ui.theme.SubTextWhite
-import com.example.capocoinapp.ui.theme.TextWhite
+import com.example.capocoinapp.ui.theme.*
+
 
 
 @Composable
@@ -53,6 +51,21 @@ fun Register(
     var username by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable() {mutableStateOf("") }
     var confirmPassword by rememberSaveable() { mutableStateOf("") }
+
+    val capoColorTextField = OutlinedTextFieldDefaults.colors(
+        focusedBorderColor = TextWhite,
+        unfocusedBorderColor = SubTextWhite,
+        focusedTextColor = TextWhite,
+        unfocusedTextColor = TextWhite,
+        cursorColor = Accent,
+        focusedLabelColor = Accent,
+        unfocusedLabelColor = SubTextWhite,
+        errorTextColor = TextWhite,
+        errorBorderColor = TextRed,
+        errorCursorColor = Accent,
+        errorLabelColor = TextRed,
+        errorSupportingTextColor = TextRed
+    )
 
     Column(
         modifier = Modifier
@@ -83,12 +96,15 @@ fun Register(
         OutlinedTextField(
             modifier = modifier.fillMaxWidth(),
             value = name,
+
             onValueChange = {
                 name = it
             },
             label = {
                 Text("Enter your name.", color = SubTextWhite)
-            }
+
+            },
+            colors = capoColorTextField
         )
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -108,7 +124,8 @@ fun Register(
             },
             label = {
                 Text("Enter your email.", color = SubTextWhite)
-            }
+            },
+            colors = capoColorTextField
         )
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -128,7 +145,8 @@ fun Register(
             },
             label = {
                 Text("Enter your username.", color = SubTextWhite)
-            }
+            },
+            colors = capoColorTextField
         )
         Spacer(modifier = Modifier.height(32.dp))
 
@@ -148,7 +166,8 @@ fun Register(
             },
             label = {
                 Text("Enter your password.", color = SubTextWhite)
-            }
+            },
+            colors = capoColorTextField
         )
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -164,21 +183,22 @@ fun Register(
 
         OutlinedTextField(
             modifier = modifier.fillMaxWidth(),
-            visualTransformation = PasswordVisualTransformation(),
             value = confirmPassword,
+            onValueChange = {
+                confirmPassword = it
+                passwordError = it != password
+            },
+            label = {
+                Text("Enter your password.")
+            },
+            visualTransformation = PasswordVisualTransformation(),
             isError = passwordError,
             supportingText = {
                 if(passwordError){
                     Text("Passwords don't Match")
                 }
             },
-            onValueChange = {
-                confirmPassword = it
-                passwordError = it != password
-            },
-            label = {
-                Text("Enter your password.", color = SubTextWhite)
-            }
+            colors = capoColorTextField
         )
 
         if (message.isNotBlank()) {

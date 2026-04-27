@@ -30,7 +30,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -172,7 +171,6 @@ fun CardBox(cards: List<@Composable () -> Unit>) {
         }
     }
 }
-
 
 // If the entry is a transaction, the amount will be formatted,
 // If not, the raw string will be displayed
