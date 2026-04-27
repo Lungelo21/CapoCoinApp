@@ -6,6 +6,8 @@ import androidx.compose.material.icons.filled.Movie
 import androidx.compose.material.icons.filled.Payments
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.capocoinapp.designUI.components.AppScaffold
 import com.example.capocoinapp.designUI.components.BottomNavBar
 import com.example.capocoinapp.designUI.components.CardBox
@@ -15,7 +17,7 @@ import com.example.capocoinapp.designUI.components.TopNavBar
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController: NavController) {
     CapoCoinAppTheme {
         AppScaffold(
             topBar = { TopNavBar() },
@@ -71,6 +73,7 @@ fun HomeScreen() {
 @Composable
 fun HomePreview() {
     CapoCoinAppTheme {
-        HomeScreen()
+        val navController = rememberNavController()
+        HomeScreen(navController)
     }
 }
