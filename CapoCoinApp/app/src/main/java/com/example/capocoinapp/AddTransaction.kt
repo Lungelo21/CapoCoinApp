@@ -32,13 +32,15 @@ import com.example.capocoinapp.ui.theme.NavBarBG
 import com.example.capocoinapp.ui.theme.Primary
 import com.example.capocoinapp.ui.theme.RobotoSlab
 import com.example.capocoinapp.designUI.components.AppScaffold
+import com.example.capocoinapp.designUI.components.BottomNavBar
 import com.example.capocoinapp.designUI.components.CardBox
 import com.example.capocoinapp.designUI.components.CardComponent
+import com.example.capocoinapp.designUI.components.TopNavBar
 import com.example.capocoinapp.designUI.components.inputCard
 
 
 @Composable
-fun AddTransaction(){
+fun AddTransaction() {
     val viewModel = viewModel<CalculatorViewModel>()
     val state = viewModel.state
 
@@ -46,59 +48,62 @@ fun AddTransaction(){
 
     var isAmountConfirmed by remember { mutableStateOf(false) }
 
-    var showCalculator by remember{ mutableStateOf(true) }
+    var showCalculator by remember { mutableStateOf(true) }
 
-    CapoCoinAppTheme{
+    CapoCoinAppTheme {
         AppScaffold(
             topBar = { TopNavBar() },
             bottomBar = { BottomNavBar() },
             pageTitle = "Add Transaction"
-        ){ _ ->
-
-            inputCard(
-                value = title,
-                onValueChange = { title = it},
-                placeholder = "Add a title",
-                icon = Icons.Default.Edit,
-                enabled = isAmountConfirmed
-            )
-
-        }
-    }
-
-    Column(modifier = Modifier.fillMaxSize()){
-
-            Column(modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth()
-            }
-
-        if(!isAmountConfirmed){
-
-            CalculatorSection(
-                state = state,
-                onAction = viewModel::onAction,
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth()
-            )
-
-//            ConfirmButton{
-//                isAmountConfirmed = true
-//            }
-        }
-        else{
-
-//            FinalAmountSection(
-//                state = state
-//            )
-
-//            AddTransactionButton{
+        ) { _ ->
 //
+//            Column(modifier = Modifier.fillMaxSize()){
+//
+//                Column(modifier = Modifier
+//                    .weight(1f)
+//                    .fillMaxWidth()
 //            }
+//
+//            if(!isAmountConfirmed){
+//
+//                CalculatorSection(
+//                    state = state,
+//                    onAction = viewModel::onAction,
+//                    modifier = Modifier
+//                        .weight(1f)
+//                        .fillMaxWidth()
+//                )
+//
+////            ConfirmButton{
+////                isAmountConfirmed = true
+////            }
+//            }
+//            else{
+//
+////            FinalAmountSection(
+////                state = state
+////            )
+//
+////            AddTransactionButton{
+////
+////            }
+//            }
+//
+//
+//        }
+//    }
+//
+//            inputCard(
+//                value = title,
+//                onValueChange = { title = it},
+//                placeholder = "Add a title",
+//                icon = Icons.Default.Edit,
+//                enabled = isAmountConfirmed
+//            )
+//          }
         }
-
-
     }
 }
+
+
 
