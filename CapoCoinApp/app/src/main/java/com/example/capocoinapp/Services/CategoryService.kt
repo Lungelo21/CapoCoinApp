@@ -30,6 +30,7 @@ import androidx.compose.material.icons.filled.Museum
 import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material.icons.filled.Payments
 import androidx.compose.material.icons.filled.Pets
+import androidx.compose.material.icons.filled.QuestionMark
 import androidx.compose.material.icons.filled.Restaurant
 import androidx.compose.material.icons.filled.Savings
 import androidx.compose.material.icons.filled.School
@@ -38,9 +39,10 @@ import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.Spa
 import androidx.compose.material.icons.filled.SportsEsports
 import androidx.compose.material.icons.filled.SportsSoccer
-
-//Import to call image vector for icons
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.example.capocoinapp.data.dao.CategoryDAO
+import com.example.capocoinapp.data.entities.Category
+import kotlinx.coroutines.flow.Flow
 
 public class CategoryService(private val categoryDao: CategoryDAO) {
 
@@ -81,7 +83,7 @@ public class CategoryService(private val categoryDao: CategoryDAO) {
      * */
 
     val selectableColours = mapOf(
-        "Grey" to "#4A4A4A",
+        "Grey"  to "#4A4A4A",
         "Deep Purple" to "#6A1B9A",
         "Vibrant Green" to "#00833F",
         "Neon Pink" to "#F062D0",
@@ -105,11 +107,17 @@ public class CategoryService(private val categoryDao: CategoryDAO) {
      * DateAccessed: 27/04/2026
      * */
 
-    //
-    fun getIcon(iconName: String): ImageVector? = baseIcons[iconName]
+    //Function to get the icons
+    fun getIcon(iconName: String): ImageVector
+    {
+        return baseIcons[iconName] ?: Icons.Default.QuestionMark
+    }
 
-    //
-    fun getColour(colour: String): String? = selectableColours[colour]
+    //Function to get the colour for the icon
+    fun getColour(colour: String): String
+    {
+        return selectableColours[colour] ?: "#000000"
+    }
 
     //Using a Query to get the full list of available categories
     fun getAllCategories(): Flow<List<Category>> = categoryDao.getAllCategories()

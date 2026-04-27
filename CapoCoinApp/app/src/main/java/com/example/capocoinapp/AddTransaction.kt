@@ -48,6 +48,7 @@ import com.example.capocoinapp.designUI.components.SelectTransactionTypeDropDown
 import com.example.capocoinapp.designUI.components.TimePickerCard
 import com.example.capocoinapp.designUI.components.TopNavBar
 import com.example.capocoinapp.designUI.components.inputCard
+import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 
 
 @Composable
@@ -84,9 +85,10 @@ fun AddTransaction() {
     var showCalculator by remember { mutableStateOf(true) }
 
     CapoCoinAppTheme {
+        val navController = rememberNavController()
         AppScaffold(
-            topBar = { TopNavBar() },
-            bottomBar = { BottomNavBar() },
+            topBar = { TopNavBar(navController) },
+            bottomBar = { BottomNavBar(navController) },
             pageTitle = "Add Transaction"
         ){ _ ->
 
