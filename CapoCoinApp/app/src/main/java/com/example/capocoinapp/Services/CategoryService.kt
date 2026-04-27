@@ -115,6 +115,8 @@ public class CategoryService(private val categoryDao: CategoryDAO) {
     //Having a method used to populate the base icons that will be seen by all users upon entry to the app
     suspend fun populateDefaultCategories()
     {
+
+        //Saving the four base categories
         val defaultCategories = listOf(
             Category(transactionType = "Income",
                 categoryTitle = "Salary",
@@ -138,6 +140,7 @@ public class CategoryService(private val categoryDao: CategoryDAO) {
             )
         )
 
+        //Create the categories so that the user will be able to see them upon running the code
         defaultCategories.forEach { createCategory(it) }
     }
 
