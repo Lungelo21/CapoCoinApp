@@ -10,22 +10,19 @@ import com.example.capocoinapp.designUI.components.AppScaffold
 import com.example.capocoinapp.designUI.components.BottomNavBar
 import com.example.capocoinapp.designUI.components.CardBox
 import com.example.capocoinapp.designUI.components.CardComponent
-import com.example.capocoinapp.designUI.components.PageTitleText
 import com.example.capocoinapp.designUI.components.TopNavBar
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 
 @Composable
-fun HomeScreen() {
+fun TransactionsScreen() {
     CapoCoinAppTheme {
         AppScaffold(
             topBar = { TopNavBar() },
             bottomBar = { BottomNavBar() },
-            pageTitle = "Home"
+            pageTitle = "Transactions"
         ) { _ ->
 
-            //ToDo: add progress bar card
-
-            PageTitleText("Recent Transactions")
+            //ToDo: add transactions filtering
 
             // ToDo: replace with logic to show the actual transactions once database is set up
             CardBox(
@@ -34,7 +31,7 @@ fun HomeScreen() {
                         CardComponent(
                             "Dinner Night",
                             "Empire Steak",
-                            "- R200",
+                            "200",
                             "5:00 PM",
                             Icons.Default.Fastfood,
                             "expense"
@@ -44,7 +41,7 @@ fun HomeScreen() {
                         CardComponent(
                             "Movie",
                             "Pavillion",
-                            "- R150",
+                            "150",
                             "7:45 AM",
                             Icons.Default.Movie,
                             "expense"
@@ -54,7 +51,7 @@ fun HomeScreen() {
                         CardComponent(
                             "Salary",
                             "Dunder Mifflin",
-                            "+ R30 000",
+                            "30 000",
                             "9:45 AM",
                             Icons.Default.Payments,
                             "income"
@@ -69,8 +66,8 @@ fun HomeScreen() {
 
 @Preview(showBackground = true)
 @Composable
-fun HomePreview() {
+fun TransactionsPreview() {
     CapoCoinAppTheme {
-        HomeScreen()
+        TransactionsScreen()
     }
 }

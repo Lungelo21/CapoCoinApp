@@ -90,8 +90,15 @@ fun CardComponent(
                     Text(
                         text = cardTitle,
                         style = CapoType.cardTitle
-
                     )
+
+                    if (cardAmount != null) {
+                        Text(
+                            text = formatAmount(cardAmount, cardTransactionType),
+                            style = CapoType.cardTitle,
+                            color = colorAmount(cardTransactionType)
+                        )
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(6.dp))
@@ -297,7 +304,7 @@ fun CardPreview() {
                     CardComponent(
                         "Dinner Night",
                         "Empire Steak",
-                        "- R200",
+                        "200",
                         "5:00 PM",
                         Icons.Default.Fastfood,
                         "expense"
@@ -307,7 +314,7 @@ fun CardPreview() {
                     CardComponent(
                         "Movie",
                         "Pavillion",
-                        "- R150",
+                        "150",
                         "7:45 AM",
                         Icons.Default.Movie,
                         "expense"
@@ -317,23 +324,27 @@ fun CardPreview() {
                     CardComponent(
                         "Salary",
                         "Dunder Mifflin",
-                        "+ R30 000",
+                        "30 000",
                         "9:45 AM",
                         Icons.Default.Payments,
                         "income"
                     )
                 },
-                { BudgetCard(
-                    "Name",
-                    200.0,
-                    400.0,
-                    Icons.Default.Payments)
+                {
+                    BudgetCard(
+                        "Name",
+                        200.0,
+                        400.0,
+                        Icons.Default.Payments
+                    )
                 },
-                { BudgetCard(
-                    "Name",
-                    4000.0,
-                    6000.0,
-                    Icons.Default.Payments)
+                {
+                    BudgetCard(
+                        "Name",
+                        4000.0,
+                        6000.0,
+                        Icons.Default.Payments
+                    )
                 }
             )
         )
