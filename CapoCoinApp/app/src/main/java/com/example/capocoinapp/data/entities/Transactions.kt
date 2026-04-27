@@ -21,6 +21,9 @@ data class Transactions(
     @PrimaryKey(autoGenerate = true)
     val transactionID: Int = 0,
 
+    //Adding Transaction Type -> Should be done taken as a string through dropdown
+    val transactionType: String,
+
     val transactionName: String,
     val transactionAmount: Double,
     val categoryID: Int, //FK -> Category
