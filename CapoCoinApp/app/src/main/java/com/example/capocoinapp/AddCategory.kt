@@ -38,62 +38,50 @@ import com.example.capocoinapp.designUI.components.TopNavBar
 //Import called to use the CapoCoin App Theme instantiated in design ui components
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 
-//Import called to allow columns to be used
+//Import called for allowing UI elements to  be used
 import androidx.compose.foundation.layout.Column
-
-//Import used to allow modifier to be used
 import androidx.compose.ui.Modifier
-
 import androidx.compose.foundation.layout.fillMaxSize
-
 import androidx.compose.foundation.layout.padding
-
 import androidx.compose.ui.unit.dp
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-
-import androidx.compose.material3.ExposedDropdownMenuBox
-
-import androidx.compose.material3.OutlinedTextField
-
-import androidx.compose.material3.ExposedDropdownMenuDefaults
-
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
-
-import androidx.compose.material3.Button
-
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.shape.RoundedCornerShape
+
+//Import for the exposed dropdown
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.DropdownMenuItem
+
+//Import for the text field to be outlined
+import androidx.compose.material3.OutlinedTextField
 
 //Import called to allow scroll capability
 import androidx.compose.foundation.verticalScroll
 
 //Import called to remember the scrolls current state
 import androidx.compose.foundation.rememberScrollState
+
+//Import used to allow colour graphics to be used
 import androidx.compose.ui.graphics.Color
 
 //Import to call the Circle Shape
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.QuestionMark
-import androidx.compose.material3.ButtonDefaults
 
-//
-import androidx.compose.material3.SegmentedButtonDefaults.Icon
+//Importing material icons
+import androidx.compose.material.icons.Icons
+
+//importing question mark icon for default fallback icon
+import androidx.compose.material.icons.filled.QuestionMark
+
+//Importing the Primary button from buttons.kt
 import com.example.capocoinapp.designUI.components.PrimaryButton
 
-//Importing the ui theme primary colour
-import com.example.capocoinapp.ui.theme.Primary
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -103,6 +91,9 @@ fun AddCategory(viewModel: CategoryViewModel, service: CategoryService)
     var categoryTitle by rememberSaveable { mutableStateOf("") }
     var iconColour by rememberSaveable { mutableStateOf("") }
     var selectedIcon by rememberSaveable { mutableStateOf("") }
+
+    var minimumBudget by rememberSaveable { mutableStateOf(0) }
+    var maximumBudget by rememberSaveable { mutableStateOf(0) }
 
     var transactionTypeExpanded by rememberSaveable { mutableStateOf(false) }
     var iconColourExpanded by rememberSaveable { mutableStateOf(false) }
@@ -123,6 +114,11 @@ fun AddCategory(viewModel: CategoryViewModel, service: CategoryService)
                     .padding(paddingValues)
                     .padding(20.dp)
                     .verticalScroll(rememberScrollState()),
+                                            /*
+                                            * Author: Dhivya
+                                            * Link:  https://medium.com/@dhivyakgf/rememberscrollstate-in-jetpack-compose-45405074fe85
+                                            * DateAccessed: 27/04/2026
+                                            * */
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
 
@@ -130,7 +126,13 @@ fun AddCategory(viewModel: CategoryViewModel, service: CategoryService)
                 ExposedDropdownMenuBox(
                     expanded = transactionTypeExpanded,
                     onExpandedChange = { transactionTypeExpanded = !transactionTypeExpanded }
-                ) {
+                )
+                /*
+                 * Author: Kotlin Programming Language
+                 * Link: https://kotlinlang.org/api/compose-multiplatform/material3/androidx.compose.material3/-exposed-dropdown-menu-box.html
+                 * DateAccessed: 27/04/2026
+                 * */
+                {
                     OutlinedTextField(
                         value = transactionType,
                         onValueChange = {},
@@ -139,10 +141,21 @@ fun AddCategory(viewModel: CategoryViewModel, service: CategoryService)
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = transactionTypeExpanded) },
                         modifier = Modifier.menuAnchor().fillMaxWidth()
                     )
+                    /*
+                    * Author: Kotlin Programming Language
+                    * Link: https://kotlinlang.org/api/compose-multiplatform/material3/androidx.compose.material3/-outlined-text-field.html
+                    * DateAccessed: 27/04/2026
+                    * */
                     ExposedDropdownMenu(
                         expanded = transactionTypeExpanded,
                         onDismissRequest = { transactionTypeExpanded = false }
-                    ) {
+                    )
+                    /*
+                    * Author: Kotlin Programming Language
+                    * Link: https://kotlinlang.org/api/compose-multiplatform/material3/androidx.compose.material3/-exposed-dropdown-menu-box.html
+                    * DateAccessed: 27/04/2026
+                    * */
+                    {
                         service.transactionTypes.forEach { type ->
                             DropdownMenuItem(
                                 text = { Text(type) },
@@ -164,12 +177,23 @@ fun AddCategory(viewModel: CategoryViewModel, service: CategoryService)
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true
                 )
+                /*
+                    * Author: Kotlin Programming Language
+                    * Link: https://kotlinlang.org/api/compose-multiplatform/material3/androidx.compose.material3/-outlined-text-field.html
+                    * DateAccessed: 27/04/2026
+                    * */
 
                 //Dropdown for the selectable colours
                 ExposedDropdownMenuBox(
                     expanded = iconColourExpanded,
                     onExpandedChange = { iconColourExpanded = !iconColourExpanded }
-                ) {
+                )
+                /*
+                 * Author: Kotlin Programming Language
+                 * Link: https://kotlinlang.org/api/compose-multiplatform/material3/androidx.compose.material3/-exposed-dropdown-menu-box.html
+                 * DateAccessed: 27/04/2026
+                 * */
+                {
                     OutlinedTextField(
                         value = iconColour,
                         onValueChange = {},
@@ -188,6 +212,11 @@ fun AddCategory(viewModel: CategoryViewModel, service: CategoryService)
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = iconColourExpanded) },
                         modifier = Modifier.menuAnchor().fillMaxWidth()
                     )
+                    /*
+                    * Author: Kotlin Programming Language
+                    * Link: https://kotlinlang.org/api/compose-multiplatform/material3/androidx.compose.material3/-outlined-text-field.html
+                    * DateAccessed: 27/04/2026
+                    * */
                     ExposedDropdownMenu(
                         expanded = iconColourExpanded,
                         onDismissRequest = { iconColourExpanded = false })
@@ -216,28 +245,43 @@ fun AddCategory(viewModel: CategoryViewModel, service: CategoryService)
                 ExposedDropdownMenuBox(
                     expanded = iconExpanded,
                     onExpandedChange = { iconExpanded = !iconExpanded }
-                ) {
+                )
+                /*
+                 * Author: Kotlin Programming Language
+                 * Link: https://kotlinlang.org/api/compose-multiplatform/material3/androidx.compose.material3/-exposed-dropdown-menu-box.html
+                 * DateAccessed: 27/04/2026
+                 * */
+                {
                     OutlinedTextField(
                         value = selectedIcon,
                         onValueChange = {},
                         readOnly = true,
-                        label = { Text("Choose Icon") },
+                        label = { Text("Select an Icon") },
                         leadingIcon = {
                             Icon(      //Setting a null value in the case no icon is selected or found -> ?
-                                imageVector = service.getIcon(selectedIcon)
-                                    ?: Icons.Default.QuestionMark,
+                                imageVector = currentIcon ?: Icons.Default.QuestionMark,
                                 contentDescription = null
                             )
                         },
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = iconExpanded) },
                         modifier = Modifier.menuAnchor().fillMaxWidth()
                     )
+                    /*
+                    * Author: Kotlin Programming Language
+                    * Link: https://kotlinlang.org/api/compose-multiplatform/material3/androidx.compose.material3/-outlined-text-field.html
+                    * DateAccessed: 27/04/2026
+                    * */
                     ExposedDropdownMenu(
                         expanded = iconExpanded,
                         onDismissRequest = { iconExpanded = false },
-                        modifier = Modifier.heightIn(max = 300.dp) //Allows for scrolling if many icons are selectable
+                        modifier = Modifier.heightIn(max = 280.dp) //Allows for scrolling if many icons are selectable
                     ) {
                         service.baseIcons.forEach { (name, icon) ->
+                            /*
+                            * Author: Sumit Ohja
+                            * Link: https://medium.com/@sumit-dev-07/foreach-loop-f7bcfb3032ab
+                            * DateAccessed: 27/04/2026
+                            * */
                             DropdownMenuItem(
                                 text = { Text(name) },
                                 leadingIcon = { Icon(icon, contentDescription = null) },
@@ -250,7 +294,7 @@ fun AddCategory(viewModel: CategoryViewModel, service: CategoryService)
                 //Spacing out the entry fields from the Add Category Button
                 Spacer(modifier = Modifier.weight(1f))
 
-                // --- 4. SAVE BUTTON ---
+                //Save button calling the Primary button method from Buttons.kt
                 PrimaryButton(
                     buttonText = "Save Category",
                     enabled = transactionType.isNotBlank() &&
@@ -262,7 +306,9 @@ fun AddCategory(viewModel: CategoryViewModel, service: CategoryService)
                             type = transactionType,
                             categoryTitle = categoryTitle,
                             categoryColour = iconColour,
-                            categoryIcon = selectedIcon
+                            categoryIcon = selectedIcon,
+                            minBudget = minBudget,
+                            maxBudget = maxBudget
                         )
                     }
                 )

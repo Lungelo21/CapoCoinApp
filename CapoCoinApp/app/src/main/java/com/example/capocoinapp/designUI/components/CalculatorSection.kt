@@ -24,7 +24,7 @@ import com.example.capocoinapp.Calculator.CalculatorViewModel
 fun CalculatorSection(
     state: CalculatorState,
     modifier: Modifier = Modifier,
-    buttonSpacing: Dp = 8.dp,
+    buttonSpacing: Dp = 2.dp,
     onAction: (CalculatorFunctions) -> Unit
 ){
     Box(modifier = modifier) {

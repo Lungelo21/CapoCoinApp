@@ -25,7 +25,7 @@ class CategoryViewModel(
     }
 
     // Function to add a new category (e.g., "Salary" or "Groceries")
-    fun addCategory(categoryTitle: String, categoryColour: String, categoryIcon: String,minBudget:Double,maxBudget:Double) {
+    fun addCategory(type: String, categoryTitle: String, categoryColour: String, categoryIcon: String, minBudget: Double, maxBudget: Double) {
         viewModelScope.launch {
             message = when {
                 type.isBlank() -> "Please select a transaction type for category"
