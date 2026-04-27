@@ -7,21 +7,9 @@ import androidx.lifecycle.ViewModel
 
 class CalculatorViewModel: ViewModel() {
 
-    /*
-    * Author: Phillip Lackner
-    * Link: https://www.youtube.com/watch?v=-aTcFJWxEQA
-    * DateAccessed: 14/04/2026
-    * */
-
     var state by mutableStateOf(CalculatorState())
 
         private set
-
-    /*
-    * Author: Phillip Lackner
-    * Link: https://www.youtube.com/watch?v=-aTcFJWxEQA
-    * DateAccessed: 14/04/2026
-    * */
 
     fun onAction(action: CalculatorFunctions){
         when(action){
@@ -33,12 +21,6 @@ class CalculatorViewModel: ViewModel() {
             is CalculatorFunctions.DeleteFunction -> doDelete()
         }
     }
-
-    /*
-    * Author: Phillip Lackner
-    * Link: https://www.youtube.com/watch?v=-aTcFJWxEQA
-    * DateAccessed: 14/04/2026
-    * */
 
     private fun doDelete() {
         when{
@@ -57,12 +39,6 @@ class CalculatorViewModel: ViewModel() {
             )
         }
     }
-
-    /*
-    * Author: Phillip Lackner
-    * Link: https://www.youtube.com/watch?v=-aTcFJWxEQA
-    * DateAccessed: 14/04/2026
-    * */
 
     private fun enterDecimal(){
         // makes the checks to see if to apply the decimal place to the first number entered into the calculator
@@ -86,12 +62,6 @@ class CalculatorViewModel: ViewModel() {
 
     }
 
-    /*
-    * Author: Phillip Lackner
-    * Link: https://www.youtube.com/watch?v=-aTcFJWxEQA
-    * DateAccessed: 14/04/2026
-    * */
-
     private fun enterNumber(number: Int) {
         if(state.operation == null){
 
@@ -113,33 +83,15 @@ class CalculatorViewModel: ViewModel() {
         )
     }
 
-    /*
-    * Author: Phillip Lackner
-    * Link: https://www.youtube.com/watch?v=-aTcFJWxEQA
-    * DateAccessed: 14/04/2026
-    * */
-
     companion object{
         private const val MAX_NUM_LENGTH = 8
     }
-
-    /*
-    * Author: Phillip Lackner
-    * Link: https://www.youtube.com/watch?v=-aTcFJWxEQA
-    * DateAccessed: 14/04/2026
-    * */
 
     private fun enterOperation(operation: CalculatorOperation){
         if(state.number1.isNotBlank()){
             state = state.copy(operation = operation)
         }
     }
-
-    /*
-    * Author: Phillip Lackner
-    * Link: https://www.youtube.com/watch?v=-aTcFJWxEQA
-    * DateAccessed: 14/04/2026
-    * */
 
     private fun doCalculation(){
         val number1 = state.number1.toDoubleOrNull()

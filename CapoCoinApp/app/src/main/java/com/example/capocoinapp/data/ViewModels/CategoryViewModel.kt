@@ -24,7 +24,7 @@ class CategoryViewModel(
     }
 
     // Function to add a new category (e.g., "Salary" or "Groceries")
-    fun addCategory(categoryTitle: String, categoryColour: String, categoryIcon: String) {
+    fun addCategory(categoryTitle: String, categoryColour: String, categoryIcon: String,minBudget:Double,maxBudget:Double) {
         viewModelScope.launch {
             message = when {
                 categoryTitle.isBlank() -> "Please enter a category title"
@@ -34,7 +34,11 @@ class CategoryViewModel(
                     val newCategory = Category(
                         categoryTitle = categoryTitle,
                         categoryColour = categoryColour,
-                        categoryIcon = categoryIcon
+                        categoryIcon = categoryIcon,
+
+                        // Added to change in More User Budget
+                        minBudget = minBudget,
+                        maxBudget = maxBudget
                     )
                     dao.insertCategory(newCategory)
                     "Category: '$categoryTitle' was added!"

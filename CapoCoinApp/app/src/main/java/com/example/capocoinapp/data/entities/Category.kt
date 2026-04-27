@@ -14,5 +14,12 @@ data class Category(
     val categoryColour: String,
 
     // Store the name of the icon (e.g., "shopping_cart"")
-    val categoryIcon: String
+    val categoryIcon: String,
+
+    // Store the minimum budget for the Category
+    val minBudget: Double,
+
+    // Store the maximum budget for the category
+    val maxBudget: Double
+
 )
