@@ -39,7 +39,7 @@ class CategoryViewModel(
                         categoryColour = categoryColour,
                         categoryIcon = categoryIcon,
 
-                        //Added to change in More User Budget
+                        // Added to change in More User Budget
                         minBudget = minBudget,
                         maxBudget = maxBudget
                     )

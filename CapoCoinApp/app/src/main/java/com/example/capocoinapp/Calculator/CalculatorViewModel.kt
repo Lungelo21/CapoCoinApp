@@ -7,12 +7,6 @@ import androidx.lifecycle.ViewModel
 
 class CalculatorViewModel: ViewModel() {
 
-    /*
-    * Author: Phillip Lackner
-    * Link: https://www.youtube.com/watch?v=-aTcFJWxEQA
-    * DateAccessed: 14/04/2026
-    * */
-
     var state by mutableStateOf(CalculatorState())
 
         private set

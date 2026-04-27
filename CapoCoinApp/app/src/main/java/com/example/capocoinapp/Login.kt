@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.capocoinapp.ui.theme.*
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 
 
@@ -53,6 +54,16 @@ fun Login(
 
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
+
+    val capoColorTextField = OutlinedTextFieldDefaults.colors(
+        focusedBorderColor = TextWhite,
+        unfocusedBorderColor = SubTextWhite,
+        focusedTextColor = TextWhite,
+        unfocusedTextColor = TextWhite,
+        cursorColor = Accent,
+        focusedLabelColor = Accent,
+        unfocusedLabelColor = SubTextWhite
+    )
 
     Column(
         modifier = Modifier
@@ -80,7 +91,9 @@ fun Login(
             onValueChange = {email = it},
             label = {
             Text("Email address:", color = SubTextWhite)
-            })
+            },
+            colors = capoColorTextField
+        )
 
         Spacer(modifier = Modifier.height(32.dp))
 
@@ -91,7 +104,10 @@ fun Login(
             onValueChange = {password = it},
             label = {
             Text( "Password:", color = SubTextWhite)
-            },visualTransformation = PasswordVisualTransformation())
+            },
+            colors = capoColorTextField,
+            visualTransformation = PasswordVisualTransformation()
+        )
 
         Spacer(modifier = Modifier.height(32.dp))
 
@@ -121,7 +137,7 @@ fun Login(
 
         Row{
             // Clickable text if user needs to register
-            Text(text="Don't have an account?",color=TextWhite)
+            Text(text="Don't have an account? ",color=TextWhite)
 
 
             Text(text = "Register",

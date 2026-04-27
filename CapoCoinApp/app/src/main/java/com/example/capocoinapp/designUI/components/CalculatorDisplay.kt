@@ -12,12 +12,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.capocoinapp.Calculator.CalculatorState
 
-/*
-    * Author: Phillip Lackner
-    * Link: https://www.youtube.com/watch?v=-aTcFJWxEQA
-    * DateAccessed: 14/04/2026
-    * */
-
 @Composable
 fun CalculatorDisplay(state: CalculatorState){
 
