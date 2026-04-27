@@ -26,6 +26,7 @@ import com.example.capocoinapp.designUI.components.CapoCoinAuthenticationLayout
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 import androidx.room.Room
 import androidx.lifecycle.lifecycleScope
+import com.example.capocoinapp.Services.CategoryService
 import com.example.capocoinapp.data.DB.AppDatabase
 import kotlinx.coroutines.launch
 
@@ -46,7 +47,7 @@ class MainActivity : ComponentActivity() {
     }
     private val categoryViewModel: CategoryViewModel by viewModels {
         val db = AppDatabase.getDatabase(applicationContext)
-        CategoryViewModelFactory(db.categoryDao())
+        CategoryViewModelFactory(CategoryService(db.categoryDao()))
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
