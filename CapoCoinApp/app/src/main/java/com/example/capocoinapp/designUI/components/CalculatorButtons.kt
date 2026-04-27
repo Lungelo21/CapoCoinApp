@@ -4,21 +4,27 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import com.example.capocoinapp.Calculator.CalculatorFunctions
 import com.example.capocoinapp.Calculator.CalculatorOperation
+import com.example.capocoinapp.Calculator.CalculatorState
 import com.example.capocoinapp.designUI.components.CalculatorButtonDesign
 import com.example.capocoinapp.ui.theme.CardBG
 import com.example.capocoinapp.ui.theme.NavBarBG
 import com.example.capocoinapp.ui.theme.Primary
+import com.example.capocoinapp.ui.theme.PurpleGrey40
 
 
 @Composable
 fun CalculatorButtons(
+    state: CalculatorState,
     onAction: (CalculatorFunctions) -> Unit,
     buttonSpacing: Dp
 ){
@@ -284,8 +290,36 @@ fun CalculatorButtons(
                     onAction(CalculatorFunctions.CalculateFunction)
                 }
             )
+        }
 
+        // Row 6 confirm amount
+        Row(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            val isAmountConfirmed =
+                state.number1.isNotBlank() &&
+                        (state.operation == null || state.number2.isNotBlank())
+
+            CalculatorButtonDesign(
+                symbol = "Confirm",
+                modifier = Modifier
+                    .background(
+
+                        if(isAmountConfirmed) Primary
+                            else PurpleGrey40
+                    )
+                    .fillMaxWidth()
+                    .weight(1f),
+
+                onClick = {
+                    if(isAmountConfirmed){
+                        onAction(CalculatorFunctions.ConfirmAmount)
+                    }
+
+                }
+            )
 
         }
+
     }
 }
