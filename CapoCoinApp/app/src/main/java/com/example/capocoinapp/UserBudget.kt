@@ -3,6 +3,7 @@ package com.example.capocoinapp
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
 import com.example.capocoinapp.Calculator.CalculatorViewModel
 import com.example.capocoinapp.data.ViewModels.CategoryViewModel
 import com.example.capocoinapp.designUI.components.AppScaffold
@@ -25,9 +26,10 @@ fun UserBudget(
     val viewModel = viewModel<CalculatorViewModel>()
 
     CapoCoinAppTheme {
+        val navController = rememberNavController()
         AppScaffold(
-            topBar = { TopNavBar() },
-            bottomBar = { BottomNavBar() },
+            topBar = { TopNavBar(navController) },
+            bottomBar = { BottomNavBar(navController) },
             pageTitle = "User Budget"
         ) { _ ->
 

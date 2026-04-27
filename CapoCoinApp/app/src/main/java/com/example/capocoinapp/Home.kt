@@ -20,8 +20,8 @@ import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 fun HomeScreen(navController: NavController) {
     CapoCoinAppTheme {
         AppScaffold(
-            topBar = { TopNavBar() },
-            bottomBar = { BottomNavBar() },
+            topBar = { TopNavBar(navController) },
+            bottomBar = { BottomNavBar(navController) },
             pageTitle = "Home"
         ) { _ ->
 

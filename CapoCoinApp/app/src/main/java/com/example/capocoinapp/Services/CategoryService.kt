@@ -1,18 +1,17 @@
 package com.example.capocoinapp.Services
 
 //Import to call the Category entity
-import com.example.capocoinapp.data.entities.Category
 
 //
-import com.example.capocoinapp.data.dao.CategoryDAO
 
 //Import to call coroutine
-import kotlinx.coroutines.flow.Flow
 
 //Import to call material icons for the base icons for categories
-import androidx.compose.material.icons.Icons
 
 //Import for all base icons that will be selectable by the user
+
+//Import to call image vector for icons
+import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AttachMoney
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.CardGiftcard
@@ -38,9 +37,10 @@ import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.Spa
 import androidx.compose.material.icons.filled.SportsEsports
 import androidx.compose.material.icons.filled.SportsSoccer
-
-//Import to call image vector for icons
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.example.capocoinapp.data.dao.CategoryDAO
+import com.example.capocoinapp.data.entities.Category
+import kotlinx.coroutines.flow.Flow
 
 public class CategoryService(private val categoryDao: CategoryDAO) {
 

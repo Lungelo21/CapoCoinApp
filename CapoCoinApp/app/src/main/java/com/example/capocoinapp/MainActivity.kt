@@ -28,8 +28,10 @@ import com.example.capocoinapp.data.ViewModels.CategoryViewModel
 import com.example.capocoinapp.data.ViewModels.CategoryViewModelFactory
 import com.example.capocoinapp.data.ViewModels.UserViewModel
 import com.example.capocoinapp.data.ViewModels.ViewModelFactory
+import com.example.capocoinapp.designUI.components.BottomNavBar
 import com.example.capocoinapp.designUI.components.CapoCoinAuthenticationLayout
 import com.example.capocoinapp.designUI.components.CapoCoinSharedLayout
+import com.example.capocoinapp.designUI.components.TopNavBar
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -59,6 +61,27 @@ class MainActivity : ComponentActivity() {
                 ){
                     composable("Home") {
                         HomeScreen(navController)
+                    }
+                    composable("Transactions"){
+                        TransactionsScreen(navController)
+                    }
+                    composable("Analytics"){
+                        AnalyticsScreen(navController)
+                    }
+                    composable("More"){
+                        MoreScreen(navController)
+                    }
+                    composable("Categories"){
+                        CategoriesScreen(navController)
+                    }
+                    composable("BottomNavBar"){
+                        BottomNavBar(navController)
+                    }
+                    composable("TopNavBar"){
+                        TopNavBar(navController)
+                    }
+                    composable("TransactionDetails"){
+                        TransactionsDetailsScreen(navController)
                     }
 
                     // composable route to Login Screen

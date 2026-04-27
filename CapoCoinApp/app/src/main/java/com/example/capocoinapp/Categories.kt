@@ -2,6 +2,7 @@ package com.example.capocoinapp
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.capocoinapp.designUI.components.AppScaffold
 import com.example.capocoinapp.designUI.components.BottomNavBar
@@ -12,11 +13,11 @@ import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 
 
 @Composable
-fun CategoriesScreen() {
+fun CategoriesScreen(navController: NavController) {
     CapoCoinAppTheme {
         AppScaffold(
-            topBar = { TopNavBar() },
-            bottomBar = { BottomNavBar() },
+            topBar = { TopNavBar(navController) },
+            bottomBar = { BottomNavBar(navController) },
             pageTitle = "Categories"
         ) { _ ->
 
@@ -63,6 +64,7 @@ fun CategoriesScreen() {
 @Composable
 fun CategoriesPreview() {
     CapoCoinAppTheme {
-        CategoriesScreen()
+        val navController = rememberNavController()
+        CategoriesScreen(navController)
     }
 }
