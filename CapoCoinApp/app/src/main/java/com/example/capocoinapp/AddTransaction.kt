@@ -52,7 +52,7 @@ import com.example.capocoinapp.designUI.components.inputCard
 
 
 @Composable
-fun AddTransaction(){
+fun AddTransaction() {
     val viewModel = viewModel<CalculatorViewModel>()
     val state = viewModel.state
 
@@ -82,9 +82,9 @@ fun AddTransaction(){
 
     var isAmountConfirmed by remember { mutableStateOf(false) }
 
-    var showCalculator by remember{ mutableStateOf(true) }
+    var showCalculator by remember { mutableStateOf(true) }
 
-    CapoCoinAppTheme{
+    CapoCoinAppTheme {
         AppScaffold(
             topBar = { TopNavBar() },
             bottomBar = { BottomNavBar() },
@@ -179,5 +179,7 @@ fun AddTransaction(){
 
     }
 }
+
+
 
 
