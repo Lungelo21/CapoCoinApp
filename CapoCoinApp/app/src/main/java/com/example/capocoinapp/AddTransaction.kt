@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.AttachFile
+import androidx.compose.material.icons.filled.Calculate
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.LibraryAdd
@@ -24,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
 import com.example.capocoinapp.Calculator.CalculatorViewModel
 import com.example.capocoinapp.data.ViewModels.CategoryViewModel
 import com.example.capocoinapp.data.ViewModels.TransactionViewModel
@@ -44,6 +46,7 @@ import com.example.capocoinapp.designUI.components.BottomNavBar
 import com.example.capocoinapp.designUI.components.CardBox
 import com.example.capocoinapp.designUI.components.CardComponent
 import com.example.capocoinapp.designUI.components.DatePickerCard
+import com.example.capocoinapp.designUI.components.FinalAmountCard
 import com.example.capocoinapp.designUI.components.SelectCategoryDropDown
 import com.example.capocoinapp.designUI.components.SelectTransactionTypeDropDown
 import com.example.capocoinapp.designUI.components.TimePickerCard
