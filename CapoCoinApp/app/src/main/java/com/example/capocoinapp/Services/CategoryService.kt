@@ -30,6 +30,7 @@ import androidx.compose.material.icons.filled.Museum
 import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material.icons.filled.Payments
 import androidx.compose.material.icons.filled.Pets
+import androidx.compose.material.icons.filled.QuestionMark
 import androidx.compose.material.icons.filled.Restaurant
 import androidx.compose.material.icons.filled.Savings
 import androidx.compose.material.icons.filled.School
@@ -105,11 +106,17 @@ public class CategoryService(private val categoryDao: CategoryDAO) {
      * DateAccessed: 27/04/2026
      * */
 
-    //
-    fun getIcon(iconName: String): ImageVector? = baseIcons[iconName]
+    //Function to get the icons
+    fun getIcon(iconName: String): ImageVector
+    {
+        return baseIcons[iconName] ?: Icons.Default.QuestionMark
+    }
 
-    //
-    fun getColour(colour: String): String? = selectableColours[colour]
+    //Function to get the colour for the icon
+    fun getColour(colour: String): String
+    {
+        return selectableColours[colour] ?: "#000000"
+    }
 
     //Using a Query to get the full list of available categories
     fun getAllCategories(): Flow<List<Category>> = categoryDao.getAllCategories()
@@ -159,5 +166,4 @@ public class CategoryService(private val categoryDao: CategoryDAO) {
         //Create the categories so that the user will be able to see them upon running the code
         defaultCategories.forEach { createCategory(it) }
     }
-
 }

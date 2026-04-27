@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.AttachFile
+import androidx.compose.material.icons.filled.Calculate
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.LibraryAdd
@@ -24,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.capocoinapp.Calculator.CalculatorFunctions
 import com.example.capocoinapp.Calculator.CalculatorViewModel
 import com.example.capocoinapp.data.ViewModels.CategoryViewModel
 import com.example.capocoinapp.data.ViewModels.TransactionViewModel
@@ -40,9 +42,11 @@ import com.example.capocoinapp.ui.theme.RobotoSlab
 import com.example.capocoinapp.designUI.components.AppScaffold
 import com.example.capocoinapp.designUI.components.AttachImageCard
 import com.example.capocoinapp.designUI.components.BottomNavBar
+import com.example.capocoinapp.designUI.components.BudgetCard
 import com.example.capocoinapp.designUI.components.CardBox
 import com.example.capocoinapp.designUI.components.CardComponent
 import com.example.capocoinapp.designUI.components.DatePickerCard
+import com.example.capocoinapp.designUI.components.FinalAmountCard
 import com.example.capocoinapp.designUI.components.SelectCategoryDropDown
 import com.example.capocoinapp.designUI.components.SelectTransactionTypeDropDown
 import com.example.capocoinapp.designUI.components.TimePickerCard
@@ -79,7 +83,7 @@ fun AddTransaction() {
 
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
 
-    var isAmountConfirmed by remember { mutableStateOf(false) }
+    val isAmountConfirmed = state.isAmountConfirmed
 
     var showCalculator by remember { mutableStateOf(true) }
 
@@ -89,83 +93,91 @@ fun AddTransaction() {
             bottomBar = { BottomNavBar() },
             pageTitle = "Add Transaction"
         ){ _ ->
+            Column(modifier = Modifier.fillMaxSize())
+            {
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth()
+                ) {
+                    // Dropdown for Transaction Type
+                    SelectTransactionTypeDropDown(
+                        transactionTypes = transactionTypes,
+                        selectedTransactionType = chosenTransactionType,
+                        onTransactionTypeSelected = { chosenTransactionType = it },
+                        placeholderText = "Select Transaction Type",
+                        enabled = isAmountConfirmed
+                    )
 
-            // Dropdown for Transaction Type
-            SelectTransactionTypeDropDown(
-                transactionTypes = transactionTypes,
-                selectedTransactionType = chosenTransactionType,
-                onTransactionTypeSelected = { chosenTransactionType = it },
-                placeholderText = "Select Transaction Type",
-                enabled = isAmountConfirmed
-            )
+                    // input for Transaction Title
+                    inputCard(
+                        value = title,
+                        onValueChange = { title = it},
+                        placeholder = "Add a title",
+                        icon = Icons.Default.Edit,
+                        enabled = isAmountConfirmed
+                    )
 
-            // input for Transaction Title
-            inputCard(
-                value = title,
-                onValueChange = { title = it},
-                placeholder = "Add a title",
-                icon = Icons.Default.Edit,
-                enabled = isAmountConfirmed
-            )
+                    // Dropdown for Category Selection
+                    SelectCategoryDropDown(
+                        categories = categories.map { it.categoryTitle },
+                        selectedCategory = selectedCategory,
+                        onCategorySelected = { selectedCategory = it },
+                        placeholderText = "Select Category",
+                        enabled = isAmountConfirmed
+                    )
 
-            // Dropdown for Category Selection
-            SelectCategoryDropDown(
-                categories = categories.map { it.categoryTitle },
-                selectedCategory = selectedCategory,
-                onCategorySelected = { selectedCategory = it },
-                placeholderText = "Select Category",
-                enabled = isAmountConfirmed
-            )
+                    DatePickerCard(
+                        selectedTransactionDate = selectedDate,
+                        onTransactionDateSelected = { selectedDate = it},
+                        placeholderText = "Select the date of Transaction",
+                        enabled = isAmountConfirmed
+                    )
 
-            DatePickerCard(
-                selectedTransactionDate = selectedDate,
-                onTransactionDateSelected = { selectedDate = it},
-                placeholderText = "Select the date of Transaction",
-                enabled = isAmountConfirmed
-            )
+                    TimePickerCard(
+                        selectedTransactionTime = selectedTime,
+                        onTransactionTimeSelected = { selectedTime = it},
+                        placeholderText = "Select time of Transaction",
+                        enabled = isAmountConfirmed
+                    )
 
-            TimePickerCard(
-                selectedTransactionTime = selectedTime,
-                onTransactionTimeSelected = { selectedTime = it},
-                placeholderText = "Select time of Transaction",
-                enabled = isAmountConfirmed
-            )
-
-            AttachImageCard(
-                imageUri = selectedImageUri,
-                onImageSelected = { selectedImageUri = it},
-                placeholderText = "Attach Receipt or Salary Image",
-                enabled = isAmountConfirmed
-            )
-        }
-
-
-        if(!isAmountConfirmed){
-
-            CalculatorSection(
-                state = state,
-                onAction = viewModel::onAction,
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
+                    AttachImageCard(
+                        imageUri = selectedImageUri,
+                        onImageSelected = { selectedImageUri = it},
+                        placeholderText = "Attach Receipt or Salary Image",
+                        enabled = isAmountConfirmed
+                    )
+                }
 
 
-    //            ConfirmButton{
-    //                isAmountConfirmed = true
-    //            }
-        }
-        else {
+                if(!isAmountConfirmed){
 
-    //            FinalAmountSection(
-    //                state = state
-    //            )
+                    CalculatorSection(
+                        state = state,
+                        onAction = viewModel::onAction,
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxWidth()
+                    )
+                }
+                else
+                {
 
-    //            AddTransactionButton{
-    //
-    //            }
+                    FinalAmountCard(
+                        transactionAmount = state.number1,
+                        cardIcon = Icons.Default.Calculate,
+                        onAmountClicked = {
+                             viewModel.reOpenCalculator()
+                        }
+                    )
+                }
+            }
         }
     }
+
+
 }
+
 
 
 
