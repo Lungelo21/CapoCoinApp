@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.capocoinapp.Calculator.CalculatorViewModel
 import com.example.capocoinapp.data.ViewModels.CategoryViewModel
+import com.example.capocoinapp.data.ViewModels.TransactionViewModel
 import com.example.capocoinapp.data.dao.CategoryDAO
 import com.example.capocoinapp.data.dao.TransactionsDAO
 import com.example.capocoinapp.designUI.components.CalculatorSection
@@ -61,8 +62,15 @@ fun AddTransaction(){
     val categories by catViewModel.getAllCategories().collectAsState(initial = emptyList())
 
     var selectedCategory by remember { mutableStateOf("") }
-    //
-    var transactionType by TransactionsDAO.getAllTransactions()
+
+    val transactionViewModel = viewModel<TransactionViewModel>()
+    // transaction types
+    val transactionTypes = listOf(
+        "Income",
+        "Expense",
+        "Transfer"
+    )
+
     var chosenTransactionType by remember { mutableStateOf("") }
 
     var selectedDate by remember { mutableStateOf("") }
@@ -84,7 +92,7 @@ fun AddTransaction(){
 
             // Dropdown for Transaction Type
             SelectTransactionTypeDropDown(
-                transactionTypes = transactionType,
+                transactionTypes = transactionTypes,
                 selectedTransactionType = chosenTransactionType,
                 onTransactionTypeSelected = { chosenTransactionType = it },
                 placeholderText = "Select Transaction Type",
@@ -129,8 +137,6 @@ fun AddTransaction(){
                 placeholderText = "Attach Receipt or Salary Image",
                 enabled = isAmountConfirmed
             )
-
-
         }
     }
 
@@ -158,8 +164,6 @@ fun AddTransaction(){
 //
 //            }
         }
-
-
     }
 
 
