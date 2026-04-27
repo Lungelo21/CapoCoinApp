@@ -1,10 +1,13 @@
 package com.example.capocoinapp.designUI.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -20,6 +23,7 @@ import com.example.capocoinapp.Calculator.CalculatorFunctions
 import com.example.capocoinapp.Calculator.CalculatorOperation
 import com.example.capocoinapp.Calculator.CalculatorState
 import com.example.capocoinapp.Calculator.CalculatorViewModel
+import com.example.capocoinapp.ui.theme.Primary
 
 
 @Composable
@@ -33,12 +37,14 @@ fun CalculatorSection(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .align(Alignment.BottomCenter),
+                .align(Alignment.TopCenter)
+                .padding(bottom = 40.dp),
             verticalArrangement = Arrangement.spacedBy(buttonSpacing)
         ) {
             CalculatorDisplay(state)
 
             CalculatorButtons(
+                state = state,
                 onAction = onAction,
                 buttonSpacing = buttonSpacing
             )

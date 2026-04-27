@@ -25,7 +25,7 @@ class CalculatorViewModel: ViewModel() {
             // adds a decimal as the enterDecimal button is clicked
             is CalculatorFunctions.DecimalFunction -> enterDecimal()
             // clears the calculation as the clear button is clicked
-            is CalculatorFunctions.ClearFunction -> CalculatorState()
+            is CalculatorFunctions.ClearFunction -> {state = CalculatorState()}
             // enters the corresponding operation per operation button clicked
             is CalculatorFunctions.Operation -> enterOperation(action.operation)
             // calculates the result of the calculation when = is clicked
@@ -176,7 +176,7 @@ class CalculatorViewModel: ViewModel() {
 
             // sets the calculated amount to 2 decimal places
             state = state.copy(
-                number1 = result.toString().take(2),
+                number1 = String.format("%.2f", result),
                 number2 = "",
 
                 operation = null
@@ -213,13 +213,18 @@ class CalculatorViewModel: ViewModel() {
             // final amount is otherwise the first number entered
             else -> number1
         }
+        if(finalAmount == null) return
 
         state = state.copy( // final amount is stored
-            number1 = finalAmount.toString(),
+            number1 = String.format("%.2f", finalAmount),
             number2 = "",
-            operation = null
+            operation = null,
+            isConfirmed = true
         )
     }
 
+    fun reOpenCalculator(){
+        state = state.copy(isConfirmed = false)
+    }
 
 }

@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.AttachFile
+import androidx.compose.material.icons.filled.Calculate
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.LibraryAdd
@@ -41,9 +42,11 @@ import com.example.capocoinapp.ui.theme.RobotoSlab
 import com.example.capocoinapp.designUI.components.AppScaffold
 import com.example.capocoinapp.designUI.components.AttachImageCard
 import com.example.capocoinapp.designUI.components.BottomNavBar
+import com.example.capocoinapp.designUI.components.BudgetCard
 import com.example.capocoinapp.designUI.components.CardBox
 import com.example.capocoinapp.designUI.components.CardComponent
 import com.example.capocoinapp.designUI.components.DatePickerCard
+import com.example.capocoinapp.designUI.components.FinalAmountCard
 import com.example.capocoinapp.designUI.components.SelectCategoryDropDown
 import com.example.capocoinapp.designUI.components.SelectTransactionTypeDropDown
 import com.example.capocoinapp.designUI.components.TimePickerCard
@@ -170,7 +173,13 @@ fun AddTransaction() {
                             .weight(1f)
                             .fillMaxWidth()
                     ) {
-
+                        FinalAmountCard(
+                            transactionAmount = state.number1,
+                            cardIcon = Icons.Default.Calculate,
+                            onAmountClicked = {
+                                isAmountConfirmed = false
+                            }
+                        )
                     }
                 }
                 }

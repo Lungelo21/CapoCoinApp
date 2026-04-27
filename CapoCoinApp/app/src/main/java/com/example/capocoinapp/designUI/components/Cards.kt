@@ -590,8 +590,52 @@ fun AttachImageCard(
     }
 }
 
+@Composable
+fun FinalAmountCard(
+    transactionAmount: String,
+    onAmountClicked: () -> Unit,
+    cardIcon: ImageVector
 
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .clickable { onAmountClicked() },
+        shape = RoundedCornerShape(50.dp),
+        colors = CardDefaults.cardColors(containerColor = CardBG),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 14.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Amount: ",
+                style = CapoType.cardTitle
+            )
 
+            Spacer(modifier = Modifier.width(8.dp))
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Text(
+                text = "R $transactionAmount",
+                style = CapoType.cardTitle
+            )
+
+            Spacer(modifier = Modifier.width(12.dp))
+
+            Icon(
+                imageVector = cardIcon,
+                contentDescription = "Adjust value",
+                tint = TextWhite
+            )
+        }
+    }
+}
 
 @Composable
 fun BudgetCard(
