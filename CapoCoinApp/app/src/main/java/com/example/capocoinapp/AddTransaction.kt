@@ -138,31 +138,32 @@ fun AddTransaction(){
                 enabled = isAmountConfirmed
             )
         }
-    }
-
-    if(!isAmountConfirmed){
-
-        CalculatorSection(
-            state = state,
-            onAction = viewModel::onAction,
-            modifier = Modifier
-                .fillMaxWidth()
-        )
 
 
-//            ConfirmButton{
-//                isAmountConfirmed = true
-//            }
-    }
-    else{
+        if(!isAmountConfirmed){
 
-//            FinalAmountSection(
-//                state = state
-//            )
+            CalculatorSection(
+                state = state,
+                onAction = viewModel::onAction,
+                modifier = Modifier
+                    .fillMaxWidth()
+            )
 
-//            AddTransactionButton{
-//
-//            }
+
+    //            ConfirmButton{
+    //                isAmountConfirmed = true
+    //            }
+        }
+        else {
+
+    //            FinalAmountSection(
+    //                state = state
+    //            )
+
+    //            AddTransactionButton{
+    //
+    //            }
+        }
     }
 }
 
