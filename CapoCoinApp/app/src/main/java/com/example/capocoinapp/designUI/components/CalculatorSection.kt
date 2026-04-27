@@ -43,3 +43,17 @@ fun CalculatorSection(
         }
     }
 }
+
+@Preview(showBackground = true)
+@Composable
+fun CalculatorPreview(){
+    CalculatorSection(
+        state = CalculatorState(
+            number1 = "1",
+            number2 = "2",
+            operation = CalculatorOperation.Add
+        ),
+        onAction = {},
+        buttonSpacing = 8.dp
+    )
+}

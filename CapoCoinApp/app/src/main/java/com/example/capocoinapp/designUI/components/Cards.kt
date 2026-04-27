@@ -1,11 +1,13 @@
 package com.example.capocoinapp.designUI.components
 
+import android.icu.util.Calendar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -16,20 +18,35 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Fastfood
 import androidx.compose.material.icons.filled.Movie
 import androidx.compose.material.icons.filled.Payments
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.capocoinapp.data.entities.Category
+import com.example.capocoinapp.data.entities.Transactions
 import com.example.capocoinapp.ui.theme.BackgroundColor
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 import com.example.capocoinapp.ui.theme.CapoType
@@ -37,7 +54,22 @@ import com.example.capocoinapp.ui.theme.CardBG
 import com.example.capocoinapp.ui.theme.TextGreen
 import com.example.capocoinapp.ui.theme.TextRed
 import com.example.capocoinapp.ui.theme.TextWhite
-
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
+import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material.icons.filled.AttachFile
+import androidx.compose.material.icons.filled.Image
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import kotlin.compareTo
+import kotlin.contracts.contract
+import kotlin.rem
+import coil.compose.rememberAsyncImagePainter
 @Composable
 fun CardComponent (
     cardTitle: String,
@@ -164,6 +196,399 @@ fun colorAmount(type: String?): Color{
     return amountColor
 }
 
+@Composable
+fun inputCard(
+    value: String,
+    placeholder: String,
+    icon: ImageVector,
+    enabled: Boolean,
+    onValueChange: (String) -> Unit
+){
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = CardBG),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                modifier = Modifier.size(44.dp),
+                tint = TextWhite
+            )
+
+            Spacer(modifier = Modifier.width(12.dp))
+
+            TextField(
+                value = value,
+                onValueChange = onValueChange,
+                enabled = enabled,
+                placeholder = { Text(placeholder, style = CapoType.cardTitle)},
+                textStyle = CapoType.cardTitle,
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+        }
+    }
+}
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SelectCategoryDropDown(
+    categories: List<String>,
+    selectedCategory: String,
+    onCategorySelected: (String) -> Unit,
+    placeholderText: String,
+    enabled: Boolean,
+    fallbackIcon: ImageVector = Icons.Default.Fastfood
+){
+    var dropdownExpand by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = CardBG),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            //val selectedIconid = selectedCategory?.let{ context.resources.getIdentifier(it.entertainmentIcon, "drawable", context.packageName)}?: 0
+
+//            Icon(imageVector =  if(selectedIconId != 0)
+//            {
+//                ImageVector.vectorResource(selectedIconId)
+//            }
+//            else
+//            {
+//                fallbackIcon
+//            },
+//                contentDescription = null,
+//                modifier = Modifier.size(44.dp),
+//                tint = TextWhite
+//            )
+
+            Spacer(modifier = Modifier.width(12.dp))
+
+            ExposedDropdownMenuBox(
+                expanded = dropdownExpand,
+                onExpandedChange = {
+                    if(enabled) dropdownExpand = !dropdownExpand
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                TextField(
+                    value = selectedCategory,
+                    onValueChange = {},
+                    readOnly = true,
+                    enabled = enabled,
+                    placeholder = { Text(placeholderText, style = CapoType.cardTitle)},
+
+                    textStyle = CapoType.cardTitle,
+                    modifier = Modifier.menuAnchor().fillMaxWidth()
+                )
+
+                ExposedDropdownMenu(
+                    expanded = dropdownExpand,
+                    onDismissRequest = { dropdownExpand = false }
+                ){
+                    categories.forEach { category ->
+
+                        //val iconId = context.resources.getIdentifier(category.entertainmentIcon, "drawable", context.packageName)
+
+//                        DropdownMenuItem(
+//                            text = {
+//                                Row(verticalAlignment = Alignment.CenterVertically){
+//
+//                                Icon(
+//                                    imageVector = if(iconId != 0)
+//                                    {
+//                                        ImageVector.vectorResource(iconId)
+//                                    }
+//                                    else
+//                                    {
+//                                        fallbackIcon
+//                                    },
+//                                    contentDescription = null,
+//                                    modifier = Modifier.size(20.dp)
+//                                )
+//
+//                                Spacer(modifier = Modifier.width(8.dp))
+//
+//                                //Text(Category.name)
+//                            } },
+//                            onClick = {
+//                                onCategorySelected(category)
+//                                dropdownExpand = false
+//                            }
+//                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SelectTransactionTypeDropDown(
+    transactionTypes: List<String>,
+    selectedTransactionType: String,
+    onTransactionTypeSelected: (String) -> Unit,
+    placeholderText: String,
+    enabled: Boolean
+){
+    var dropdownExpand by remember { mutableStateOf(false) }
+
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = CardBG),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ){
+
+            ExposedDropdownMenuBox(
+                expanded = dropdownExpand,
+                onExpandedChange = {
+                    if(enabled) dropdownExpand = !dropdownExpand
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                TextField(
+                    value = selectedTransactionType,
+                    onValueChange = {},
+                    readOnly = true,
+                    enabled = enabled,
+                    placeholder = { Text(placeholderText, style = CapoType.cardTitle)},
+
+                    textStyle = CapoType.cardTitle,
+                    modifier = Modifier.menuAnchor().fillMaxWidth()
+                )
+
+                ExposedDropdownMenu(
+                    expanded = dropdownExpand,
+                    onDismissRequest = { dropdownExpand = false }
+                ){
+                    transactionTypes.forEach { transactionTypes ->
+
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    text = transactionTypes,
+                                    style = CapoType.cardTitle
+                                )
+                            },
+                            onClick = {
+                                onTransactionTypeSelected(transactionTypes)
+                                dropdownExpand = false
+                            }
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DatePickerCard(
+    selectedTransactionDate: String,
+    onTransactionDateSelected: (String) -> Unit,
+    placeholderText: String,
+    enabled: Boolean,
+    icon: ImageVector = Icons.Default.DateRange
+){
+    val context = LocalContext.current
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(enabled = enabled){
+
+                if(enabled){
+                    val calendar = Calendar.getInstance()
+
+                    DatePickerDialog (
+                        context,
+                        {
+                            _, year, month, dayOfMonth ->
+                            val formatted = "$dayOfMonth/${month + 1}/$year"
+                            onTransactionDateSelected(formatted)
+                        },
+                        calendar.get(Calendar.YEAR),
+                        calendar.get(Calendar.MONTH),
+                        calendar.get(Calendar.DAY_OF_MONTH)
+                    ).show()
+                }
+        },
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = CardBG),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                modifier = Modifier.size((44.dp)),
+                tint = TextWhite
+            )
+
+            Spacer(modifier = Modifier.width(12.dp))
+
+            Text(
+                text = if(selectedTransactionDate.isEmpty()) placeholderText else selectedTransactionDate,
+                style = CapoType.cardTitle,
+                color = if(selectedTransactionDate.isEmpty()) Color.Gray else TextWhite
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TimePickerCard(
+    selectedTransactionTime: String,
+    onTransactionTimeSelected: (String) -> Unit,
+    placeholderText: String,
+    enabled: Boolean,
+    icon: ImageVector = Icons.Default.AccessTime
+){
+    val context = LocalContext.current
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(enabled = enabled){
+
+                if(enabled){
+
+                    TimePickerDialog (
+                        context,
+                        {
+                                _, hourOfDay, minute ->
+
+                            // Converts to 12 hr format
+                            var amPM = if(hourOfDay >=12) "PM" else "AM"
+
+                            val hour12 = when{
+                                hourOfDay == 0 -> 12
+                                hourOfDay > 12 -> hourOfDay - 12
+                                else -> hourOfDay
+                        }
+
+                            val formatted = String.format("%02d:%02d %s", hour12, minute, amPM)
+                            onTransactionTimeSelected(formatted)
+                        },
+                        12,
+                        0,
+                        true
+                    ).show()
+                }
+            },
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = CardBG),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                modifier = Modifier.size((44.dp)),
+                tint = TextWhite
+            )
+
+            Spacer(modifier = Modifier.width(12.dp))
+
+            Text(   // If the entered time hasnt been shown yet, show the placeholderText otherwise show the selectedTime for the Transaction
+                text = if(selectedTransactionTime.isEmpty()) placeholderText else selectedTransactionTime,
+                style = CapoType.cardTitle,
+                color = if(selectedTransactionTime.isEmpty()) Color.Gray else TextWhite // sets chosen time to TextWhite otherwise it remains gray
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AttachImageCard(
+    imageUri: Uri?,
+    onImageSelected: (Uri?) -> Unit,
+    placeholderText: String,
+    enabled: Boolean,
+    icon: ImageVector = Icons.Default.AttachFile
+){
+    val photoPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia()
+    ) { uri ->
+        onImageSelected(uri)
+    }
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(enabled = enabled) {
+
+                photoPickerLauncher.launch(
+                    PickVisualMediaRequest(
+                        ActivityResultContracts.PickVisualMedia.ImageOnly
+                    )
+                )
+            },
+
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = CardBG),
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            if(imageUri == null) {
+                Icon(
+                    imageVector = Icons.Default.Image,
+                    contentDescription = null,
+                    modifier = Modifier.size((44.dp))
+                )
+            }
+            else
+            {
+                Image(
+                    painter = rememberAsyncImagePainter(imageUri),
+                    contentDescription = null,
+                    modifier = Modifier.size(44.dp).clip(RoundedCornerShape(8.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            }
+            Spacer(modifier = Modifier.width(12.dp))
+
+            Text(
+                text = if(imageUri == null) placeholderText else "Image Attached",
+                style = CapoType.cardTitle,
+            )
+        }
+    }
+}
+
+
+
+
 @Preview(showBackground = true)
 @Composable
 fun CardPreview() {
@@ -173,21 +598,21 @@ fun CardPreview() {
                 CardComponent(
                 "Dinner Night",
                 "Empire Steak",
-                "- R200",
+                "200",
                 "5:00 PM",
                 Icons.Default.Fastfood,
                 "expense")},
             {CardComponent(
                     "Movie",
                     "Pavillion",
-                    "- R150",
+                    "150",
                     "7:45 AM",
                     Icons.Default.Movie,
                     "expense")},
             {CardComponent(
                     "Salary",
                     "Dunder Mifflin",
-                    "+ R30 000",
+                    "30 000",
                     "9:45 AM",
                     Icons.Default.Payments,
                     "income")
