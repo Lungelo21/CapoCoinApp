@@ -1,6 +1,13 @@
 package com.example.capocoinapp.designUI.components
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.icu.util.Calendar
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -8,7 +15,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -21,18 +27,45 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material.icons.filled.AttachFile
+import androidx.compose.material.icons.filled.AttachMoney
+import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material.icons.filled.CardGiftcard
+import androidx.compose.material.icons.filled.Celebration
+import androidx.compose.material.icons.filled.Construction
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Devices
+import androidx.compose.material.icons.filled.DirectionsBus
+import androidx.compose.material.icons.filled.DirectionsCar
 import androidx.compose.material.icons.filled.Fastfood
+import androidx.compose.material.icons.filled.FitnessCenter
+import androidx.compose.material.icons.filled.Flight
+import androidx.compose.material.icons.filled.Handshake
+import androidx.compose.material.icons.filled.Image
+import androidx.compose.material.icons.filled.MedicalServices
 import androidx.compose.material.icons.filled.Movie
+import androidx.compose.material.icons.filled.Museum
+import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material.icons.filled.Payments
+import androidx.compose.material.icons.filled.Pets
+import androidx.compose.material.icons.filled.QuestionMark
+import androidx.compose.material.icons.filled.Restaurant
+import androidx.compose.material.icons.filled.Savings
+import androidx.compose.material.icons.filled.School
+import androidx.compose.material.icons.filled.ShoppingBag
+import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.filled.Spa
+import androidx.compose.material.icons.filled.SportsEsports
+import androidx.compose.material.icons.filled.SportsSoccer
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,16 +73,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.capocoinapp.data.entities.Category
-import com.example.capocoinapp.data.entities.Transactions
+import androidx.compose.ui.unit.sp
+import androidx.core.graphics.toColorInt
+import coil.compose.rememberAsyncImagePainter
 import com.example.capocoinapp.ui.theme.BackgroundColor
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 import com.example.capocoinapp.ui.theme.CapoType
@@ -240,6 +273,7 @@ fun inputCard(
         }
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SelectCategoryDropDown(
@@ -249,7 +283,7 @@ fun SelectCategoryDropDown(
     placeholderText: String,
     enabled: Boolean,
     fallbackIcon: ImageVector = Icons.Default.Fastfood
-){
+) {
     var dropdownExpand by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
@@ -262,7 +296,7 @@ fun SelectCategoryDropDown(
         Row(
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
-        ){
+        ) {
             //val selectedIconid = selectedCategory?.let{ context.resources.getIdentifier(it.entertainmentIcon, "drawable", context.packageName)}?: 0
 
 //            Icon(imageVector =  if(selectedIconId != 0)
@@ -283,7 +317,7 @@ fun SelectCategoryDropDown(
             ExposedDropdownMenuBox(
                 expanded = dropdownExpand,
                 onExpandedChange = {
-                    if(enabled) dropdownExpand = !dropdownExpand
+                    if (enabled) dropdownExpand = !dropdownExpand
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -292,16 +326,18 @@ fun SelectCategoryDropDown(
                     onValueChange = {},
                     readOnly = true,
                     enabled = enabled,
-                    placeholder = { Text(placeholderText, style = CapoType.cardTitle)},
+                    placeholder = { Text(placeholderText, style = CapoType.cardTitle) },
 
                     textStyle = CapoType.cardTitle,
-                    modifier = Modifier.menuAnchor().fillMaxWidth()
+                    modifier = Modifier
+                        .menuAnchor()
+                        .fillMaxWidth()
                 )
 
                 ExposedDropdownMenu(
                     expanded = dropdownExpand,
                     onDismissRequest = { dropdownExpand = false }
-                ){
+                ) {
                     categories.forEach { category ->
 
                         //val iconId = context.resources.getIdentifier(category.entertainmentIcon, "drawable", context.packageName)
@@ -347,7 +383,7 @@ fun SelectTransactionTypeDropDown(
     onTransactionTypeSelected: (String) -> Unit,
     placeholderText: String,
     enabled: Boolean
-){
+) {
     var dropdownExpand by remember { mutableStateOf(false) }
 
 
@@ -360,12 +396,12 @@ fun SelectTransactionTypeDropDown(
         Row(
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
-        ){
+        ) {
 
             ExposedDropdownMenuBox(
                 expanded = dropdownExpand,
                 onExpandedChange = {
-                    if(enabled) dropdownExpand = !dropdownExpand
+                    if (enabled) dropdownExpand = !dropdownExpand
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -374,16 +410,18 @@ fun SelectTransactionTypeDropDown(
                     onValueChange = {},
                     readOnly = true,
                     enabled = enabled,
-                    placeholder = { Text(placeholderText, style = CapoType.cardTitle)},
+                    placeholder = { Text(placeholderText, style = CapoType.cardTitle) },
 
                     textStyle = CapoType.cardTitle,
-                    modifier = Modifier.menuAnchor().fillMaxWidth()
+                    modifier = Modifier
+                        .menuAnchor()
+                        .fillMaxWidth()
                 )
 
                 ExposedDropdownMenu(
                     expanded = dropdownExpand,
                     onDismissRequest = { dropdownExpand = false }
-                ){
+                ) {
                     transactionTypes.forEach { transactionTypes ->
 
                         DropdownMenuItem(
@@ -413,21 +451,20 @@ fun DatePickerCard(
     placeholderText: String,
     enabled: Boolean,
     icon: ImageVector = Icons.Default.DateRange
-){
+) {
     val context = LocalContext.current
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(enabled = enabled){
+            .clickable(enabled = enabled) {
 
-                if(enabled){
+                if (enabled) {
                     val calendar = Calendar.getInstance()
 
-                    DatePickerDialog (
+                    DatePickerDialog(
                         context,
-                        {
-                            _, year, month, dayOfMonth ->
+                        { _, year, month, dayOfMonth ->
                             val formatted = "$dayOfMonth/${month + 1}/$year"
                             onTransactionDateSelected(formatted)
                         },
@@ -436,7 +473,7 @@ fun DatePickerCard(
                         calendar.get(Calendar.DAY_OF_MONTH)
                     ).show()
                 }
-        },
+            },
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = CardBG),
         elevation = CardDefaults.cardElevation(4.dp)
@@ -444,7 +481,7 @@ fun DatePickerCard(
         Row(
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
-        ){
+        ) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
@@ -455,9 +492,9 @@ fun DatePickerCard(
             Spacer(modifier = Modifier.width(12.dp))
 
             Text(
-                text = if(selectedTransactionDate.isEmpty()) placeholderText else selectedTransactionDate,
+                text = if (selectedTransactionDate.isEmpty()) placeholderText else selectedTransactionDate,
                 style = CapoType.cardTitle,
-                color = if(selectedTransactionDate.isEmpty()) Color.Gray else TextWhite
+                color = if (selectedTransactionDate.isEmpty()) Color.Gray else TextWhite
             )
         }
     }
@@ -471,29 +508,28 @@ fun TimePickerCard(
     placeholderText: String,
     enabled: Boolean,
     icon: ImageVector = Icons.Default.AccessTime
-){
+) {
     val context = LocalContext.current
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(enabled = enabled){
+            .clickable(enabled = enabled) {
 
-                if(enabled){
+                if (enabled) {
 
-                    TimePickerDialog (
+                    TimePickerDialog(
                         context,
-                        {
-                                _, hourOfDay, minute ->
+                        { _, hourOfDay, minute ->
 
                             // Converts to 12 hr format
-                            var amPM = if(hourOfDay >=12) "PM" else "AM"
+                            var amPM = if (hourOfDay >= 12) "PM" else "AM"
 
-                            val hour12 = when{
+                            val hour12 = when {
                                 hourOfDay == 0 -> 12
                                 hourOfDay > 12 -> hourOfDay - 12
                                 else -> hourOfDay
-                        }
+                            }
 
                             val formatted = String.format("%02d:%02d %s", hour12, minute, amPM)
                             onTransactionTimeSelected(formatted)
@@ -511,7 +547,7 @@ fun TimePickerCard(
         Row(
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
-        ){
+        ) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
@@ -522,9 +558,9 @@ fun TimePickerCard(
             Spacer(modifier = Modifier.width(12.dp))
 
             Text(   // If the entered time hasnt been shown yet, show the placeholderText otherwise show the selectedTime for the Transaction
-                text = if(selectedTransactionTime.isEmpty()) placeholderText else selectedTransactionTime,
+                text = if (selectedTransactionTime.isEmpty()) placeholderText else selectedTransactionTime,
                 style = CapoType.cardTitle,
-                color = if(selectedTransactionTime.isEmpty()) Color.Gray else TextWhite // sets chosen time to TextWhite otherwise it remains gray
+                color = if (selectedTransactionTime.isEmpty()) Color.Gray else TextWhite // sets chosen time to TextWhite otherwise it remains gray
             )
         }
     }
@@ -538,7 +574,7 @@ fun AttachImageCard(
     placeholderText: String,
     enabled: Boolean,
     icon: ImageVector = Icons.Default.AttachFile
-){
+) {
     val photoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia()
     ) { uri ->
@@ -563,27 +599,27 @@ fun AttachImageCard(
         Row(
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
-        ){
-            if(imageUri == null) {
+        ) {
+            if (imageUri == null) {
                 Icon(
                     imageVector = Icons.Default.Image,
                     contentDescription = null,
                     modifier = Modifier.size((44.dp))
                 )
-            }
-            else
-            {
+            } else {
                 Image(
                     painter = rememberAsyncImagePainter(imageUri),
                     contentDescription = null,
-                    modifier = Modifier.size(44.dp).clip(RoundedCornerShape(8.dp)),
+                    modifier = Modifier
+                        .size(44.dp)
+                        .clip(RoundedCornerShape(8.dp)),
                     contentScale = ContentScale.Crop
                 )
             }
             Spacer(modifier = Modifier.width(12.dp))
 
             Text(
-                text = if(imageUri == null) placeholderText else "Image Attached",
+                text = if (imageUri == null) placeholderText else "Image Attached",
                 style = CapoType.cardTitle,
             )
         }
@@ -642,7 +678,8 @@ fun BudgetCard(
     cardTitle: String,
     cardMin: Double?,
     cardMax: Double?,
-    cardIcon: ImageVector,
+    cardIcon: String,
+    cardColor: String,
     onClick: () -> Unit = {}
 ) {
     Card(
@@ -670,14 +707,13 @@ fun BudgetCard(
                 modifier = Modifier
                     .size(35.dp)
                     .background(
-                        color = Accent,
+                        color = getColorFromString(cardColor),
                         shape = CircleShape
                     ),
                 contentAlignment = Alignment.Center
             ) {
-                // Icon passed as parameter
                 Icon(
-                    imageVector = cardIcon,
+                    imageVector = getIconFromString(cardIcon),
                     contentDescription = null,
                     tint = TextWhite,
                 )
@@ -722,6 +758,146 @@ fun BudgetCard(
     }
 }
 
+@Composable
+fun CategoryCard(
+    cardTitle: String,
+    cardColor: String,
+    cardIcon: String?,
+    onClick: () -> Unit = {}
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .clickable { onClick() },
+        shape = RoundedCornerShape(50.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = CardBG
+        ),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(16.dp)
+                .wrapContentHeight()
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            if (cardIcon != null) {
+                Box(
+                    modifier = Modifier
+                        .size(35.dp)
+                        .background(
+                            color = getColorFromString(cardColor),
+                            shape = CircleShape
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = getIconFromString(cardIcon),
+                        contentDescription = null,
+                        tint = TextWhite,
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            Row(
+                modifier = Modifier.wrapContentWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = cardTitle,
+                    style = CapoType.cardTitle,
+                    fontSize = 20.sp
+
+                )
+            }
+        }
+    }
+}
+
+// Returns the corresponding icon from the string stored in the database
+fun getIconFromString(category: String) = when (category) {
+    "Food" -> Icons.Default.Restaurant
+    "Movie" -> Icons.Default.Movie
+    "Groceries" -> Icons.Default.ShoppingCart
+    "Shopping" -> Icons.Default.ShoppingBag
+    "Transport" -> Icons.Default.DirectionsBus
+    "Flight" -> Icons.Default.Flight
+    "Education" -> Icons.Default.School
+    "Gift" -> Icons.Default.CardGiftcard
+    "Subscriptions" -> Icons.Default.Payments
+    "Gym" -> Icons.Default.FitnessCenter
+    "Healthcare" -> Icons.Default.MedicalServices
+    "House payments" -> Icons.Default.Construction
+    "Salary" -> Icons.Default.AttachMoney
+    "Sports" -> Icons.Default.SportsSoccer
+    "Hobbies" -> Icons.Default.AutoAwesome
+    "Culture" -> Icons.Default.Museum
+    "Donations" -> Icons.Default.Handshake
+    "Self Care" -> Icons.Default.Spa
+    "Gaming" -> Icons.Default.SportsEsports
+    "Pets" -> Icons.Default.Pets
+    "Music" -> Icons.Default.MusicNote
+    "Tech" -> Icons.Default.Devices
+    "Savings" -> Icons.Default.Savings
+    "Car Payments" -> Icons.Default.DirectionsCar
+    "Celebration" -> Icons.Default.Celebration
+    else -> Icons.Default.QuestionMark
+}
+
+fun getColorFromString(hex: String) = Color(hex.toColorInt())
+
+@Composable
+fun HomeCard(
+    budgetMin: Double?,
+    budgetMax: Double?,
+    daysRemaining: Int?,
+    onClick: () -> Unit = {}
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .clickable { onClick() },
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = CardBG
+        ),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(16.dp)
+                .wrapContentHeight(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            Column(modifier = Modifier.fillMaxWidth()) {
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+
+                }
+
+                Spacer(modifier = Modifier.height(6.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+
+                }
+            }
+        }
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun CardPreview() {
@@ -740,16 +916,6 @@ fun CardPreview() {
                 },
                 {
                     CardComponent(
-                        "Movie",
-                        "Pavillion",
-                        "150",
-                        "7:45 AM",
-                        Icons.Default.Movie,
-                        "expense"
-                    )
-                },
-                {
-                    CardComponent(
                         "Salary",
                         "Dunder Mifflin",
                         "30 000",
@@ -760,18 +926,18 @@ fun CardPreview() {
                 },
                 {
                     BudgetCard(
-                        "Name",
+                        "Gym",
                         200.0,
                         400.0,
-                        Icons.Default.Payments
+                        "Gym",
+                        "Teal"
                     )
                 },
                 {
-                    BudgetCard(
-                        "Name",
-                        4000.0,
-                        6000.0,
-                        Icons.Default.Payments
+                    CategoryCard(
+                        "Food",
+                        "Grey",
+                        "Food"
                     )
                 }
             )
