@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import com.example.capocoinapp.data.dto.CategoryTotal
 import com.example.capocoinapp.data.entities.Transactions
 import kotlinx.coroutines.flow.Flow
 
@@ -19,4 +20,12 @@ interface TransactionsDAO {
 
     //@Query("SELECT * FROM transactions WHERE transactionName = :transactionNameInput LIMIT 1")
     //fun getTransactions(transactionNameInput: String): Transactions
+
+    @Query("SELECT c.categoryTitle, SUM(t.transactionAmount) as totalAmount " +
+            "FROM transactions t " +
+            "INNER JOIN categories c ON  t.categoryID = c.categoryID " +
+            "WHERE t.transactionDate BETWEEN :startDate AND :endDate " +
+            "GROUP BY c.categoryID")
+    fun getCategoryTotals(startDate: String, endDate: String): Flow<List<CategoryTotal>>
+
 }
