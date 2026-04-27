@@ -39,14 +39,12 @@ fun CalculatorSection(
 ){
     Box (modifier = modifier.fillMaxSize()) {
 
-
-
         // keypad calc
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.BottomCenter)
-                .padding(bottom = 100.dp),
+                .padding(bottom = 140.dp),
             verticalArrangement = Arrangement.spacedBy(buttonSpacing)
         ) {
             // display
@@ -59,22 +57,32 @@ fun CalculatorSection(
             )
         }
 
-        CalculatorButtonDesign (
-            symbol = "Confirm Amount",
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(60.dp)
-                .align(Alignment.BottomCenter)
-                .background(if(state.number1.isNotBlank()) Primary else NavBarBG),
+        Box(modifier = Modifier
+            .fillMaxWidth()
+            .align(Alignment.BottomCenter)
+            .padding(bottom = 50.dp)
+        ){
+            CalculatorButtonDesign (
+                symbol = "Confirm Amount",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(60.dp)
+                    .align(Alignment.BottomCenter)
+                    .background(if(state.number1.isNotBlank()) Primary else NavBarBG),
 
-            onClick = {
-                if(state.number1.isNotBlank()){
-                onAction(CalculatorFunctions.ConfirmAmount)
+                onClick = {
+                    if(state.number1.isNotBlank()){
+                        onAction(CalculatorFunctions.ConfirmAmount)
+                    }
                 }
-            }
-        )
+            )
+        }
+
 
     }
+
+
+
 }
 
 @Preview()
