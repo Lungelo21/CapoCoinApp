@@ -92,8 +92,8 @@ fun AddCategory(viewModel: CategoryViewModel, service: CategoryService)
     var iconColour by rememberSaveable { mutableStateOf("") }
     var selectedIcon by rememberSaveable { mutableStateOf("") }
 
-    var minimumBudget by rememberSaveable { mutableStateOf(0) }
-    var maximumBudget by rememberSaveable { mutableStateOf(0) }
+    var minBudget by rememberSaveable { mutableStateOf(0.0) }
+    var maxBudget by rememberSaveable { mutableStateOf(0.0) }
 
     var transactionTypeExpanded by rememberSaveable { mutableStateOf(false) }
     var iconColourExpanded by rememberSaveable { mutableStateOf(false) }

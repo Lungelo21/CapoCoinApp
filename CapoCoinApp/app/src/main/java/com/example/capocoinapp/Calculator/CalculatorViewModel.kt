@@ -197,9 +197,11 @@ class CalculatorViewModel: ViewModel() {
             // when user has made a calculation and gotten a result
             state.number2.isBlank() && state.operation == null ->
                 state.number1.toDoubleOrNull()
-            
+
+            // checks if number 1 and 2 isnt null
             number1 != null && number2 != null -> {
 
+                // calculates based off operation
                 when(state.operation){
                     is CalculatorOperation.Add -> number1 + number2
                     is CalculatorOperation.Subtract -> number1 - number2
@@ -212,7 +214,7 @@ class CalculatorViewModel: ViewModel() {
             else -> number1
         }
 
-        state = state.copy(
+        state = state.copy( // final amount is stored
             number1 = finalAmount.toString(),
             number2 = "",
             operation = null
