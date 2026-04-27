@@ -8,6 +8,10 @@ data class Category(
     @PrimaryKey(autoGenerate = true)
     val categoryID: Int = 0,
 
+    //Adding a val to hold transaction type for category
+    val transactionType: String,
+
+    //Store the user selected name for the category
     val categoryTitle: String,
 
     // Store the color as a String Hex (e.g., "#D4AF37")
@@ -16,10 +20,10 @@ data class Category(
     // Store the name of the icon (e.g., "shopping_cart"")
     val categoryIcon: String,
 
-    // Store the minimum budget for the Category
+    //Store the minimum for the Category
     val minBudget: Double,
 
-    // Store the maximum budget for the category
+    //Store the maximum budget for the Category
     val maxBudget: Double
 
 )

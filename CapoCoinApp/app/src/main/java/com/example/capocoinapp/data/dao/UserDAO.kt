@@ -24,5 +24,5 @@ interface UserDAO {
     fun getAllUsers(): Flow<List<User>>
 
     @Query("SELECT * FROM users WHERE username = :usernameInput LIMIT 1")
-    fun getUser(usernameInput: String): User
+    suspend fun getUserByUsername(usernameInput: String): User?
 }

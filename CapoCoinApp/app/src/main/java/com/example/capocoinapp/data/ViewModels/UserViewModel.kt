@@ -31,7 +31,13 @@ class UserViewModel (
     fun clearLoginState(){
         isLoggedIn = false
     }
-    fun registerUser(name :String, username: String, password :String, confirmPassword: String, email :String){
+    fun registerUser(
+        name :String,
+        username: String,
+        password :String,
+        confirmPassword: String,
+        email :String
+    ){
 
         val validatePassword = Regex("^(?=.*[A-Z])(?=.*\\d).{6,}$")
 
@@ -62,15 +68,30 @@ class UserViewModel (
                 }
 
                 else ->{
-                    val user = User(
-                        name = name,
-                        username = username,
-                        email = email,
-                        password = password
-                    )
 
-                    dao?.insertUser(user)
-                    "User registered successfully"
+                    val cleanUsername = username.trim()
+
+                    val existingUser = dao?.getUserByUsername(cleanUsername)
+
+                    if(existingUser != null){
+                        "Username already exists"
+                    }else {
+                        try {
+                            val user = User(
+                                name = name.trim(),
+                                username = cleanUsername,
+                                email = email.trim(),
+                                password = password
+                            )
+
+                            dao?.insertUser(user)
+
+                            "User registered successfully"
+
+                        } catch (e: Exception) {
+                            "Registration failed: ${e.message}"
+                        }
+                    }
                 }
             }
         }

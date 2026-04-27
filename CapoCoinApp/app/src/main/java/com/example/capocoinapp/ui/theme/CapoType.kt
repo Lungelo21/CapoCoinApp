@@ -12,13 +12,13 @@ val RobotoSlab = FontFamily(
 )
 object CapoType {
     val cardTitle = TextStyle(
-        fontSize = 20.sp,
+        fontSize = 16.sp,
         fontFamily = RobotoSlab,
         fontWeight = FontWeight.Bold,
         color = TextWhite
     )
     val cardSubTitle = TextStyle(
-        fontSize = 16.sp,
+        fontSize = 14.sp,
         fontFamily = RobotoSlab,
         fontWeight = FontWeight.Medium,
         color = SubTextWhite

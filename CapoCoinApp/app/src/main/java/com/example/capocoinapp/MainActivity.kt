@@ -26,6 +26,7 @@ import com.example.capocoinapp.designUI.components.CapoCoinAuthenticationLayout
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 import androidx.room.Room
 import androidx.lifecycle.lifecycleScope
+import com.example.capocoinapp.Services.CategoryService
 import com.example.capocoinapp.data.DB.AppDatabase
 import kotlinx.coroutines.launch
 
@@ -46,17 +47,12 @@ class MainActivity : ComponentActivity() {
     }
     private val categoryViewModel: CategoryViewModel by viewModels {
         val db = AppDatabase.getDatabase(applicationContext)
-        CategoryViewModelFactory(db.categoryDao())
+        CategoryViewModelFactory(CategoryService(db.categoryDao()))
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val db = Room.databaseBuilder(
-            applicationContext,
-            AppDatabase::class.java,
-            "capocoin_database"
-        ).build()
 
         setContent {
             CapoCoinAppTheme {
@@ -191,6 +187,22 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
 
+                        }
+                    }
+
+                    // composable route to Categories Screen
+                    composable("Categories"){
+                        // Ensures the Global UI layout is applied to the Categories Screen
+                        CapoCoinSharedLayout(screenTitle = "Transactions", navController = navController){ padding ->
+                            Text("Categories Content", modifier = Modifier.padding(padding))
+                        }
+                    }
+
+                    // composable route to Add Categories Screen
+                    composable("AddCategories"){
+                        // Ensures the Global UI layout is applied to the Add Categories Screen
+                        CapoCoinSharedLayout(screenTitle = "Add Categories", navController = navController){ padding ->
+                            Text("Add Categories Content", modifier = Modifier.padding(padding))
                         }
                     }
 
