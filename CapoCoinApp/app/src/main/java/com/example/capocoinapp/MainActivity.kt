@@ -31,8 +31,12 @@ import kotlinx.coroutines.launch
 
 import com.example.capocoinapp.data.entities.User
 
+//
 import com.example.capocoinapp.data.ViewModels.UserViewModel
 import com.example.capocoinapp.data.ViewModels.ViewModelFactory
+
+import com.example.capocoinapp.data.ViewModels.CategoryViewModel
+import com.example.capocoinapp.data.ViewModels.CategoryViewModelFactory
 
 class MainActivity : ComponentActivity() {
 
@@ -40,15 +44,14 @@ class MainActivity : ComponentActivity() {
         val db = AppDatabase.getDatabase(applicationContext)
         ViewModelFactory(db.userDao())
     }
+    private val categoryViewModel: CategoryViewModel by viewModels {
+        val db = AppDatabase.getDatabase(applicationContext)
+        CategoryViewModelFactory(db.categoryDao())
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val db = Room.databaseBuilder(
-            applicationContext,
-            AppDatabase::class.java,
-            "capocoin_database"
-        ).build()
 
         setContent {
             CapoCoinAppTheme {
@@ -116,6 +119,16 @@ class MainActivity : ComponentActivity() {
                         // Ensures the Global UI layout is applied to the More Screen
                         CapoCoinSharedLayout(screenTitle = "More", navController = navController){ padding ->
                             Text("More Content", modifier = Modifier.padding(padding))
+                        }
+                    }
+
+                    // composable route for User budget
+                    composable("UserBudget") {
+                        CapoCoinSharedLayout(screenTitle = "User Budget",navController = navController) { padding ->
+                            UserBudget(
+                                modifier = Modifier.padding(padding),
+                                categoryViewModel = categoryViewModel
+                            )
                         }
                     }
 
