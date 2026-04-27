@@ -45,18 +45,13 @@ import com.example.capocoinapp.designUI.components.CapoCoinAuthenticationLayout
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 import androidx.room.Room
 import androidx.lifecycle.lifecycleScope
-import com.example.capocoinapp.Services.CategoryService
-import com.example.capocoinapp.data.DB.AppDatabase
+
 import kotlinx.coroutines.launch
 
 import com.example.capocoinapp.data.entities.User
 
 //
-import com.example.capocoinapp.data.ViewModels.UserViewModel
-import com.example.capocoinapp.data.ViewModels.ViewModelFactory
 
-import com.example.capocoinapp.data.ViewModels.CategoryViewModel
-import com.example.capocoinapp.data.ViewModels.CategoryViewModelFactory
 
 class MainActivity : ComponentActivity() {
 
