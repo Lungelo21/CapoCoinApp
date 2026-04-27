@@ -108,7 +108,11 @@ fun CapoCoinSharedLayout(
                 )
             )
         },
-
+        /*
+         * Author: IGNATIAH XAVIER
+         * Link: https://medium.com/@ignatiah.x/scaffold-topappbar-and-bottomnavigation-in-jetpack-compose-build-structured-uis-9742c64df6e6
+         * DateAccessed: 25/04/2026
+         * */
         bottomBar = {
             NavigationBar(containerColor = Color(0xFF292929))
             {
@@ -165,6 +169,11 @@ fun CapoCoinSharedLayout(
                 )
             }
         }
+        /*
+         * Author: IGNATIAH XAVIER
+         * Link: https://medium.com/@ignatiah.x/scaffold-topappbar-and-bottomnavigation-in-jetpack-compose-build-structured-uis-9742c64df6e6
+         * DateAccessed: 25/04/2026
+         * */
     )
     { paddingValues ->
         content(paddingValues)

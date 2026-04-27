@@ -19,4 +19,5 @@ interface CategoryDAO {
 
     //@Query("SELECT * FROM categories WHERE categoryName = :categoryNameInput LIMIT 1")
     //fun getCategories(categoryNameInput: String): Category
+    companion object
 }
