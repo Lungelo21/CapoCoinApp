@@ -74,6 +74,8 @@ import kotlin.compareTo
 import kotlin.contracts.contract
 import kotlin.rem
 import coil.compose.rememberAsyncImagePainter
+import com.example.capocoinapp.ui.theme.Accent
+
 @Composable
 fun CardComponent(
     cardTitle: String,
