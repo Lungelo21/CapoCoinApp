@@ -4,6 +4,7 @@ import android.icu.util.Calendar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,7 +15,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -71,7 +74,7 @@ import kotlin.contracts.contract
 import kotlin.rem
 import coil.compose.rememberAsyncImagePainter
 @Composable
-fun CardComponent (
+fun CardComponent(
     cardTitle: String,
     cardSubTitle: String?,
     cardAmount: String?,
@@ -79,8 +82,7 @@ fun CardComponent (
     cardIcon: ImageVector,
     cardTransactionType: String?,
     onClick: () -> Unit = {}
-)
-{
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -118,7 +120,6 @@ fun CardComponent (
                     Text(
                         text = cardTitle,
                         style = CapoType.cardTitle
-
                     )
 
                     if (cardAmount != null) {
@@ -174,9 +175,9 @@ fun CardBox(cards: List<@Composable () -> Unit>) {
 
 // If the entry is a transaction, the amount will be formatted,
 // If not, the raw string will be displayed
-fun formatAmount(amount: String, type: String?): String{
+fun formatAmount(amount: String, type: String?): String {
 
-    val prefix: String = when (type){
+    val prefix: String = when (type) {
         "income" -> "+ R"
         "expense" -> "- R"
         else -> ""
@@ -186,8 +187,8 @@ fun formatAmount(amount: String, type: String?): String{
 }
 
 // Sets amount text to green or red depending on income or expense
-fun colorAmount(type: String?): Color{
-    val amountColor: Color = when (type){
+fun colorAmount(type: String?): Color {
+    val amountColor: Color = when (type) {
         "income" -> TextGreen
         "expense" -> TextRed
         else -> TextWhite
@@ -203,7 +204,7 @@ fun inputCard(
     icon: ImageVector,
     enabled: Boolean,
     onValueChange: (String) -> Unit
-){
+) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
@@ -213,7 +214,7 @@ fun inputCard(
         Row(
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
-        ){
+        ) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
@@ -227,7 +228,7 @@ fun inputCard(
                 value = value,
                 onValueChange = onValueChange,
                 enabled = enabled,
-                placeholder = { Text(placeholder, style = CapoType.cardTitle)},
+                placeholder = { Text(placeholder, style = CapoType.cardTitle) },
                 textStyle = CapoType.cardTitle,
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
@@ -589,35 +590,143 @@ fun AttachImageCard(
 
 
 
+@Composable
+fun BudgetCard(
+    cardTitle: String,
+    cardMin: Double?,
+    cardMax: Double?,
+    cardIcon: ImageVector,
+    onClick: () -> Unit = {}
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .clickable { onClick() },
+        shape = RoundedCornerShape(50.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = CardBG
+        ),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .wrapContentHeight()
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            //Icon format is a placeholder, will be replaced with logic
+            // to automatically change according to category
+            Box(
+                modifier = Modifier
+                    .size(35.dp)
+                    .background(
+                        color = Accent,
+                        shape = CircleShape
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                // Icon passed as parameter
+                Icon(
+                    imageVector = cardIcon,
+                    contentDescription = null,
+                    tint = TextWhite,
+                )
+            }
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            Row(
+                modifier = Modifier.wrapContentWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = cardTitle,
+                    style = CapoType.cardTitle
+
+                )
+            }
+
+            Row(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .wrapContentHeight()
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.End
+            ) {
+                Text(
+                    modifier = Modifier.width(70.dp),
+                    text = cardMin.toString(),
+                    style = CapoType.cardTitle,
+                )
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                Text(
+                    modifier = Modifier.width(70.dp),
+                    text = cardMax.toString(),
+                    style = CapoType.cardTitle,
+                )
+            }
+        }
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun CardPreview() {
     CapoCoinAppTheme {
-        CardBox(cards = listOf(
-            {
-                CardComponent(
-                "Dinner Night",
-                "Empire Steak",
-                "200",
-                "5:00 PM",
-                Icons.Default.Fastfood,
-                "expense")},
-            {CardComponent(
-                    "Movie",
-                    "Pavillion",
-                    "150",
-                    "7:45 AM",
-                    Icons.Default.Movie,
-                    "expense")},
-            {CardComponent(
-                    "Salary",
-                    "Dunder Mifflin",
-                    "30 000",
-                    "9:45 AM",
-                    Icons.Default.Payments,
-                    "income")
-
-            }
+        CardBox(
+            cards = listOf(
+                {
+                    CardComponent(
+                        "Dinner Night",
+                        "Empire Steak",
+                        "200",
+                        "5:00 PM",
+                        Icons.Default.Fastfood,
+                        "expense"
+                    )
+                },
+                {
+                    CardComponent(
+                        "Movie",
+                        "Pavillion",
+                        "150",
+                        "7:45 AM",
+                        Icons.Default.Movie,
+                        "expense"
+                    )
+                },
+                {
+                    CardComponent(
+                        "Salary",
+                        "Dunder Mifflin",
+                        "30 000",
+                        "9:45 AM",
+                        Icons.Default.Payments,
+                        "income"
+                    )
+                },
+                {
+                    BudgetCard(
+                        "Name",
+                        200.0,
+                        400.0,
+                        Icons.Default.Payments
+                    )
+                },
+                {
+                    BudgetCard(
+                        "Name",
+                        4000.0,
+                        6000.0,
+                        Icons.Default.Payments
+                    )
+                }
             )
         )
     }
