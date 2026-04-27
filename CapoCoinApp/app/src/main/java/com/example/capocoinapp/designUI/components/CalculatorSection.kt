@@ -12,27 +12,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.capocoinapp.Calculator.CalculatorFunctions
-import com.example.capocoinapp.Calculator.CalculatorOperation
 import com.example.capocoinapp.Calculator.CalculatorState
 import com.example.capocoinapp.Calculator.CalculatorViewModel
 
-
-/*
-    * Author: Phillip Lackner
-    * Link: https://www.youtube.com/watch?v=-aTcFJWxEQA
-    * DateAccessed: 14/04/2026
-    * */
 
 @Composable
 fun CalculatorSection(
     state: CalculatorState,
     modifier: Modifier = Modifier,
-    buttonSpacing: Dp = 8.dp,
+    buttonSpacing: Dp = 2.dp,
     onAction: (CalculatorFunctions) -> Unit
 ){
     Box(modifier = modifier) {
@@ -57,9 +49,9 @@ fun CalculatorSection(
 fun CalculatorPreview(){
     CalculatorSection(
         state = CalculatorState(
-            number1 = "",
-            number2 = "",
-            operation = null
+            number1 = "1",
+            number2 = "2",
+            operation = CalculatorOperation.Add
         ),
         onAction = {},
         buttonSpacing = 8.dp

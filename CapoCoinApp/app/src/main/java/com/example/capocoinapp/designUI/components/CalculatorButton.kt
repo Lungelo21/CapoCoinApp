@@ -12,17 +12,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun CalculatorButtonDesign(
+fun CalculatorButton(
     symbol: String,
     modifier: Modifier,
     onClick: () -> Unit
 ){
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier
-            .clip(CircleShape)
-            .clickable{ onClick() }
-            .then(modifier)
+        modifier = Modifier.clip(CircleShape).clickable{ onClick() }.then(modifier)
     ){
 
         Text(
@@ -32,5 +29,4 @@ fun CalculatorButtonDesign(
         )
     }
 }
-
 

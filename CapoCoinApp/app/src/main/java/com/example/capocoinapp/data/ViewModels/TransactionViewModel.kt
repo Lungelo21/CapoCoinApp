@@ -28,6 +28,7 @@ class TransactionViewModel(
     }
 
     fun addTransaction(
+        type: String,
         name: String,
         amount: String, // String from TextField
         categoryID: Int,
@@ -39,6 +40,7 @@ class TransactionViewModel(
             val amountDouble = amount.toDoubleOrNull()
 
             message = when {
+                type.isBlank() -> "Please select a Transaction type"
                 name.isBlank() -> "Please enter a title"
                 amountDouble == null || amountDouble <= 0 -> "Please enter a valid amount"
                 categoryID == 0 -> "Please select a category"
@@ -51,6 +53,7 @@ class TransactionViewModel(
                     val timeLogged = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(calendar.time)
 
                     val transaction = Transactions(
+                        transactionType = type,
                         transactionName = name,
                         transactionAmount = amountDouble,
                         categoryID = categoryID,
