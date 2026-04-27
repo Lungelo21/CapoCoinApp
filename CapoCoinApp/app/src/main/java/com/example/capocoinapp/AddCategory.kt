@@ -103,9 +103,10 @@ fun AddCategory(viewModel: CategoryViewModel, service: CategoryService)
     val currentIcon = service.getIcon(selectedIcon)
 
     CapoCoinAppTheme{
+        val navController = rememberNavController()
         AppScaffold(
-            topBar = { TopNavBar() },
-            bottomBar = { BottomNavBar() },
+            topBar = { TopNavBar(navController) },
+            bottomBar = { BottomNavBar(navController) },
             pageTitle = "Add Category"
         ) { paddingValues ->
             Column(

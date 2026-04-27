@@ -39,9 +39,10 @@ import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.Spa
 import androidx.compose.material.icons.filled.SportsEsports
 import androidx.compose.material.icons.filled.SportsSoccer
-
-//Import to call image vector for icons
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.example.capocoinapp.data.dao.CategoryDAO
+import com.example.capocoinapp.data.entities.Category
+import kotlinx.coroutines.flow.Flow
 
 public class CategoryService(private val categoryDao: CategoryDAO) {
 
@@ -127,34 +128,43 @@ public class CategoryService(private val categoryDao: CategoryDAO) {
         categoryDao.insertCategory(category)
     }
 
+    // suspended function to update categories in the
+    suspend fun updateCategory(category: Category) {
+        categoryDao.updateCategory(category)
+    }
+
     //Having a method used to populate the base icons that will be seen by all users upon entry to the app
-    suspend fun populateDefaultCategories()
-    {
+    suspend fun populateDefaultCategories() {
 
         //Saving the four base categories
         val defaultCategories = listOf(
-            Category(transactionType = "Income",
+            Category(
+                transactionType = "Income",
                 categoryTitle = "Salary",
                 categoryIcon = "Salary", //Using ? to ensure if dark navy cant be found,
-                categoryColour = selectableColours["Dark Navy"] ?: "#2D344B",//it will predefine with the
+                categoryColour = selectableColours["Dark Navy"]
+                    ?: "#2D344B",//it will predefine with the
                 minBudget = 0.0,                                             //colour hex of dark navy
                 maxBudget = 0.0
-                ),
-            Category(transactionType = "Expense",
+            ),
+            Category(
+                transactionType = "Expense",
                 categoryTitle = "Food",
                 categoryIcon = "Food",
                 categoryColour = selectableColours["Grey"] ?: "#4A4A4A",
                 minBudget = 0.0,
                 maxBudget = 0.0
             ),
-            Category(transactionType = "Expense",
+            Category(
+                transactionType = "Expense",
                 categoryTitle = "Groceries",
                 categoryIcon = "Groceries",
                 categoryColour = selectableColours["Vibrant Green"] ?: "#00833F",
                 minBudget = 0.0,
                 maxBudget = 0.0
             ),
-            Category(transactionType = "Expense",
+            Category(
+                transactionType = "Expense",
                 categoryTitle = "Transport",
                 categoryIcon = "Transport",
                 categoryColour = selectableColours["Slate"] ?: "#455A64",
@@ -166,4 +176,5 @@ public class CategoryService(private val categoryDao: CategoryDAO) {
         //Create the categories so that the user will be able to see them upon running the code
         defaultCategories.forEach { createCategory(it) }
     }
+
 }

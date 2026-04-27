@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.AttachFile
-import androidx.compose.material.icons.filled.Calculate
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.LibraryAdd
@@ -25,7 +24,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.capocoinapp.Calculator.CalculatorFunctions
 import com.example.capocoinapp.Calculator.CalculatorViewModel
 import com.example.capocoinapp.data.ViewModels.CategoryViewModel
 import com.example.capocoinapp.data.ViewModels.TransactionViewModel
@@ -43,16 +41,15 @@ import com.example.capocoinapp.ui.theme.RobotoSlab
 import com.example.capocoinapp.designUI.components.AppScaffold
 import com.example.capocoinapp.designUI.components.AttachImageCard
 import com.example.capocoinapp.designUI.components.BottomNavBar
-import com.example.capocoinapp.designUI.components.BudgetCard
 import com.example.capocoinapp.designUI.components.CardBox
 import com.example.capocoinapp.designUI.components.CardComponent
 import com.example.capocoinapp.designUI.components.DatePickerCard
-import com.example.capocoinapp.designUI.components.FinalAmountCard
 import com.example.capocoinapp.designUI.components.SelectCategoryDropDown
 import com.example.capocoinapp.designUI.components.SelectTransactionTypeDropDown
 import com.example.capocoinapp.designUI.components.TimePickerCard
 import com.example.capocoinapp.designUI.components.TopNavBar
 import com.example.capocoinapp.designUI.components.inputCard
+import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 
 
 @Composable
@@ -84,14 +81,15 @@ fun AddTransaction() {
 
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
 
-    val isAmountConfirmed = state.isAmountConfirmed
+    var isAmountConfirmed by remember { mutableStateOf(false) }
 
     var showCalculator by remember { mutableStateOf(true) }
 
     CapoCoinAppTheme {
+        val navController = rememberNavController()
         AppScaffold(
-            topBar = { TopNavBar() },
-            bottomBar = { BottomNavBar() },
+            topBar = { TopNavBar(navController) },
+            bottomBar = { BottomNavBar(navController) },
             pageTitle = "Add Transaction"
         ){ _ ->
             Column(modifier = Modifier.fillMaxSize())
@@ -174,11 +172,34 @@ fun AddTransaction() {
                 }
             }
         }
+
+
+        if(!isAmountConfirmed){
+
+            CalculatorSection(
+                state = state,
+                onAction = viewModel::onAction,
+                modifier = Modifier
+                    .fillMaxWidth()
+            )
+
+
+    //            ConfirmButton{
+    //                isAmountConfirmed = true
+    //            }
+        }
+        else {
+
+    //            FinalAmountSection(
+    //                state = state
+    //            )
+
+    //            AddTransactionButton{
+    //
+    //            }
+        }
     }
-
-
 }
-
 
 
 
