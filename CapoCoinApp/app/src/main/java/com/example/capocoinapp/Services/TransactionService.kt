@@ -6,6 +6,7 @@ import com.example.capocoinapp.data.entities.Transactions
 //Import to call coroutine
 import kotlinx.coroutines.flow.Flow
 import com.example.capocoinapp.data.dao.TransactionsDAO
+import com.example.capocoinapp.data.dto.CategoryTotal
 
 
 public class TransactionService(private val transactionsDAO: TransactionsDAO) {
@@ -18,5 +19,9 @@ public class TransactionService(private val transactionsDAO: TransactionsDAO) {
         transactionsDAO.insertTransactions(transactions)
     }
 
-
+    //Making a method call the DAO query
+    fun getCategoryTotals(startDate: String, endDate: String): Flow<List<CategoryTotal>>
+    {
+        return transactionsDAO.getCategoryTotals(startDate, endDate)
+    }
 }

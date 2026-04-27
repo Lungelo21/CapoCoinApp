@@ -83,6 +83,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
 import coil.compose.rememberAsyncImagePainter
+import com.example.capocoinapp.data.entities.Category
 import com.example.capocoinapp.ui.theme.BackgroundColor
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 import com.example.capocoinapp.ui.theme.CapoType
@@ -90,24 +91,7 @@ import com.example.capocoinapp.ui.theme.CardBG
 import com.example.capocoinapp.ui.theme.TextGreen
 import com.example.capocoinapp.ui.theme.TextRed
 import com.example.capocoinapp.ui.theme.TextWhite
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
-import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
-import androidx.compose.material.icons.filled.AccessTime
-import androidx.compose.material.icons.filled.AttachFile
-import androidx.compose.material.icons.filled.Image
-import androidx.compose.material3.TextField
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
-import kotlin.compareTo
-import kotlin.contracts.contract
-import kotlin.rem
-import coil.compose.rememberAsyncImagePainter
-import com.example.capocoinapp.ui.theme.Accent
+
 
 @Composable
 fun CardComponent(
@@ -277,15 +261,23 @@ fun inputCard(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SelectCategoryDropDown(
-    categories: List<String>,
-    selectedCategory: String,
-    onCategorySelected: (String) -> Unit,
+    categories: List<Category>,
+    selectedCategory: Category?,
+    onCategorySelected: (Category) -> Unit,
     placeholderText: String,
-    enabled: Boolean,
-    fallbackIcon: ImageVector = Icons.Default.Fastfood
+    enabled: Boolean
 ) {
     var dropdownExpand by remember { mutableStateOf(false) }
-    val context = LocalContext.current
+
+    // sorts categories alphabetically
+    val sortedCategories = categories.sortedBy { it.categoryTitle }
+
+    // limits how many categories pop up (10)
+    val categoryLimit = sortedCategories.take(10)
+    // shows the rest of the categories beyond the first 10
+    val viewMore = sortedCategories.size > 10
+
+
 
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -297,23 +289,15 @@ fun SelectCategoryDropDown(
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            //val selectedIconid = selectedCategory?.let{ context.resources.getIdentifier(it.entertainmentIcon, "drawable", context.packageName)}?: 0
-
-//            Icon(imageVector =  if(selectedIconId != 0)
-//            {
-//                ImageVector.vectorResource(selectedIconId)
-//            }
-//            else
-//            {
-//                fallbackIcon
-//            },
-//                contentDescription = null,
-//                modifier = Modifier.size(44.dp),
-//                tint = TextWhite
-//            )
-
-            Spacer(modifier = Modifier.width(12.dp))
-
+            selectedCategory?.let {
+                Icon(
+                    imageVector = getIconFromString(it.categoryIcon),
+                    contentDescription = null,
+                    modifier = Modifier.size(44.dp),
+                    tint = TextWhite
+                )
+                Spacer(modifier = Modifier.width(12.dp))
+            }
             ExposedDropdownMenuBox(
                 expanded = dropdownExpand,
                 onExpandedChange = {
@@ -322,7 +306,7 @@ fun SelectCategoryDropDown(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 TextField(
-                    value = selectedCategory,
+                    value = selectedCategory?.categoryTitle?: "",
                     onValueChange = {},
                     readOnly = true,
                     enabled = enabled,
@@ -338,36 +322,43 @@ fun SelectCategoryDropDown(
                     expanded = dropdownExpand,
                     onDismissRequest = { dropdownExpand = false }
                 ) {
-                    categories.forEach { category ->
+                    categoryLimit.forEach { category ->
 
-                        //val iconId = context.resources.getIdentifier(category.entertainmentIcon, "drawable", context.packageName)
+                        DropdownMenuItem(
+                            text = {
+                                Row(verticalAlignment = Alignment.CenterVertically){
 
-//                        DropdownMenuItem(
-//                            text = {
-//                                Row(verticalAlignment = Alignment.CenterVertically){
-//
-//                                Icon(
-//                                    imageVector = if(iconId != 0)
-//                                    {
-//                                        ImageVector.vectorResource(iconId)
-//                                    }
-//                                    else
-//                                    {
-//                                        fallbackIcon
-//                                    },
-//                                    contentDescription = null,
-//                                    modifier = Modifier.size(20.dp)
-//                                )
-//
-//                                Spacer(modifier = Modifier.width(8.dp))
-//
-//                                //Text(Category.name)
-//                            } },
-//                            onClick = {
-//                                onCategorySelected(category)
-//                                dropdownExpand = false
-//                            }
-//                        )
+                                Icon(
+                                    imageVector = getIconFromString(category.categoryIcon),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(20.dp),
+                                    tint = TextWhite
+                                )
+
+                                Spacer(modifier = Modifier.width(8.dp))
+
+                                Text(
+                                    text = category.categoryTitle,
+                                    style = CapoType.cardTitle
+                                )
+                            }
+                                   },
+                            onClick = {
+                                onCategorySelected(category)
+                                dropdownExpand = false
+                            }
+                        )
+                    }
+
+                    if(viewMore){
+                        DropdownMenuItem(
+                            text = {
+                                Text("View More", style = CapoType.cardTitle)
+                            },
+                            onClick = {
+                                dropdownExpand = false
+                            }
+                        )
                     }
                 }
             }
