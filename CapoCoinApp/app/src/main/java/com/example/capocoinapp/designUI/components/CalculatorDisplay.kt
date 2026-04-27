@@ -27,7 +27,7 @@ fun CalculatorDisplay(state: CalculatorState){
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 32.dp),
-        fontWeight = FontWeight.Light,
+        fontWeight = FontWeight.Bold,
         fontSize = 80.sp,
         color = Color.White,
         maxLines = 2
