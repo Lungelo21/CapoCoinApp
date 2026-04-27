@@ -90,6 +90,24 @@ import com.example.capocoinapp.ui.theme.CardBG
 import com.example.capocoinapp.ui.theme.TextGreen
 import com.example.capocoinapp.ui.theme.TextRed
 import com.example.capocoinapp.ui.theme.TextWhite
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
+import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material.icons.filled.AttachFile
+import androidx.compose.material.icons.filled.Image
+import androidx.compose.material3.TextField
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import kotlin.compareTo
+import kotlin.contracts.contract
+import kotlin.rem
+import coil.compose.rememberAsyncImagePainter
+import com.example.capocoinapp.ui.theme.Accent
 
 @Composable
 fun CardComponent(
@@ -608,6 +626,52 @@ fun AttachImageCard(
     }
 }
 
+@Composable
+fun FinalAmountCard(
+    transactionAmount: String,
+    onAmountClicked: () -> Unit,
+    cardIcon: ImageVector
+
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .clickable { onAmountClicked() },
+        shape = RoundedCornerShape(50.dp),
+        colors = CardDefaults.cardColors(containerColor = CardBG),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 14.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Amount: ",
+                style = CapoType.cardTitle
+            )
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Text(
+                text = "R $transactionAmount",
+                style = CapoType.cardTitle
+            )
+
+            Spacer(modifier = Modifier.width(12.dp))
+
+            Icon(
+                imageVector = cardIcon,
+                contentDescription = "Adjust value",
+                tint = TextWhite
+            )
+        }
+    }
+}
 
 @Composable
 fun BudgetCard(

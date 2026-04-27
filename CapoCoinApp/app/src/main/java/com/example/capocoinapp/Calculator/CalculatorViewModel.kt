@@ -25,7 +25,7 @@ class CalculatorViewModel: ViewModel() {
             // adds a decimal as the enterDecimal button is clicked
             is CalculatorFunctions.DecimalFunction -> enterDecimal()
             // clears the calculation as the clear button is clicked
-            is CalculatorFunctions.ClearFunction -> CalculatorState()
+            is CalculatorFunctions.ClearFunction -> {state = CalculatorState()}
             // enters the corresponding operation per operation button clicked
             is CalculatorFunctions.Operation -> enterOperation(action.operation)
             // calculates the result of the calculation when = is clicked
@@ -45,6 +45,9 @@ class CalculatorViewModel: ViewModel() {
 
     // delete function
     private fun doDelete() {
+        // ensures that when user is deleting, the state of amount confirmed and editing amount are false
+        state = state.copy(isAmountConfirmed = false, isShowingResult = false)
+
         when{
             // check if state number 2 isnt blank, if it isnt blank, then removes the 2nd number's state, then updates the state of the number
             state.number2.isNotBlank() -> state = state.copy(
@@ -70,6 +73,17 @@ class CalculatorViewModel: ViewModel() {
 
     // enter decimal function
     private fun enterDecimal(){
+
+        // reset fields
+        if(state.isShowingResult){
+            state = state.copy(
+                number1 = "",
+                isAmountConfirmed = false,
+                isShowingResult = false
+            )
+        }
+
+
         // makes the checks to see if to apply the decimal place to the first number entered into the calculator
         if(state.operation == null && !state.number1.contains(".")
             && state.number1.isNotBlank()
@@ -99,6 +113,18 @@ class CalculatorViewModel: ViewModel() {
 
     // enter number function
     private fun enterNumber(number: Int) {
+
+        // checking if the user is coming back to make an edit, if they are then reset field
+        if(state.isShowingResult){
+            state = state.copy(
+                number1 = "",
+                number2 = "",
+                operation = null,
+                isAmountConfirmed = false,
+                isShowingResult = false
+            )
+        }
+
         // checks if operation is null
         if(state.operation == null){
 
@@ -108,7 +134,8 @@ class CalculatorViewModel: ViewModel() {
             }
 
             state = state.copy(
-                number1 = state.number1 + number
+                number1 = state.number1 + number,
+                isAmountConfirmed = false
             )
             return
         }
@@ -118,7 +145,8 @@ class CalculatorViewModel: ViewModel() {
             return // return them
         }
         state = state.copy(
-            number2 = state.number2 + number
+            number2 = state.number2 + number,
+            isAmountConfirmed = false
         )
     }
 
@@ -144,7 +172,11 @@ class CalculatorViewModel: ViewModel() {
         // checks state of number1 isnt blank
         if(state.number1.isNotBlank()){
             // sets operation to operation
-            state = state.copy(operation = operation)
+            state = state.copy(
+                operation = operation,
+                isAmountConfirmed = false,
+                isShowingResult = false
+            )
         }
     }
 
@@ -176,7 +208,7 @@ class CalculatorViewModel: ViewModel() {
 
             // sets the calculated amount to 2 decimal places
             state = state.copy(
-                number1 = result.toString().take(2),
+                number1 = String.format("%.2f", result),
                 number2 = "",
 
                 operation = null
@@ -213,13 +245,19 @@ class CalculatorViewModel: ViewModel() {
             // final amount is otherwise the first number entered
             else -> number1
         }
+        if(finalAmount == null) return
 
         state = state.copy( // final amount is stored
-            number1 = finalAmount.toString(),
+            number1 = String.format("%.2f", finalAmount),
             number2 = "",
-            operation = null
+            operation = null,
+            isAmountConfirmed = true,
+            isShowingResult = true
         )
     }
 
+    fun reOpenCalculator(){
+        state = state.copy(isAmountConfirmed = false)
+    }
 
 }
