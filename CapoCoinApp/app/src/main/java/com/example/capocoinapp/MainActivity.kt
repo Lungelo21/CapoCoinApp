@@ -32,7 +32,31 @@ import com.example.capocoinapp.designUI.components.BottomNavBar
 import com.example.capocoinapp.designUI.components.CapoCoinAuthenticationLayout
 import com.example.capocoinapp.designUI.components.CapoCoinSharedLayout
 import com.example.capocoinapp.designUI.components.TopNavBar
+// import for nav host
+import androidx.navigation.compose.NavHost
+// import for composable
+import androidx.navigation.compose.composable
+// import for navController
+import androidx.navigation.compose.rememberNavController
+// import for shared layout referenced from the designUI folder
+import com.example.capocoinapp.designUI.components.CapoCoinSharedLayout
+// import for authentication layout referenced from the designUI folder
+import com.example.capocoinapp.designUI.components.CapoCoinAuthenticationLayout
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
+import androidx.room.Room
+import androidx.lifecycle.lifecycleScope
+import com.example.capocoinapp.Services.CategoryService
+import com.example.capocoinapp.data.DB.AppDatabase
+import kotlinx.coroutines.launch
+
+import com.example.capocoinapp.data.entities.User
+
+//
+import com.example.capocoinapp.data.ViewModels.UserViewModel
+import com.example.capocoinapp.data.ViewModels.ViewModelFactory
+
+import com.example.capocoinapp.data.ViewModels.CategoryViewModel
+import com.example.capocoinapp.data.ViewModels.CategoryViewModelFactory
 
 class MainActivity : ComponentActivity() {
 

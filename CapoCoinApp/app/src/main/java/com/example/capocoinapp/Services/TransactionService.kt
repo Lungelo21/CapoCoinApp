@@ -14,12 +14,9 @@ public class TransactionService(private val transactionsDAO: TransactionsDAO) {
     fun getAllTransactions() = transactionsDAO.getAllTransactions()
 
     // function to create the transaction
-    suspend fun createTransaction(transactions: Transactions){
+    suspend fun createTransaction(transactions: Transactions) {
         transactionsDAO.insertTransactions(transactions)
     }
-
-
-
 
 
 }

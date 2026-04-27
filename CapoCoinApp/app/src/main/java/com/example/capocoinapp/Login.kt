@@ -1,7 +1,6 @@
 package com.example.capocoinapp
 
 
-
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -15,24 +14,18 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -47,10 +40,10 @@ import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 fun Login(
     modifier: Modifier = Modifier,
 
-    onLoginClick:(email: String,password:String) -> Unit = {_, _ ->},
-    onRegisterClick: ()-> Unit={}
+    onLoginClick: (email: String, password: String) -> Unit = { _, _ -> },
+    onRegisterClick: () -> Unit = {}
 
-){
+) {
 
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
@@ -65,6 +58,12 @@ fun Login(
         unfocusedLabelColor = SubTextWhite
     )
 
+    /*
+   * Author: Donn Felker
+                * Link: https://www.youtube.com/watch?v=VE7mCMK5djM
+                * Date Accessed: 27/04/2026
+                */
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -75,7 +74,7 @@ fun Login(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
 
-    ){
+    ) {
         Text(
             text = "Sign In", fontSize = 24.sp,
             color = Accent,
@@ -88,9 +87,9 @@ fun Login(
         // Takes user email
         OutlinedTextField(
             value = email,
-            onValueChange = {email = it},
+            onValueChange = { email = it },
             label = {
-            Text("Email address:", color = SubTextWhite)
+                Text("Email address:", color = SubTextWhite)
             },
             colors = capoColorTextField
         )
@@ -101,9 +100,9 @@ fun Login(
         OutlinedTextField(
             value = password,
 
-            onValueChange = {password = it},
+            onValueChange = { password = it },
             label = {
-            Text( "Password:", color = SubTextWhite)
+                Text("Password:", color = SubTextWhite)
             },
             colors = capoColorTextField,
             visualTransformation = PasswordVisualTransformation()
@@ -127,24 +126,27 @@ fun Login(
         Spacer(modifier = Modifier.height(32.dp))
 
         // Clickable if user forgot password
-        Text(text = "Forgot Password?",
+        Text(
+            text = "Forgot Password?",
             color = Accent,
-            modifier=Modifier.clickable{
+            modifier = Modifier.clickable {
 
-        })
+            })
 
-        Spacer(modifier= Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
-        Row{
+        Row {
             // Clickable text if user needs to register
-            Text(text="Don't have an account? ",color=TextWhite)
+            Text(text = "Don't have an account? ", color = TextWhite)
 
 
-            Text(text = "Register",
+            Text(
+                text = "Register",
                 color = Accent,
-                modifier=Modifier.clickable{
+                modifier = Modifier.clickable {
                     onRegisterClick()
-            },)
+                },
+            )
         }
 
 
