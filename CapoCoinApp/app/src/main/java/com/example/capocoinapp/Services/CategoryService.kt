@@ -129,22 +129,30 @@ public class CategoryService(private val categoryDao: CategoryDAO) {
             Category(transactionType = "Income",
                 categoryTitle = "Salary",
                 categoryIcon = "Salary", //Using ? to ensure if dark navy cant be found,
-                categoryColour = selectableColours["Dark Navy"] ?: "#2D344B"//it will predefine with the
-            ),                                                             //colour hex of dark navy
+                categoryColour = selectableColours["Dark Navy"] ?: "#2D344B",//it will predefine with the
+                minBudget = 0.0,                                             //colour hex of dark navy
+                maxBudget = 0.0
+                ),
             Category(transactionType = "Expense",
                 categoryTitle = "Food",
                 categoryIcon = "Food",
-                categoryColour = selectableColours["Grey"] ?: "#4A4A4A"
+                categoryColour = selectableColours["Grey"] ?: "#4A4A4A",
+                minBudget = 0.0,
+                maxBudget = 0.0
             ),
             Category(transactionType = "Expense",
                 categoryTitle = "Groceries",
                 categoryIcon = "Groceries",
-                categoryColour = selectableColours["Vibrant Green"] ?: "#00833F"
+                categoryColour = selectableColours["Vibrant Green"] ?: "#00833F",
+                minBudget = 0.0,
+                maxBudget = 0.0
             ),
             Category(transactionType = "Expense",
                 categoryTitle = "Transport",
                 categoryIcon = "Transport",
-                categoryColour = selectableColours["Slate"] ?: "#455A64"
+                categoryColour = selectableColours["Slate"] ?: "#455A64",
+                minBudget = 0.0,
+                maxBudget = 0.0
             )
         )
 
