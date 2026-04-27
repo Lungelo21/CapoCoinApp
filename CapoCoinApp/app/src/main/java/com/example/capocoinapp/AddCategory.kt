@@ -38,62 +38,50 @@ import com.example.capocoinapp.designUI.components.TopNavBar
 //Import called to use the CapoCoin App Theme instantiated in design ui components
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 
-//Import called to allow columns to be used
+//Import called for allowing UI elements to  be used
 import androidx.compose.foundation.layout.Column
-
-//Import used to allow modifier to be used
 import androidx.compose.ui.Modifier
-
 import androidx.compose.foundation.layout.fillMaxSize
-
 import androidx.compose.foundation.layout.padding
-
 import androidx.compose.ui.unit.dp
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-
-import androidx.compose.material3.ExposedDropdownMenuBox
-
-import androidx.compose.material3.OutlinedTextField
-
-import androidx.compose.material3.ExposedDropdownMenuDefaults
-
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
-
-import androidx.compose.material3.Button
-
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.shape.RoundedCornerShape
+
+//Import for the exposed dropdown
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.DropdownMenuItem
+
+//Import for the text field to be outlined
+import androidx.compose.material3.OutlinedTextField
 
 //Import called to allow scroll capability
 import androidx.compose.foundation.verticalScroll
 
 //Import called to remember the scrolls current state
 import androidx.compose.foundation.rememberScrollState
+
+//Import used to allow colour graphics to be used
 import androidx.compose.ui.graphics.Color
 
 //Import to call the Circle Shape
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.QuestionMark
-import androidx.compose.material3.ButtonDefaults
 
-//
-import androidx.compose.material3.SegmentedButtonDefaults.Icon
+//Importing material icons
+import androidx.compose.material.icons.Icons
+
+//importing question mark icon for default fallback icon
+import androidx.compose.material.icons.filled.QuestionMark
+
+//Importing the Primary button from buttons.kt
 import com.example.capocoinapp.designUI.components.PrimaryButton
 
-//Importing the ui theme primary colour
-import com.example.capocoinapp.ui.theme.Primary
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
