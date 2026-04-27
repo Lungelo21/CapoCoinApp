@@ -207,12 +207,12 @@ fun AppScaffold(
 }
 
 //@Composable
-//fun Screen() {
+//fun Screen(navController: NavController) {
 //    CapoCoinAppTheme {
 //        AppScaffold(
-//            topBar = { TopNavBar() },
-//            bottomBar = { BottomNavBar() },
-//            pageTitle = "More"
+//            topBar = { TopNavBar(navController) },
+//            bottomBar = { BottomNavBar(navController) },
+//            pageTitle = "Title"
 //        ) { paddingValues ->
 //
 //            //Content goes here
