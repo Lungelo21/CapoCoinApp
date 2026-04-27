@@ -386,10 +386,11 @@ fun SelectTransactionTypeDropDown(
 
                         DropdownMenuItem(
                             text = {
-                                Row(verticalAlignment = Alignment.CenterVertically){
-
-                                    Text(Transactions.transactionType)
-                            } },
+                                Text(
+                                    text = transactionTypes,
+                                    style = CapoType.cardTitle
+                                )
+                            },
                             onClick = {
                                 onTransactionTypeSelected(transactionTypes)
                                 dropdownExpand = false
