@@ -57,9 +57,9 @@ fun CalculatorSection(
 fun CalculatorPreview(){
     CalculatorSection(
         state = CalculatorState(
-            number1 = "",
-            number2 = "",
-            operation = null
+            number1 = "1",
+            number2 = "2",
+            operation = CalculatorOperation.Add
         ),
         onAction = {},
         buttonSpacing = 8.dp

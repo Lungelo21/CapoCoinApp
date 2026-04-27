@@ -17,6 +17,7 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.LibraryAdd
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.capocoinapp.Calculator.CalculatorViewModel
+import com.example.capocoinapp.data.ViewModels.CategoryViewModel
 import com.example.capocoinapp.data.dao.CategoryDAO
 import com.example.capocoinapp.data.dao.TransactionsDAO
 import com.example.capocoinapp.designUI.components.CalculatorSection
@@ -54,8 +56,9 @@ fun AddTransaction(){
 
     var title by remember { mutableStateOf("") }
 
-    //
-    var categories by CategoryDAO.getAllCategories()
+    val catViewModel = viewModel<CategoryViewModel>()
+    // stores the categories by retrieving the list of categories and storing them as an empty list state which is then filled
+    val categories by catViewModel.getAllCategories().collectAsState(initial = emptyList())
 
     var selectedCategory by remember { mutableStateOf("") }
     //
@@ -99,7 +102,7 @@ fun AddTransaction(){
 
             // Dropdown for Category Selection
             SelectCategoryDropDown(
-                categories = categories,
+                categories = categories.map { it.categoryTitle },
                 selectedCategory = selectedCategory,
                 onCategorySelected = { selectedCategory = it },
                 placeholderText = "Select Category",
