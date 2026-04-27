@@ -41,6 +41,15 @@ import com.example.capocoinapp.data.dto.CategoryTotal
 import androidx.compose.foundation.layout.Spacer
 
 import androidx.compose.foundation.layout.height
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.ui.tooling.preview.Preview
+
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+
+import androidx.compose.ui.graphics.Color
+
+import androidx.compose.ui.text.font.FontWeight
 
 @Composable
 fun CategoryTotalsScreen(service: TransactionService) {
@@ -95,17 +104,54 @@ fun CategoryTotalsScreen(service: TransactionService) {
         val totals by service.getCategoryTotals(startDate, endDate)
             .collectAsState(initial = emptyList())
 
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp, vertical = 4.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "Category",
+                style = MaterialTheme.typography.labelMedium,
+                color = Color.Gray,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = "Total Amount",
+                style = MaterialTheme.typography.labelMedium,
+                color = Color.Gray,
+                fontWeight = FontWeight.Bold
+            )
+        }
+
+        HorizontalDivider(
+            modifier = Modifier.padding(horizontal = 8.dp),
+            thickness = 1.dp,
+            color = Color.LightGray.copy(alpha = 0.3f)
+        )
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 16.dp)
+                .padding(top = 8.dp)
         )
         {
-            totals.forEach { item ->
+            if(totals.isEmpty())
+            {
+                Text(
+                    text = "No transactions found for this period.",
+                    color = Color.Gray,
+                    modifier = Modifier.padding(vertical = 20.dp, horizontal = 8.dp)
+                )
+            }
+            else
+            {
+                totals.forEach { item ->
 
-                key(item.categoryTotalID)
-                {
-                    CategoryTotalRow(item)
+                    key(item.categoryTotalID)
+                    {
+                        CategoryTotalRow(item)
+                    }
                 }
             }
         }
@@ -118,18 +164,99 @@ fun CategoryTotalRow(item: CategoryTotal) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 12.dp),
+            .padding(horizontal = 8.dp, vertical = 12.dp),
         horizontalArrangement = Arrangement.SpaceBetween
-    )
-    {
+    ) {
         Text(
             text = item.categoryTitle,
-            style = androidx.compose.material3.MaterialTheme.typography.bodyLarge
+            style = MaterialTheme.typography.bodyLarge
         )
         Text(
             text = "R ${String.format("%.2f", item.totalAmount)}",
-            style = androidx.compose.material3.MaterialTheme.typography.bodyLarge,
-            fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.Bold
         )
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewCategoryTotals()
+{
+    val mockItem = CategoryTotal(
+        categoryTotalID = 1,
+        categoryTitle = "Groceries",
+        totalAmount = 1250.50
+    )
+
+    // Wrap in a Column just to see it clearly in the preview pane
+    Column(modifier = Modifier.padding(16.dp)) {
+        CategoryTotalRow(item = mockItem)
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun PreviewCategoryTotalsScreen() {
+    // Create a list of dummy data
+    val mockTotals = listOf(
+        CategoryTotal(1, "Transport", 450.00),
+        CategoryTotal(2, "Food", 1200.00),
+        CategoryTotal(3, "Rent", 5000.00),
+        CategoryTotal(4, "Entertainment", 300.00)
+    )
+
+    Column(modifier = Modifier.fillMaxSize().padding(16.dp))
+    {
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp))
+        {
+            OutlinedButton(onClick = {}, modifier = Modifier.weight(1f))
+            {
+                Text("From: 2026-04-01")
+            }
+            OutlinedButton(onClick = {}, modifier = Modifier.weight(1f))
+            {
+                Text("To: 2026-04-27")
+            }
+        }
+
+        //Spacer to space out page
+        Spacer(modifier = Modifier.height(24.dp))
+
+        //Added headers to indentify category and total amount
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp, vertical = 4.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "Category",
+                style = MaterialTheme.typography.labelMedium,
+                color = Color.Gray,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = "Total Amount",
+                style = MaterialTheme.typography.labelMedium,
+                color = Color.Gray,
+                fontWeight = FontWeight.Bold
+            )
+        }
+
+        HorizontalDivider(
+            modifier = Modifier.padding(horizontal = 8.dp),
+            thickness = 1.dp,
+            color = Color.LightGray.copy(alpha = 0.3f)
+        )
+
+        //Column instantiating each increment (category) and its total amount
+        Column(modifier = Modifier.padding(top = 8.dp)) {
+            mockTotals.forEach { item ->
+                CategoryTotalRow(item)
+            }
+        }
+
     }
 }
