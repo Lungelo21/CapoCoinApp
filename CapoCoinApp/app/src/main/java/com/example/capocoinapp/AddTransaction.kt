@@ -83,7 +83,7 @@ fun AddTransaction() {
 
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
 
-    var isAmountConfirmed by remember { mutableStateOf(false) }
+    val isAmountConfirmed = state.isAmountConfirmed
 
     var showCalculator by remember { mutableStateOf(true) }
 
@@ -154,13 +154,7 @@ fun AddTransaction() {
 
                     CalculatorSection(
                         state = state,
-                        onAction = { action ->
-                            viewModel.onAction(action)
-
-                            if(action is CalculatorFunctions.ConfirmAmount){
-                                isAmountConfirmed = true
-                            }
-                        },
+                        onAction = viewModel::onAction,
                         modifier = Modifier
                             .weight(1f)
                             .fillMaxWidth()
@@ -168,26 +162,22 @@ fun AddTransaction() {
                 }
                 else
                 {
-                    Column(
-                        modifier = Modifier
-                            .weight(1f)
-                            .fillMaxWidth()
-                    ) {
-                        FinalAmountCard(
-                            transactionAmount = state.number1,
-                            cardIcon = Icons.Default.Calculate,
-                            onAmountClicked = {
-                                isAmountConfirmed = false
-                            }
-                        )
-                    }
-                }
+
+                    FinalAmountCard(
+                        transactionAmount = state.number1,
+                        cardIcon = Icons.Default.Calculate,
+                        onAmountClicked = {
+                             viewModel.reOpenCalculator()
+                        }
+                    )
                 }
             }
-
-
+        }
     }
+
+
 }
+
 
 
 

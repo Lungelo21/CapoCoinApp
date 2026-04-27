@@ -5,5 +5,6 @@ data class CalculatorState(
     val number2: String = "",
     val operation: CalculatorOperation? = null,
 
-    val isConfirmed: Boolean = false
+    val isAmountConfirmed: Boolean = false,
+    val isShowingResult: Boolean = false
 )
