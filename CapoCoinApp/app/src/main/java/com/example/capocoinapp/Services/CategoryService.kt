@@ -42,9 +42,6 @@ import androidx.compose.material.icons.filled.SportsSoccer
 //Import to call image vector for icons
 import androidx.compose.ui.graphics.vector.ImageVector
 
-
-
-
 public class CategoryService(private val categoryDao: CategoryDAO) {
 
     val transactionTypes = listOf("Expense", "Income")
@@ -77,6 +74,11 @@ public class CategoryService(private val categoryDao: CategoryDAO) {
         "Car Payments" to Icons.Default.DirectionsCar,
         "Celebration" to Icons.Default.Celebration
     )
+    /*
+     * Author: GeeksforGeeks
+     * Link: https://www.geeksforgeeks.org/kotlin/kotlin-map-mapof/
+     * DateAccessed: 27/04/2026
+     * */
 
     val selectableColours = mapOf(
         "Grey"  to "#4A4A4A",
@@ -97,6 +99,12 @@ public class CategoryService(private val categoryDao: CategoryDAO) {
         "Lavender" to "#B39DDB",
         "Rose" to "#AD1457"
     )
+    /*
+     * Author: GeeksforGeeks
+     * Link: https://www.geeksforgeeks.org/kotlin/kotlin-map-mapof/
+     * DateAccessed: 27/04/2026
+     * */
+
     //
     fun getIcon(iconName: String): ImageVector? = baseIcons[iconName]
 

@@ -291,7 +291,7 @@ fun AddCategory(viewModel: CategoryViewModel, service: CategoryService)
                 //Spacing out the entry fields from the Add Category Button
                 Spacer(modifier = Modifier.weight(1f))
 
-                // --- 4. SAVE BUTTON ---
+                //Save button calling the Primary button method from Buttons.kt
                 PrimaryButton(
                     buttonText = "Save Category",
                     enabled = transactionType.isNotBlank() &&
