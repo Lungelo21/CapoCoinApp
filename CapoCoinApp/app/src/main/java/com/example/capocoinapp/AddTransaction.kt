@@ -1,5 +1,6 @@
 package com.example.capocoinapp
 
+import android.net.Uri
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,6 +35,7 @@ import com.example.capocoinapp.ui.theme.NavBarBG
 import com.example.capocoinapp.ui.theme.Primary
 import com.example.capocoinapp.ui.theme.RobotoSlab
 import com.example.capocoinapp.designUI.components.AppScaffold
+import com.example.capocoinapp.designUI.components.AttachImageCard
 import com.example.capocoinapp.designUI.components.BottomNavBar
 import com.example.capocoinapp.designUI.components.CardBox
 import com.example.capocoinapp.designUI.components.CardComponent
@@ -64,7 +66,7 @@ fun AddTransaction(){
 
     var selectedTime by remember { mutableStateOf("") }
 
-
+    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
 
     var isAmountConfirmed by remember { mutableStateOf(false) }
 
@@ -115,6 +117,13 @@ fun AddTransaction(){
                 selectedTransactionTime = selectedTime,
                 onTransactionTimeSelected = { selectedTime = it},
                 placeholderText = "Select time of Transaction",
+                enabled = isAmountConfirmed
+            )
+
+            AttachImageCard(
+                imageUri = selectedImageUri,
+                onImageSelected = { selectedImageUri = it},
+                placeholderText = "Attach Receipt or Salary Image",
                 enabled = isAmountConfirmed
             )
 
