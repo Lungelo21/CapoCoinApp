@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.Row
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 
 import androidx.compose.material3.OutlinedButton
 
@@ -50,6 +51,24 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.graphics.Color
 
 import androidx.compose.ui.text.font.FontWeight
+import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
+
+import androidx.compose.foundation.background
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.History
+import androidx.compose.material.icons.filled.Payments
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.SegmentedButtonDefaults.Icon
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.unit.sp
+import com.example.capocoinapp.ui.theme.BackgroundColor
+
+import com.example.capocoinapp.ui.theme.CapoType
+import com.example.capocoinapp.ui.theme.CardBG
+import com.example.capocoinapp.ui.theme.TextWhite
+
 
 @Composable
 fun CategoryTotalsScreen(service: TransactionService) {
@@ -207,56 +226,112 @@ fun PreviewCategoryTotalsScreen() {
         CategoryTotal(4, "Entertainment", 300.00)
     )
 
-    Column(modifier = Modifier.fillMaxSize().padding(16.dp))
-    {
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp))
-        {
-            OutlinedButton(onClick = {}, modifier = Modifier.weight(1f))
-            {
-                Text("From: 2026-04-01")
-            }
-            OutlinedButton(onClick = {}, modifier = Modifier.weight(1f))
-            {
-                Text("To: 2026-04-27")
-            }
-        }
-
-        //Spacer to space out page
-        Spacer(modifier = Modifier.height(24.dp))
-
-        //Added headers to indentify category and total amount
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 8.dp, vertical = 4.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = "Category",
-                style = MaterialTheme.typography.labelMedium,
-                color = Color.Gray,
-                fontWeight = FontWeight.Bold
-            )
-            Text(
-                text = "Total Amount",
-                style = MaterialTheme.typography.labelMedium,
-                color = Color.Gray,
-                fontWeight = FontWeight.Bold
-            )
-        }
-
-        HorizontalDivider(
-            modifier = Modifier.padding(horizontal = 8.dp),
-            thickness = 1.dp,
-            color = Color.LightGray.copy(alpha = 0.3f)
+    CapoCoinAppTheme {
+        Scaffold(
+            topBar = {
+                // Using a simple header to match your app's style
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(BackgroundColor)
+                        .padding(16.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "Category Totals",
+                        style = CapoType.cardTitle,
+                        fontSize = 24.sp,
+                        color = TextWhite
+                    )
+                }
+            },
+            bottomBar = {
+                // This mimics your navigation bar
+                NavigationBar(
+                    containerColor = CardBG
+                ) {
+                    NavigationBarItem(
+                        selected = true,
+                        onClick = {},
+                        icon = {
+                            Icon(
+                                Icons.Default.Payments,
+                                contentDescription = null,
+                                tint = TextWhite
+                            )
+                        },
+                        label = { Text("Totals", color = TextWhite) }
+                    )
+                    NavigationBarItem(
+                        selected = false,
+                        onClick = {},
+                        icon = {
+                            Icon(
+                                Icons.Default.History,
+                                contentDescription = null,
+                                tint = Color.Gray
+                            )
+                        },
+                        label = { Text("History", color = Color.Gray) }
+                    )
+                }
+            },
+            containerColor = BackgroundColor // Uses your theme's background
         )
+        { innerPadding ->
+            Column(modifier = Modifier.fillMaxSize().padding(innerPadding).padding(16.dp))
+            {
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp))
+                {
+                    OutlinedButton(onClick = {}, modifier = Modifier.weight(1f))
+                    {
+                        Text("From: 2026-04-01")
+                    }
+                    OutlinedButton(onClick = {}, modifier = Modifier.weight(1f))
+                    {
+                        Text("To: 2026-04-27")
+                    }
+                }
 
-        //Column instantiating each increment (category) and its total amount
-        Column(modifier = Modifier.padding(top = 8.dp)) {
-            mockTotals.forEach { item ->
-                CategoryTotalRow(item)
+                //Spacer to space out page
+                Spacer(modifier = Modifier.height(24.dp))
+
+                //Added headers to identify category and total amount
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp, vertical = 4.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "Category",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = Color.Gray,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = "Total Amount",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = Color.Gray,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+
+                HorizontalDivider(
+                    modifier = Modifier.padding(horizontal = 8.dp),
+                    thickness = 1.dp,
+                    color = Color.LightGray.copy(alpha = 0.3f)
+                )
+
+                //Column instantiating each increment (category) and its total amount
+                Column(modifier = Modifier.padding(top = 8.dp))
+                {
+                    mockTotals.forEach { item ->
+                        CategoryTotalRow(item)
+                    }
+                }
+
             }
         }
-
     }
 }
