@@ -24,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.capocoinapp.Calculator.CalculatorFunctions
 import com.example.capocoinapp.Calculator.CalculatorViewModel
 import com.example.capocoinapp.data.ViewModels.CategoryViewModel
 import com.example.capocoinapp.data.ViewModels.TransactionViewModel
@@ -89,81 +90,93 @@ fun AddTransaction(){
             bottomBar = { BottomNavBar() },
             pageTitle = "Add Transaction"
         ){ _ ->
+            Column(modifier = Modifier.fillMaxSize())
+            {
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth()
+                ) {
+                    // Dropdown for Transaction Type
+                    SelectTransactionTypeDropDown(
+                        transactionTypes = transactionTypes,
+                        selectedTransactionType = chosenTransactionType,
+                        onTransactionTypeSelected = { chosenTransactionType = it },
+                        placeholderText = "Select Transaction Type",
+                        enabled = isAmountConfirmed
+                    )
 
-            // Dropdown for Transaction Type
-            SelectTransactionTypeDropDown(
-                transactionTypes = transactionTypes,
-                selectedTransactionType = chosenTransactionType,
-                onTransactionTypeSelected = { chosenTransactionType = it },
-                placeholderText = "Select Transaction Type",
-                enabled = isAmountConfirmed
-            )
+                    // input for Transaction Title
+                    inputCard(
+                        value = title,
+                        onValueChange = { title = it},
+                        placeholder = "Add a title",
+                        icon = Icons.Default.Edit,
+                        enabled = isAmountConfirmed
+                    )
 
-            // input for Transaction Title
-            inputCard(
-                value = title,
-                onValueChange = { title = it},
-                placeholder = "Add a title",
-                icon = Icons.Default.Edit,
-                enabled = isAmountConfirmed
-            )
+                    // Dropdown for Category Selection
+                    SelectCategoryDropDown(
+                        categories = categories.map { it.categoryTitle },
+                        selectedCategory = selectedCategory,
+                        onCategorySelected = { selectedCategory = it },
+                        placeholderText = "Select Category",
+                        enabled = isAmountConfirmed
+                    )
 
-            // Dropdown for Category Selection
-            SelectCategoryDropDown(
-                categories = categories.map { it.categoryTitle },
-                selectedCategory = selectedCategory,
-                onCategorySelected = { selectedCategory = it },
-                placeholderText = "Select Category",
-                enabled = isAmountConfirmed
-            )
+                    DatePickerCard(
+                        selectedTransactionDate = selectedDate,
+                        onTransactionDateSelected = { selectedDate = it},
+                        placeholderText = "Select the date of Transaction",
+                        enabled = isAmountConfirmed
+                    )
 
-            DatePickerCard(
-                selectedTransactionDate = selectedDate,
-                onTransactionDateSelected = { selectedDate = it},
-                placeholderText = "Select the date of Transaction",
-                enabled = isAmountConfirmed
-            )
+                    TimePickerCard(
+                        selectedTransactionTime = selectedTime,
+                        onTransactionTimeSelected = { selectedTime = it},
+                        placeholderText = "Select time of Transaction",
+                        enabled = isAmountConfirmed
+                    )
 
-            TimePickerCard(
-                selectedTransactionTime = selectedTime,
-                onTransactionTimeSelected = { selectedTime = it},
-                placeholderText = "Select time of Transaction",
-                enabled = isAmountConfirmed
-            )
-
-            AttachImageCard(
-                imageUri = selectedImageUri,
-                onImageSelected = { selectedImageUri = it},
-                placeholderText = "Attach Receipt or Salary Image",
-                enabled = isAmountConfirmed
-            )
-        }
-
-
-        if(!isAmountConfirmed){
-
-            CalculatorSection(
-                state = state,
-                onAction = viewModel::onAction,
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
+                    AttachImageCard(
+                        imageUri = selectedImageUri,
+                        onImageSelected = { selectedImageUri = it},
+                        placeholderText = "Attach Receipt or Salary Image",
+                        enabled = isAmountConfirmed
+                    )
+                }
 
 
-    //            ConfirmButton{
-    //                isAmountConfirmed = true
-    //            }
-        }
-        else {
+                if(!isAmountConfirmed){
 
-    //            FinalAmountSection(
-    //                state = state
-    //            )
+                    CalculatorSection(
+                        state = state,
+                        onAction = { action ->
+                            viewModel.onAction(action)
 
-    //            AddTransactionButton{
-    //
-    //            }
-        }
+                            if(action is CalculatorFunctions.ConfirmAmount){
+                                isAmountConfirmed = true
+                            }
+                        },
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxWidth()
+                    )
+                }
+                else
+                {
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxWidth()
+                    ) {
+
+                    }
+                }
+                }
+            }
+
+
     }
 }
 
