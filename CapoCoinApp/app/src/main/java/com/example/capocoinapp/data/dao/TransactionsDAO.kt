@@ -21,7 +21,7 @@ interface TransactionsDAO {
     //@Query("SELECT * FROM transactions WHERE transactionName = :transactionNameInput LIMIT 1")
     //fun getTransactions(transactionNameInput: String): Transactions
 
-    @Query("SELECT c.categoryTitle, SUM(t.transactionAmount) as totalAmount " +
+    @Query("SELECT c.categoryTitle AS categoryTotalID, c.CategoryTitle, SUM(t.transactionAmount) as totalAmount " +
             "FROM transactions t " +
             "INNER JOIN categories c ON  t.categoryID = c.categoryID " +
             "WHERE t.transactionDate BETWEEN :startDate AND :endDate " +

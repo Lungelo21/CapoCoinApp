@@ -27,6 +27,7 @@ import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 import androidx.compose.runtime.*
 
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 
 
 @Composable
@@ -34,7 +35,8 @@ fun UserBudget(
     modifier: Modifier = Modifier,
     categoryViewModel: CategoryViewModel,
     message: String = "",
-    onAddCategoryClick: () -> Unit = {}
+    onAddCategoryClick: () -> Unit = {},
+    navController: NavController
 ) {
     val categories by categoryViewModel
         .getAllCategories()
@@ -46,8 +48,8 @@ fun UserBudget(
 
     CapoCoinAppTheme {
         AppScaffold(
-            topBar = { TopNavBar() },
-            bottomBar = { BottomNavBar() },
+            topBar = { TopNavBar(navController) },
+            bottomBar = { BottomNavBar(navController) },
             pageTitle = "User Budget"
         ) { _ ->
 
@@ -68,6 +70,7 @@ fun UserBudget(
                         cardTitle = category.categoryTitle,
                         cardMin = category.minBudget,
                         cardMax = category.maxBudget,
+                        cardColor = "Teal",
                         cardIcon = category.categoryIcon,
                         onClick = {
                             selectedCategory = category

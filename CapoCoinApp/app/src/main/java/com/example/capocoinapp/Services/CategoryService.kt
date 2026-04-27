@@ -40,9 +40,7 @@ import androidx.compose.material.icons.filled.Spa
 import androidx.compose.material.icons.filled.SportsEsports
 import androidx.compose.material.icons.filled.SportsSoccer
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.example.capocoinapp.data.dao.CategoryDAO
-import com.example.capocoinapp.data.entities.Category
-import kotlinx.coroutines.flow.Flow
+
 
 public class CategoryService(private val categoryDao: CategoryDAO) {
 
