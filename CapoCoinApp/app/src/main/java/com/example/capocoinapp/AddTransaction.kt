@@ -3,8 +3,19 @@ package com.example.capocoinapp
 import android.net.Uri
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material.icons.filled.AttachFile
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.LibraryAdd
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -127,11 +138,10 @@ fun AddTransaction() {
                 enabled = isAmountConfirmed
             )
         }
-    }
 
-        }
 
-        if(showCalculator){
+        if(!isAmountConfirmed){
+
             CalculatorSection(
                 state = state,
                 onAction = viewModel::onAction,
@@ -140,49 +150,22 @@ fun AddTransaction() {
             )
 
 
-//            ConfirmButton{
-//                isAmountConfirmed = true
-//            }
-//
-//            if(!isAmountConfirmed){
-//
-//                CalculatorSection(
-//                    state = state,
-//                    onAction = viewModel::onAction,
-//                    modifier = Modifier
-//                        .weight(1f)
-//                        .fillMaxWidth()
-//                )
-//
-////            ConfirmButton{
-////                isAmountConfirmed = true
-////            }
-//            }
-//            else{
-//
-////            FinalAmountSection(
-////                state = state
-////            )
-//
-////            AddTransactionButton{
-////
-////            }
-//            }
-//
-//
-//        }
-//    }
-//
-//            inputCard(
-//                value = title,
-//                onValueChange = { title = it},
-//                placeholder = "Add a title",
-//                icon = Icons.Default.Edit,
-//                enabled = isAmountConfirmed
-//            )
-//          }
+    //            ConfirmButton{
+    //                isAmountConfirmed = true
+    //            }
+        }
+        else {
+
+    //            FinalAmountSection(
+    //                state = state
+    //            )
+
+    //            AddTransactionButton{
+    //
+    //            }
         }
     }
+}
 
 
 
