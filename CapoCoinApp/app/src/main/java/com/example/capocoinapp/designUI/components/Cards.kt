@@ -90,24 +90,7 @@ import com.example.capocoinapp.ui.theme.CardBG
 import com.example.capocoinapp.ui.theme.TextGreen
 import com.example.capocoinapp.ui.theme.TextRed
 import com.example.capocoinapp.ui.theme.TextWhite
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
-import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
-import androidx.compose.material.icons.filled.AccessTime
-import androidx.compose.material.icons.filled.AttachFile
-import androidx.compose.material.icons.filled.Image
-import androidx.compose.material3.TextField
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
-import kotlin.compareTo
-import kotlin.contracts.contract
-import kotlin.rem
-import coil.compose.rememberAsyncImagePainter
-import com.example.capocoinapp.ui.theme.Accent
+
 
 @Composable
 fun CardComponent(
