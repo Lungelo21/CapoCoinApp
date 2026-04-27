@@ -31,6 +31,7 @@ import com.example.capocoinapp.data.ViewModels.CategoryViewModel
 import com.example.capocoinapp.data.ViewModels.TransactionViewModel
 import com.example.capocoinapp.data.dao.CategoryDAO
 import com.example.capocoinapp.data.dao.TransactionsDAO
+import com.example.capocoinapp.data.entities.Category
 import com.example.capocoinapp.designUI.components.CalculatorSection
 import com.example.capocoinapp.ui.theme.Accent
 import com.example.capocoinapp.ui.theme.BackgroundColor
@@ -65,7 +66,7 @@ fun AddTransaction() {
     // stores the categories by retrieving the list of categories and storing them as an empty list state which is then filled
     val categories by catViewModel.getAllCategories().collectAsState(initial = emptyList())
 
-    var selectedCategory by remember { mutableStateOf("") }
+    var selectedCategory by remember { mutableStateOf<Category?>(null) }
 
     val transactionViewModel = viewModel<TransactionViewModel>()
     // transaction types
@@ -120,7 +121,7 @@ fun AddTransaction() {
 
                     // Dropdown for Category Selection
                     SelectCategoryDropDown(
-                        categories = categories.map { it.categoryTitle },
+                        categories = categories,
                         selectedCategory = selectedCategory,
                         onCategorySelected = { selectedCategory = it },
                         placeholderText = "Select Category",
