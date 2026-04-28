@@ -26,8 +26,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.capocoinapp.Calculator.CalculatorViewModel
 import com.example.capocoinapp.data.ViewModels.CategoryViewModel
@@ -61,7 +63,7 @@ import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 
 
 @Composable
-fun AddTransaction() {
+fun AddTransaction(navController: NavController) {
     // variable holds the calculator view model
     val calculatorViewModel = viewModel<CalculatorViewModel>()
 

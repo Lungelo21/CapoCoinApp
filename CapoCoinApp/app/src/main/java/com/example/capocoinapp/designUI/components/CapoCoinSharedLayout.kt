@@ -331,7 +331,7 @@ fun BottomNavBar(navController: NavController) {
         ) {
             Icon(
                 imageVector = Icons.Default.Add,
-                contentDescription = "Add",
+                contentDescription = "AddTransaction",
 
                 tint = Color.Black,
                 modifier = Modifier

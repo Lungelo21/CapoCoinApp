@@ -16,7 +16,7 @@ fun AnalyticsScreen(navController: NavController) {
         AppScaffold(
             topBar = { TopNavBar(navController) },
             bottomBar = { BottomNavBar(navController) },
-            pageTitle = "Home"
+            pageTitle = "Analytics"
         ) { _ ->
 
             //ToDo: add graph generator

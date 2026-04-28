@@ -84,6 +84,9 @@ class MainActivity : ComponentActivity() {
                     composable("Transactions"){
                         TransactionsScreen(navController)
                     }
+                    composable("AddTransaction"){
+                        AddTransaction(navController)
+                    }
                     composable("Analytics"){
                         AnalyticsScreen(navController)
                     }
