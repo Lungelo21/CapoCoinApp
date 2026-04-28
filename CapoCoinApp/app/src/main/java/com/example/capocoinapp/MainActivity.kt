@@ -13,6 +13,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -76,7 +77,7 @@ class MainActivity : ComponentActivity() {
 
                 // Nav Host wraps all composable routes
                 NavHost(
-                    navController = navController, startDestination = "Login"
+                    navController = navController, startDestination = "AddCategories"
                 ){
                     composable("Home") {
                         HomeScreen(navController)
@@ -175,8 +176,17 @@ class MainActivity : ComponentActivity() {
                     // composable route to Add Categories Screen
                     composable("AddCategories"){
                         // Ensures the Global UI layout is applied to the Add Categories Screen
-                        CapoCoinSharedLayout(screenTitle = "Add Categories", navController = navController){ padding ->
-                            Text("Add Categories Content", modifier = Modifier.padding(padding))
+                        CapoCoinSharedLayout(
+                            screenTitle = "Add Category",
+                            navController = navController
+                        ){ padding ->
+                            Box(modifier = Modifier.padding(padding))
+                            {
+                                AddCategory(viewModel = categoryViewModel,
+                                service = CategoryService(AppDatabase.getDatabase
+                                    (applicationContext).categoryDao()),
+                                navController = navController)
+                            }
                         }
                     }
 

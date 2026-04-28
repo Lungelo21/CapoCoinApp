@@ -48,6 +48,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Text
 import androidx.compose.material3.Icon
 import androidx.compose.foundation.layout.heightIn
@@ -78,6 +79,7 @@ import androidx.compose.material.icons.Icons
 
 //importing question mark icon for default fallback icon
 import androidx.compose.material.icons.filled.QuestionMark
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 
 //Importing the Primary button from buttons.kt
@@ -86,7 +88,7 @@ import com.example.capocoinapp.designUI.components.PrimaryButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddCategory(viewModel: CategoryViewModel, service: CategoryService)
+fun AddCategory(viewModel: CategoryViewModel, service: CategoryService, navController: NavHostController)
 {
     var transactionType by rememberSaveable { mutableStateOf("") }
     var categoryTitle by rememberSaveable { mutableStateOf("") }
@@ -100,20 +102,20 @@ fun AddCategory(viewModel: CategoryViewModel, service: CategoryService)
     var iconColourExpanded by rememberSaveable { mutableStateOf(false) }
     var iconExpanded by rememberSaveable { mutableStateOf(false) }
 
-    val currentColourHex = service.selectableColours[iconColour]
+    val currentColourHex = service.selectableColours[iconColour] ?: "#000000"
     val currentIcon = service.getIcon(selectedIcon)
 
+    /*
     CapoCoinAppTheme{
-        val navController = rememberNavController()
         AppScaffold(
             topBar = { TopNavBar(navController) },
             bottomBar = { BottomNavBar(navController) },
             pageTitle = "Add Category"
-        ) { paddingValues ->
+        ) { paddingValues ->*/
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues)
+                    //.padding(paddingValues)
                     .padding(20.dp)
                     .verticalScroll(rememberScrollState()),
                                             /*
@@ -294,7 +296,7 @@ fun AddCategory(viewModel: CategoryViewModel, service: CategoryService)
                 }
 
                 //Spacing out the entry fields from the Add Category Button
-                Spacer(modifier = Modifier.weight(1f))
+                Spacer(modifier = Modifier.height(32.dp))
 
                 //Save button calling the Primary button method from Buttons.kt
                 PrimaryButton(
@@ -316,5 +318,5 @@ fun AddCategory(viewModel: CategoryViewModel, service: CategoryService)
                 )
             }
         }
-    }
-}
+    //}
+//}
