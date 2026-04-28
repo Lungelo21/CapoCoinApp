@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -38,7 +40,6 @@ import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Devices
 import androidx.compose.material.icons.filled.DirectionsBus
 import androidx.compose.material.icons.filled.DirectionsCar
-import androidx.compose.material.icons.filled.Fastfood
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.Flight
 import androidx.compose.material.icons.filled.Handshake
@@ -64,6 +65,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -78,6 +80,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -88,9 +91,12 @@ import com.example.capocoinapp.ui.theme.BackgroundColor
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 import com.example.capocoinapp.ui.theme.CapoType
 import com.example.capocoinapp.ui.theme.CardBG
+import com.example.capocoinapp.ui.theme.Primary
+import com.example.capocoinapp.ui.theme.ProgressBarOrange
 import com.example.capocoinapp.ui.theme.TextGreen
 import com.example.capocoinapp.ui.theme.TextRed
 import com.example.capocoinapp.ui.theme.TextWhite
+import java.text.NumberFormat
 
 
 @Composable
@@ -306,7 +312,7 @@ fun SelectCategoryDropDown(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 TextField(
-                    value = selectedCategory?.categoryTitle?: "",
+                    value = selectedCategory?.categoryTitle ?: "",
                     onValueChange = {},
                     readOnly = true,
                     enabled = enabled,
@@ -326,23 +332,23 @@ fun SelectCategoryDropDown(
 
                         DropdownMenuItem(
                             text = {
-                                Row(verticalAlignment = Alignment.CenterVertically){
+                                Row(verticalAlignment = Alignment.CenterVertically) {
 
-                                Icon(
-                                    imageVector = getIconFromString(category.categoryIcon),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(20.dp),
-                                    tint = TextWhite
-                                )
+                                    Icon(
+                                        imageVector = getIconFromString(category.categoryIcon),
+                                        contentDescription = null,
+                                        modifier = Modifier.size(20.dp),
+                                        tint = TextWhite
+                                    )
 
-                                Spacer(modifier = Modifier.width(8.dp))
+                                    Spacer(modifier = Modifier.width(8.dp))
 
-                                Text(
-                                    text = category.categoryTitle,
-                                    style = CapoType.cardTitle
-                                )
-                            }
-                                   },
+                                    Text(
+                                        text = category.categoryTitle,
+                                        style = CapoType.cardTitle
+                                    )
+                                }
+                            },
                             onClick = {
                                 onCategorySelected(category)
                                 dropdownExpand = false
@@ -350,7 +356,7 @@ fun SelectCategoryDropDown(
                         )
                     }
 
-                    if(viewMore){
+                    if (viewMore) {
                         DropdownMenuItem(
                             text = {
                                 Text("View More", style = CapoType.cardTitle)
@@ -860,11 +866,19 @@ fun getColorFromString(hex: String) = Color(hex.toColorInt())
 
 @Composable
 fun HomeCard(
-    budgetMin: Double?,
-    budgetMax: Double?,
-    daysRemaining: Int?,
+    totalSpent: Double,
+    budget: Double,
+    daysRemaining: Int,
     onClick: () -> Unit = {}
 ) {
+    // Formats the number to look nicer: 20000.0 -> R20 000,00
+    val budgetString = NumberFormat.getCurrencyInstance().format(budget)
+    val totalRemaining = NumberFormat.getCurrencyInstance().format(budget - totalSpent)
+    val dailyRemaining = NumberFormat.getCurrencyInstance().format((budget - totalSpent) / daysRemaining.toDouble())
+
+    val progressFloat = (totalSpent/budget).toFloat()
+    val progressPercent = (progressFloat * 100).toInt()
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -876,34 +890,81 @@ fun HomeCard(
         ),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
-        Row(
+
+        Box(
             modifier = Modifier
-                .padding(16.dp)
-                .wrapContentHeight(),
-            verticalAlignment = Alignment.CenterVertically
+                .fillMaxWidth()
+                .background(Primary)
         ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                Text(
+                    text = "Monthly Expenses",
+                    style = CapoType.cardTitle,
+                    fontSize = 20.sp
+                )
 
-            Column(modifier = Modifier.fillMaxWidth()) {
+                Spacer(modifier = Modifier.width(16.dp))
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
+                Text(
+                    text = "You can spend $dailyRemaining per day for $daysRemaining days",
+                    style = CapoType.cardTitle
+                )
+            }
+        }
 
-                }
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Text(
+                text = "$totalRemaining remaining of $budgetString",
+                style = CapoType.cardTitle,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
 
-                Spacer(modifier = Modifier.height(6.dp))
+            // Progress bar box
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(20.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight()
+                        .background(
+                            color = BackgroundColor,
+                            shape = RoundedCornerShape(16.dp))
+                )
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
+                LinearProgressIndicator(
+                    progress = { progressFloat },
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .fillMaxWidth(),
+                    color = ProgressBarOrange,
+                    trackColor = Color.Transparent,
+                    drawStopIndicator = {}
+                )
 
-                }
+                Text(
+                    text = "$progressPercent%",
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    style = CapoType.cardTitle,
+                    textAlign = TextAlign.Center
+                )
             }
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
@@ -912,41 +973,44 @@ fun CardPreview() {
         CardBox(
             cards = listOf(
                 {
-                    CardComponent(
-                        "Dinner Night",
-                        "Empire Steak",
-                        "200",
-                        "5:00 PM",
-                        Icons.Default.Fastfood,
-                        "expense"
-                    )
-                },
-                {
-                    CardComponent(
-                        "Salary",
-                        "Dunder Mifflin",
-                        "30 000",
-                        "9:45 AM",
-                        Icons.Default.Payments,
-                        "income"
-                    )
-                },
-                {
-                    BudgetCard(
-                        "Gym",
-                        200.0,
-                        400.0,
-                        "Gym",
-                        "Teal"
-                    )
-                },
-                {
-                    CategoryCard(
-                        "Food",
-                        "Grey",
-                        "Food"
-                    )
+                    HomeCard(1300.0, 2000.0, 15)
                 }
+//                {
+//                    CardComponent(
+//                        "Dinner Night",
+//                        "Empire Steak",
+//                        "200",
+//                        "5:00 PM",
+//                        Icons.Default.Fastfood,
+//                        "expense"
+//                    )
+//                },
+//                {
+//                    CardComponent(
+//                        "Salary",
+//                        "Dunder Mifflin",
+//                        "30 000",
+//                        "9:45 AM",
+//                        Icons.Default.Payments,
+//                        "income"
+//                    )
+//                },
+//                {
+//                    BudgetCard(
+//                        "Gym",
+//                        200.0,
+//                        400.0,
+//                        "Gym",
+//                        "Teal"
+//                    )
+//                },
+//                {
+//                    CategoryCard(
+//                        "Food",
+//                        "Grey",
+//                        "Food"
+//                    )
+//                }
             )
         )
     }
