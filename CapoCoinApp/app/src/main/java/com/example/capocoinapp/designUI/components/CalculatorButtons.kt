@@ -26,7 +26,8 @@ import com.example.capocoinapp.ui.theme.PurpleGrey40
 fun CalculatorButtons(
     state: CalculatorState,
     onAction: (CalculatorFunctions) -> Unit,
-    buttonSpacing: Dp
+    buttonSpacing: Dp,
+    modifier: Modifier = Modifier
 ){
     Column(verticalArrangement = Arrangement.spacedBy(buttonSpacing)) {
 

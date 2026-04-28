@@ -13,17 +13,17 @@ import androidx.compose.ui.unit.sp
 import com.example.capocoinapp.Calculator.CalculatorState
 
 @Composable
-fun CalculatorDisplay(state: CalculatorState){
+fun CalculatorDisplay(state: CalculatorState, modifier: Modifier){
 
     Text(
         text = state.number1 + (state.operation?.symbol ?: "") + state.number2,
         textAlign = TextAlign.End,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 32.dp),
+            .padding(vertical = 0.dp),
         fontWeight = FontWeight.Bold,
-        fontSize = 80.sp,
+        fontSize = 50.sp,
         color = Color.White,
-        maxLines = 2
+        maxLines = 1
     )
 }

@@ -405,6 +405,7 @@ fun SelectTransactionTypeDropDown(
                 onExpandedChange = {
                     if (enabled) dropdownExpand = !dropdownExpand
                 },
+
                 modifier = Modifier.fillMaxWidth()
             ) {
                 TextField(
@@ -413,7 +414,6 @@ fun SelectTransactionTypeDropDown(
                     readOnly = true,
                     enabled = enabled,
                     placeholder = { Text(placeholderText, style = CapoType.cardTitle) },
-
                     textStyle = CapoType.cardTitle,
                     modifier = Modifier
                         .menuAnchor()
@@ -430,7 +430,8 @@ fun SelectTransactionTypeDropDown(
                             text = {
                                 Text(
                                     text = transactionTypes,
-                                    style = CapoType.cardTitle
+                                    style = CapoType.cardTitle,
+                                    color = TextWhite
                                 )
                             },
                             onClick = {
@@ -598,7 +599,8 @@ fun AttachImageCard(
         ) {
             if (imageUri == null) {
                 Icon(
-                    imageVector = Icons.Default.Image,
+                    imageVector = icon,
+                    tint = TextWhite,
                     contentDescription = null,
                     modifier = Modifier.size((44.dp))
                 )

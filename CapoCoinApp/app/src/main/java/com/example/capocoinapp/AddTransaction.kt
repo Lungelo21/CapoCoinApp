@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -133,7 +134,7 @@ fun AddTransaction(navController: NavController, categoryViewModel: CategoryView
                         onAction = calculatorViewModel::onAction,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(200.dp)
+                            .fillMaxHeight(0.55f)
                     )
                 }
                 else // otherwise show rest of screen (without calculator)
@@ -204,6 +205,7 @@ fun AddTransaction(navController: NavController, categoryViewModel: CategoryView
                             cardIcon = Icons.Default.Calculate,
                             onAmountClicked = {
                                 calculatorViewModel.reOpenCalculator()
+                                transactionViewModel.clearMessage()
                             }
                         )
 
