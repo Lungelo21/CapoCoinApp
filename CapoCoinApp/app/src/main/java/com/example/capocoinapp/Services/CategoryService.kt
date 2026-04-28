@@ -30,6 +30,7 @@ import androidx.compose.material.icons.filled.Museum
 import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material.icons.filled.Payments
 import androidx.compose.material.icons.filled.Pets
+import androidx.compose.material.icons.filled.QuestionMark
 import androidx.compose.material.icons.filled.Restaurant
 import androidx.compose.material.icons.filled.Savings
 import androidx.compose.material.icons.filled.School
@@ -38,11 +39,7 @@ import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.Spa
 import androidx.compose.material.icons.filled.SportsEsports
 import androidx.compose.material.icons.filled.SportsSoccer
-
-//Import to call image vector for icons
 import androidx.compose.ui.graphics.vector.ImageVector
-
-
 
 
 public class CategoryService(private val categoryDao: CategoryDAO) {
@@ -77,6 +74,11 @@ public class CategoryService(private val categoryDao: CategoryDAO) {
         "Car Payments" to Icons.Default.DirectionsCar,
         "Celebration" to Icons.Default.Celebration
     )
+    /*
+     * Author: GeeksforGeeks
+     * Link: https://www.geeksforgeeks.org/kotlin/kotlin-map-mapof/
+     * DateAccessed: 27/04/2026
+     * */
 
     val selectableColours = mapOf(
         "Grey"  to "#4A4A4A",
@@ -97,11 +99,23 @@ public class CategoryService(private val categoryDao: CategoryDAO) {
         "Lavender" to "#B39DDB",
         "Rose" to "#AD1457"
     )
-    //
-    fun getIcon(iconName: String): ImageVector? = baseIcons[iconName]
+    /*
+     * Author: GeeksforGeeks
+     * Link: https://www.geeksforgeeks.org/kotlin/kotlin-map-mapof/
+     * DateAccessed: 27/04/2026
+     * */
 
-    //
-    fun getColour(colour: String): String? = selectableColours[colour]
+    //Function to get the icons
+    fun getIcon(iconName: String): ImageVector
+    {
+        return baseIcons[iconName] ?: Icons.Default.QuestionMark
+    }
+
+    //Function to get the colour for the icon
+    fun getColour(colour: String): String
+    {
+        return selectableColours[colour] ?: "#000000"
+    }
 
     //Using a Query to get the full list of available categories
     fun getAllCategories(): Flow<List<Category>> = categoryDao.getAllCategories()
@@ -112,31 +126,48 @@ public class CategoryService(private val categoryDao: CategoryDAO) {
         categoryDao.insertCategory(category)
     }
 
+    // suspended function to update categories in the
+    suspend fun updateCategory(category: Category) {
+        categoryDao.updateCategory(category)
+    }
+
     //Having a method used to populate the base icons that will be seen by all users upon entry to the app
-    suspend fun populateDefaultCategories()
-    {
+    suspend fun populateDefaultCategories() {
 
         //Saving the four base categories
         val defaultCategories = listOf(
-            Category(transactionType = "Income",
+            Category(
+                transactionType = "Income",
                 categoryTitle = "Salary",
                 categoryIcon = "Salary", //Using ? to ensure if dark navy cant be found,
-                categoryColour = selectableColours["Dark Navy"] ?: "#2D344B"//it will predefine with the
-            ),                                                             //colour hex of dark navy
-            Category(transactionType = "Expense",
+                categoryColour = selectableColours["Dark Navy"]
+                    ?: "#2D344B",//it will predefine with the
+                minBudget = 0.0,                                             //colour hex of dark navy
+                maxBudget = 0.0
+            ),
+            Category(
+                transactionType = "Expense",
                 categoryTitle = "Food",
                 categoryIcon = "Food",
-                categoryColour = selectableColours["Grey"] ?: "#4A4A4A"
+                categoryColour = selectableColours["Grey"] ?: "#4A4A4A",
+                minBudget = 0.0,
+                maxBudget = 0.0
             ),
-            Category(transactionType = "Expense",
+            Category(
+                transactionType = "Expense",
                 categoryTitle = "Groceries",
                 categoryIcon = "Groceries",
-                categoryColour = selectableColours["Vibrant Green"] ?: "#00833F"
+                categoryColour = selectableColours["Vibrant Green"] ?: "#00833F",
+                minBudget = 0.0,
+                maxBudget = 0.0
             ),
-            Category(transactionType = "Expense",
+            Category(
+                transactionType = "Expense",
                 categoryTitle = "Transport",
                 categoryIcon = "Transport",
-                categoryColour = selectableColours["Slate"] ?: "#455A64"
+                categoryColour = selectableColours["Slate"] ?: "#455A64",
+                minBudget = 0.0,
+                maxBudget = 0.0
             )
         )
 

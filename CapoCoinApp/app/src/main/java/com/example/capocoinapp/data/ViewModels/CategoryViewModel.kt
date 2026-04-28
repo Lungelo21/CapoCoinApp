@@ -25,7 +25,7 @@ class CategoryViewModel(
     }
 
     // Function to add a new category (e.g., "Salary" or "Groceries")
-    fun addCategory(categoryTitle: String, categoryColour: String, categoryIcon: String,minBudget:Double,maxBudget:Double) {
+    fun addCategory(type: String, categoryTitle: String, categoryColour: String, categoryIcon: String, minBudget: Double, maxBudget: Double) {
         viewModelScope.launch {
             message = when {
                 type.isBlank() -> "Please select a transaction type for category"
@@ -54,7 +54,25 @@ class CategoryViewModel(
     fun getAllCategories(): Flow<List<Category>> {
         return service.getAllCategories()
     }
+
+    // Update fo the User Budget to Change Min and Max Budget Goals
+    fun updateCategoryBudget(
+        category: Category,
+        minBudget: Double,
+        maxBudget: Double
+    ){
+        viewModelScope.launch{
+            val updatedCategory = category.copy(
+                minBudget=minBudget,
+                maxBudget = maxBudget
+            )
+            service.updateCategory(updatedCategory)
+            message = "Budget updated"
+
+        }
+    }
 }
+
 
 // Factory to inject the CategoryDAO
 class CategoryViewModelFactory(private val service: CategoryService) : ViewModelProvider.Factory {

@@ -51,6 +51,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.capocoinapp.ui.theme.BackgroundColor
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 import com.example.capocoinapp.ui.theme.CapoType
@@ -108,7 +109,11 @@ fun CapoCoinSharedLayout(
                 )
             )
         },
-
+        /*
+         * Author: IGNATIAH XAVIER
+         * Link: https://medium.com/@ignatiah.x/scaffold-topappbar-and-bottomnavigation-in-jetpack-compose-build-structured-uis-9742c64df6e6
+         * DateAccessed: 25/04/2026
+         * */
         bottomBar = {
             NavigationBar(containerColor = Color(0xFF292929))
             {
@@ -165,6 +170,11 @@ fun CapoCoinSharedLayout(
                 )
             }
         }
+        /*
+         * Author: IGNATIAH XAVIER
+         * Link: https://medium.com/@ignatiah.x/scaffold-topappbar-and-bottomnavigation-in-jetpack-compose-build-structured-uis-9742c64df6e6
+         * DateAccessed: 25/04/2026
+         * */
     )
     { paddingValues ->
         content(paddingValues)
@@ -197,12 +207,12 @@ fun AppScaffold(
 }
 
 //@Composable
-//fun Screen() {
+//fun Screen(navController: NavController) {
 //    CapoCoinAppTheme {
 //        AppScaffold(
-//            topBar = { TopNavBar() },
-//            bottomBar = { BottomNavBar() },
-//            pageTitle = "More"
+//            topBar = { TopNavBar(navController) },
+//            bottomBar = { BottomNavBar(navController) },
+//            pageTitle = "Title"
 //        ) { paddingValues ->
 //
 //            //Content goes here
@@ -212,7 +222,7 @@ fun AppScaffold(
 //}
 
 @Composable
-fun TopNavBar() {
+fun TopNavBar(navController: NavController) {
     val iconSize = 50.dp
     Box(
         modifier = Modifier
@@ -259,7 +269,7 @@ fun TopNavBar() {
 
 //Placeholder bottom bar
 @Composable
-fun BottomNavBar() {
+fun BottomNavBar(navController: NavController) {
     val iconSize = 50.dp
     Box(
         modifier = Modifier
@@ -285,24 +295,28 @@ fun BottomNavBar() {
             BottomIcon(
                 icon = Icons.Default.Home,
                 label = "Home",
-                selected = true
+                selected = true,
+                onClick = {navController.navigate("Home")}
             )
 
             BottomIcon(
                 icon = Icons.Default.LocalOffer,
-                label = "Transactions"
+                label = "Transactions",
+                onClick = {navController.navigate("Transactions")}
             )
 
             Spacer(modifier = Modifier.width(55.dp)) // space for center FAB
 
             BottomIcon(
                 icon = Icons.Default.PieChart,
-                label = "Analytics"
+                label = "Analytics",
+                onClick = {navController.navigate("Analytics")}
             )
 
             BottomIcon(
                 icon = Icons.Default.MoreHoriz,
-                label = "More"
+                label = "More",
+                onClick = {navController.navigate("More")}
             )
         }
 
@@ -332,17 +346,20 @@ fun BottomNavBar() {
 fun BottomIcon(
     icon: ImageVector,
     label: String,
-    selected: Boolean = false
+    selected: Boolean = false,
+    onClick: () -> Unit = {}
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(6.dp)
+        verticalArrangement = Arrangement.spacedBy(6.dp),
+        modifier = Modifier.clickable{ onClick()}
     ) {
         Icon(
             imageVector = icon,
             contentDescription = label,
             tint = if (selected) Color(0xFFE9B44C) else Color.Gray,
-            modifier = Modifier.size(28.dp)
+            modifier = Modifier
+                .size(28.dp)
         )
 
         Text(
@@ -371,9 +388,10 @@ fun PageTitleText(titleText: String) {
 fun GreetingPreview() {
     CapoCoinAppTheme {
         CapoCoinAppTheme {
+            val navController = rememberNavController()
             AppScaffold(
-                topBar = { TopNavBar() },
-                bottomBar = { BottomNavBar() },
+                topBar = { TopNavBar(navController) },
+                bottomBar = { BottomNavBar(navController) },
                 pageTitle = "Preview"
             ) { paddingValues ->
 
