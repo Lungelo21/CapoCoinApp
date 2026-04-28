@@ -134,7 +134,7 @@ fun AddTransaction(navController: NavController, categoryViewModel: CategoryView
                         onAction = calculatorViewModel::onAction,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .fillMaxHeight(0.55f)
+                            .weight(1f)
                     )
                 }
                 else // otherwise show rest of screen (without calculator)

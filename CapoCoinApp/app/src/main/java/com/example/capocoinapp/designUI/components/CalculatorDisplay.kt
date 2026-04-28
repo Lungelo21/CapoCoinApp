@@ -20,9 +20,9 @@ fun CalculatorDisplay(state: CalculatorState, modifier: Modifier){
         textAlign = TextAlign.End,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 0.dp),
+            .padding(vertical = 4.dp),
         fontWeight = FontWeight.Bold,
-        fontSize = 50.sp,
+        fontSize = 40.sp,
         color = Color.White,
         maxLines = 1
     )

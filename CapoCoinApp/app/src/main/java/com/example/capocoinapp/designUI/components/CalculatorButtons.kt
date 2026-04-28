@@ -29,7 +29,10 @@ fun CalculatorButtons(
     buttonSpacing: Dp,
     modifier: Modifier = Modifier
 ){
-    Column(verticalArrangement = Arrangement.spacedBy(buttonSpacing)) {
+    Column(
+        modifier = Modifier.fillMaxWidth()
+            .padding(4.dp),
+        verticalArrangement = Arrangement.spacedBy(buttonSpacing)) {
 
         Row(
             modifier = Modifier.fillMaxWidth(),
