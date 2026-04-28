@@ -254,7 +254,7 @@ fun TopNavBar(navController: NavController) {
                 modifier = Modifier
                     .size(iconSize)
                     .clickable {
-                        //ToDo: Add path to accounts screen
+                        navController.navigate("UserProfile")
                     }
             )
 

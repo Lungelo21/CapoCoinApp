@@ -21,8 +21,6 @@ fun CategoriesScreen(navController: NavController) {
             pageTitle = "Categories"
         ) { _ ->
 
-            val navController = rememberNavController()
-
             // ToDo: replace with logic to show the actual transactions once database is set up
             CardBox(
                 cards = listOf(
