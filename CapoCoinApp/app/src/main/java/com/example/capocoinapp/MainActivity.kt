@@ -50,6 +50,7 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 
 import com.example.capocoinapp.data.entities.User
+import com.example.capocoinapp.designUI.components.AppScaffold
 
 //
 
@@ -176,9 +177,10 @@ class MainActivity : ComponentActivity() {
                     // composable route to Add Categories Screen
                     composable("AddCategories"){
                         // Ensures the Global UI layout is applied to the Add Categories Screen
-                        CapoCoinSharedLayout(
-                            screenTitle = "Add Category",
-                            navController = navController
+                        AppScaffold(
+                            topBar = { TopNavBar(navController) },
+                            bottomBar = { BottomNavBar(navController) },
+                            pageTitle = "Add Category"
                         ){ padding ->
                             Box(modifier = Modifier.padding(padding))
                             {
