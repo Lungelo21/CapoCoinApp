@@ -331,7 +331,7 @@ fun BottomNavBar(navController: NavController) {
         ) {
             Icon(
                 imageVector = Icons.Default.Add,
-                contentDescription = "Add",
+                contentDescription = "AddTransaction",
 
                 tint = Color.Black,
                 modifier = Modifier
@@ -380,6 +380,14 @@ fun PageTitleText(titleText: String) {
         text = titleText,
         style = CapoType.heading,
         modifier = Modifier.padding(horizontal = 16.dp)
+    )
+}
+
+@Composable
+fun PageSubTitleText(titleText: String) {
+    Text(
+        text = titleText,
+        style = CapoType.heading,
     )
 }
 

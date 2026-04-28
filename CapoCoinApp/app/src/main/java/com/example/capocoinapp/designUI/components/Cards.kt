@@ -2,7 +2,7 @@ package com.example.capocoinapp.designUI.components
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.icu.util.Calendar
+import java.util.Calendar
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -29,6 +30,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.AttachFile
 import androidx.compose.material.icons.filled.AttachMoney
 import androidx.compose.material.icons.filled.AutoAwesome
@@ -39,7 +41,6 @@ import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Devices
 import androidx.compose.material.icons.filled.DirectionsBus
 import androidx.compose.material.icons.filled.DirectionsCar
-import androidx.compose.material.icons.filled.Fastfood
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.Flight
 import androidx.compose.material.icons.filled.Handshake
@@ -49,6 +50,7 @@ import androidx.compose.material.icons.filled.Movie
 import androidx.compose.material.icons.filled.Museum
 import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material.icons.filled.Payments
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Pets
 import androidx.compose.material.icons.filled.QuestionMark
 import androidx.compose.material.icons.filled.Restaurant
@@ -65,6 +67,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -79,6 +82,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -89,9 +93,13 @@ import com.example.capocoinapp.ui.theme.BackgroundColor
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 import com.example.capocoinapp.ui.theme.CapoType
 import com.example.capocoinapp.ui.theme.CardBG
+import com.example.capocoinapp.ui.theme.Primary
+import com.example.capocoinapp.ui.theme.ProgressBarBlue
+import com.example.capocoinapp.ui.theme.ProgressBarOrange
 import com.example.capocoinapp.ui.theme.TextGreen
 import com.example.capocoinapp.ui.theme.TextRed
 import com.example.capocoinapp.ui.theme.TextWhite
+import java.text.NumberFormat
 
 
 @Composable
@@ -309,7 +317,7 @@ fun SelectCategoryDropDown(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 TextField(
-                    value = selectedCategory?.categoryTitle?: "",
+                    value = selectedCategory?.categoryTitle ?: "",
                     onValueChange = {},
                     readOnly = true,
                     enabled = enabled,
@@ -329,23 +337,23 @@ fun SelectCategoryDropDown(
 
                         DropdownMenuItem(
                             text = {
-                                Row(verticalAlignment = Alignment.CenterVertically){
+                                Row(verticalAlignment = Alignment.CenterVertically) {
 
-                                Icon(
-                                    imageVector = getIconFromString(category.categoryIcon),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(20.dp),
-                                    tint = TextWhite
-                                )
+                                    Icon(
+                                        imageVector = getIconFromString(category.categoryIcon),
+                                        contentDescription = null,
+                                        modifier = Modifier.size(20.dp),
+                                        tint = TextWhite
+                                    )
 
-                                Spacer(modifier = Modifier.width(8.dp))
+                                    Spacer(modifier = Modifier.width(8.dp))
 
-                                Text(
-                                    text = category.categoryTitle,
-                                    style = CapoType.cardTitle
-                                )
-                            }
-                                   },
+                                    Text(
+                                        text = category.categoryTitle,
+                                        style = CapoType.cardTitle
+                                    )
+                                }
+                            },
                             onClick = {
                                 onCategorySelected(category)
                                 dropdownExpand = false
@@ -353,7 +361,7 @@ fun SelectCategoryDropDown(
                         )
                     }
 
-                    if(viewMore){
+                    if (viewMore) {
                         DropdownMenuItem(
                             text = {
                                 Text("View More", style = CapoType.cardTitle)
@@ -459,7 +467,7 @@ fun DatePickerCard(
                     DatePickerDialog(
                         context,
                         { _, year, month, dayOfMonth ->
-                            val formatted = "$dayOfMonth/${month + 1}/$year"
+                            val formatted = String.format("%04d-%02d-%02d", year, month + 1, dayOfMonth)
                             onTransactionDateSelected(formatted)
                         },
                         calendar.get(Calendar.YEAR),
@@ -511,25 +519,19 @@ fun TimePickerCard(
             .clickable(enabled = enabled) {
 
                 if (enabled) {
+                    // gets instance of calendar
+                    val calendar = Calendar.getInstance()
 
                     TimePickerDialog(
                         context,
                         { _, hourOfDay, minute ->
 
-                            // Converts to 12 hr format
-                            var amPM = if (hourOfDay >= 12) "PM" else "AM"
+                            val formatted = String.format("%02d:%02d", hourOfDay, minute)
 
-                            val hour12 = when {
-                                hourOfDay == 0 -> 12
-                                hourOfDay > 12 -> hourOfDay - 12
-                                else -> hourOfDay
-                            }
-
-                            val formatted = String.format("%02d:%02d %s", hour12, minute, amPM)
                             onTransactionTimeSelected(formatted)
                         },
-                        12,
-                        0,
+                        calendar.get(Calendar.HOUR_OF_DAY),
+                        calendar.get(Calendar.MINUTE),
                         true
                     ).show()
                 }
@@ -666,6 +668,207 @@ fun FinalAmountCard(
         }
     }
 }
+
+@Composable
+fun LogTransactionButton(
+    symbol: String,
+    modifier: Modifier,
+    onClick: () -> Unit
+) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .clip(RoundedCornerShape(20.dp))
+            .clickable { onClick() }
+            .then(modifier)
+    ) {
+
+        Text(
+            text = symbol,
+            fontSize = 18.sp,
+            color = Color.White
+        )
+    }
+}
+
+
+@Composable
+fun UserProfileCard(
+    firstName: String,
+    lastName: String,
+    level: Int,
+    profileTitle: String,
+    currentXP: Int,
+    nextLevelXP: Int,
+    onClick: () -> Unit = {}
+) {
+    // Formats the number to look nicer: 20000.0 -> R20 000,00
+    val xpRemaining = nextLevelXP - currentXP
+    val progressFloat = currentXP.toFloat() / nextLevelXP.toFloat()
+    val progressPercent = (progressFloat * 100).toInt()
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .clickable { onClick() },
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = CardBG
+        ),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Primary)
+        ) {
+
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // profile icon
+
+                Icon(
+                    imageVector = Icons.Default.AccountCircle,
+                    contentDescription = "User Profile",
+                    modifier = Modifier.size(56.dp),
+                    tint = TextWhite
+                )
+
+                Spacer(modifier = Modifier.width(12.dp))
+
+                Column {
+
+                    // Text with users first and last name
+                    Text(
+                        text = "$firstName $lastName",
+                        style = CapoType.cardTitle
+                    )
+
+                    Spacer(modifier = Modifier.width(16.dp))
+
+                    // Text with the users level and profile title
+                    Text(
+                        text = "Level $level: $profileTitle",
+                        style = CapoType.cardTitle,
+                    )
+                }
+            }
+        }
+
+        Column (
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ){
+            // Text which shows the amount of xp users needs to lvl up
+            Text(
+                text = "$xpRemaining more xp to Level ${level + 1}",
+                style = CapoType.cardTitle,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+
+            // Progress bar
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(20.dp)
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(BackgroundColor),
+                contentAlignment = Alignment.Center
+            ){
+                // Fills the progress bar from left to right
+                Box(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .fillMaxWidth(progressFloat)
+                        .align(Alignment.CenterStart)
+                        .background(ProgressBarBlue)
+                )
+
+                // Percentage of xp to next level
+                Text(
+                        text = "$progressPercent%",
+                        modifier = Modifier.fillMaxWidth(),
+                        style = CapoType.cardTitle,
+                        textAlign = TextAlign.Center
+                )
+            }
+        }
+    }
+
+}
+
+
+
+
+
+
+
+@Composable
+fun MilestoneAchievementCard(
+    milestoneTitle: String,
+    milestoneSubTitle: String,
+    milestonesTimesEarned: String?
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = CardBG
+        ),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(16.dp)
+                .wrapContentHeight(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            Column(modifier = Modifier.fillMaxWidth()) {
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = milestoneTitle,
+                        style = CapoType.cardTitle
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(6.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                        Text(
+                            text = milestoneSubTitle,
+                            style = CapoType.cardSubTitle
+                        )
+
+                        Text(
+                            text = milestonesTimesEarned?:"",
+                            style = CapoType.cardSubTitle
+                        )
+
+                }
+            }
+        }
+    }
+}
+
+
 
 @Composable
 fun BudgetCard(
@@ -848,11 +1051,19 @@ fun getColorFromString(hex: String) = Color(hex.toColorInt())
 
 @Composable
 fun HomeCard(
-    budgetMin: Double?,
-    budgetMax: Double?,
-    daysRemaining: Int?,
+    totalSpent: Double,
+    budget: Double,
+    daysRemaining: Int,
     onClick: () -> Unit = {}
 ) {
+    // Formats the number to look nicer: 20000.0 -> R20 000,00
+    val budgetString = NumberFormat.getCurrencyInstance().format(budget)
+    val totalRemaining = NumberFormat.getCurrencyInstance().format(budget - totalSpent)
+    val dailyRemaining = NumberFormat.getCurrencyInstance().format((budget - totalSpent) / daysRemaining.toDouble())
+
+    val progressFloat = (totalSpent/budget).toFloat()
+    val progressPercent = (progressFloat * 100).toInt()
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -864,34 +1075,81 @@ fun HomeCard(
         ),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
-        Row(
+
+        Box(
             modifier = Modifier
-                .padding(16.dp)
-                .wrapContentHeight(),
-            verticalAlignment = Alignment.CenterVertically
+                .fillMaxWidth()
+                .background(Primary)
         ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                Text(
+                    text = "Monthly Expenses",
+                    style = CapoType.cardTitle,
+                    fontSize = 20.sp
+                )
 
-            Column(modifier = Modifier.fillMaxWidth()) {
+                Spacer(modifier = Modifier.width(16.dp))
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
+                Text(
+                    text = "You can spend $dailyRemaining per day for $daysRemaining days",
+                    style = CapoType.cardTitle
+                )
+            }
+        }
 
-                }
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Text(
+                text = "$totalRemaining remaining of $budgetString",
+                style = CapoType.cardTitle,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
 
-                Spacer(modifier = Modifier.height(6.dp))
+            // Progress bar box
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(20.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight()
+                        .background(
+                            color = BackgroundColor,
+                            shape = RoundedCornerShape(16.dp))
+                )
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
+                LinearProgressIndicator(
+                    progress = { progressFloat },
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .fillMaxWidth(),
+                    color = ProgressBarOrange,
+                    trackColor = Color.Transparent,
+                    drawStopIndicator = {}
+                )
 
-                }
+                Text(
+                    text = "$progressPercent%",
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    style = CapoType.cardTitle,
+                    textAlign = TextAlign.Center
+                )
             }
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
@@ -900,41 +1158,49 @@ fun CardPreview() {
         CardBox(
             cards = listOf(
                 {
-                    CardComponent(
-                        "Dinner Night",
-                        "Empire Steak",
-                        "200",
-                        "5:00 PM",
-                        Icons.Default.Fastfood,
-                        "expense"
-                    )
+                    HomeCard(1300.0, 2000.0, 15)
+
+
                 },
                 {
-                    CardComponent(
-                        "Salary",
-                        "Dunder Mifflin",
-                        "30 000",
-                        "9:45 AM",
-                        Icons.Default.Payments,
-                        "income"
-                    )
-                },
-                {
-                    BudgetCard(
-                        "Gym",
-                        200.0,
-                        400.0,
-                        "Gym",
-                        "Teal"
-                    )
-                },
-                {
-                    CategoryCard(
-                        "Food",
-                        "Grey",
-                        "Food"
-                    )
+                    UserProfileCard("John", "Smith", 4, "Penny Pincher", 1000, 1200)
                 }
+//                {
+//                    CardComponent(
+//                        "Dinner Night",
+//                        "Empire Steak",
+//                        "200",
+//                        "5:00 PM",
+//                        Icons.Default.Fastfood,
+//                        "expense"
+//                    )
+//                },
+//                {
+//                    CardComponent(
+//                        "Salary",
+//                        "Dunder Mifflin",
+//                        "30 000",
+//                        "9:45 AM",
+//                        Icons.Default.Payments,
+//                        "income"
+//                    )
+//                },
+//                {
+//                    BudgetCard(
+//                        "Gym",
+//                        200.0,
+//                        400.0,
+//                        "Gym",
+//                        "Teal"
+//                    )
+//                },
+//                {
+//                    CategoryCard(
+//                        "Food",
+//                        "Grey",
+//                        "Food"
+//                    )
+//                }
             )
         )
     }
