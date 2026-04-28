@@ -63,6 +63,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.SegmentedButtonDefaults.Icon
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.capocoinapp.designUI.components.PrimaryButton
 import com.example.capocoinapp.ui.theme.Accent
 import com.example.capocoinapp.ui.theme.BackgroundColor
@@ -73,7 +74,7 @@ import com.example.capocoinapp.ui.theme.TextWhite
 
 
 @Composable
-fun CategoryTotalsScreen(service: TransactionService) {
+fun CategoryTotalsScreen(service: TransactionService, navController: NavHostController) {
     val context = LocalContext.current
 
     var startDate by rememberSaveable { mutableStateOf("") }

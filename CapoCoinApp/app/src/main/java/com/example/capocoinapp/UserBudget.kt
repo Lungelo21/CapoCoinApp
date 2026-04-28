@@ -29,6 +29,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.capocoinapp.Services.CategoryService
 import com.example.capocoinapp.ui.theme.Accent
 import com.example.capocoinapp.ui.theme.Primary
 
@@ -37,6 +38,7 @@ import com.example.capocoinapp.ui.theme.Primary
 fun UserBudgetScreen(
     modifier: Modifier = Modifier,
     categoryViewModel: CategoryViewModel,
+    categoryService: CategoryService,
     message: String = "",
     onAddCategoryClick: () -> Unit = {},
     navController: NavController
@@ -86,8 +88,8 @@ fun UserBudgetScreen(
                     BudgetCard(
                         cardTitle = category.categoryTitle,
                         cardMin = category.minBudget,
-                        cardMax = category.maxBudget,
-                        cardColor = "Teal",
+                        cardMax = category.maxBudget,//Changed from hard coded colour to take from DB
+                        cardColor = categoryService.getColour(category.categoryColour),//using service called method
                         cardIcon = category.categoryIcon,
                         onClick = {
                             selectedCategory = category

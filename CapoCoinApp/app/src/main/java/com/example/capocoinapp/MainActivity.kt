@@ -47,6 +47,7 @@ import com.example.capocoinapp.designUI.components.CapoCoinAuthenticationLayout
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 import androidx.room.Room
 import androidx.lifecycle.lifecycleScope
+import com.example.capocoinapp.Services.TransactionService
 import com.example.capocoinapp.data.ViewModels.TransactionViewModel
 
 import kotlinx.coroutines.launch
@@ -86,7 +87,7 @@ class MainActivity : ComponentActivity() {
 
                 // Nav Host wraps all composable routes
                 NavHost(
-                    navController = navController, startDestination = "AddCategories"
+                    navController = navController, startDestination = "UserBudget"
                 ){
                     composable("Home") {
                         HomeScreen(navController)
@@ -118,7 +119,9 @@ class MainActivity : ComponentActivity() {
                     }
                     composable("UserBudget"){
                         UserBudgetScreen(navController=navController,
-                            categoryViewModel = categoryViewModel)
+                            categoryViewModel = categoryViewModel,
+                            categoryService = CategoryService(AppDatabase.getDatabase
+                                (applicationContext).categoryDao()))
                     }
                     composable("TransactionDetails"){
                         TransactionsDetailsScreen(navController)
@@ -182,13 +185,14 @@ class MainActivity : ComponentActivity() {
                         }
                     }
 
+                    /*
                     // composable route to Categories Screen
                     composable("Categories"){
                         // Ensures the Global UI layout is applied to the Categories Screen
                         CapoCoinSharedLayout(screenTitle = "Transactions", navController = navController){ padding ->
                             Text("Categories Content", modifier = Modifier.padding(padding))
                         }
-                    }
+                    }*/
 
                     // composable route to Add Categories Screen
                     composable("AddCategories"){
@@ -204,6 +208,25 @@ class MainActivity : ComponentActivity() {
                                 service = CategoryService(AppDatabase.getDatabase
                                     (applicationContext).categoryDao()),
                                 navController = navController)
+                            }
+                        }
+                    }
+
+                    //composable route to Category Totals Screen
+                    composable("CategoryTotals")
+                    {
+                        // Ensures the Global UI layout is applied to the Categories Totals Screen
+                        AppScaffold(
+                            topBar = { TopNavBar(navController) },
+                            bottomBar = { BottomNavBar(navController) },
+                            pageTitle = "Category Totals"
+                        ){ padding ->
+                            Box(modifier = Modifier.padding(padding))
+                            {
+                                CategoryTotalsScreen(service = TransactionService
+                                    (AppDatabase.getDatabase
+                                    (applicationContext).transactionDao()),
+                                    navController = navController)
                             }
                         }
                     }
