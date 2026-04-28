@@ -1,11 +1,13 @@
 package com.example.capocoinapp
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ContentPaste
 import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material.icons.filled.PieChart
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -27,6 +29,7 @@ fun MoreScreen(navController: NavController) {
         ) { _ ->
 
             CardBox(
+
                 cards = listOf(
                     {
                         CardComponent(
@@ -45,7 +48,10 @@ fun MoreScreen(navController: NavController) {
                             null,
                             null,
                             Icons.Default.PieChart,
-                            null
+                            null,
+                            onClick = {
+                                navController.navigate("UserBudget")
+                            }
                         )
                     },
                     {

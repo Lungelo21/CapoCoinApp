@@ -39,7 +39,7 @@ import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 @Composable
 fun Login(
     modifier: Modifier = Modifier,
-
+    message: String ="",
     onLoginClick: (email: String, password: String) -> Unit = { _, _ -> },
     onRegisterClick: () -> Unit = {}
 
@@ -109,6 +109,13 @@ fun Login(
         )
 
         Spacer(modifier = Modifier.height(32.dp))
+
+        if (message.isNotBlank()) {
+            Text(
+                text = message,
+                color = TextRed
+            )
+        }
 
         // button to login
         FilledTonalButton(

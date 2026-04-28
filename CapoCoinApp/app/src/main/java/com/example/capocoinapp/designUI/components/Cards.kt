@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -105,6 +106,7 @@ fun CardComponent(
 ) {
     Card(
         modifier = Modifier
+            .fillMaxSize()
             .fillMaxWidth()
             .wrapContentHeight()
             .clickable { onClick() },
@@ -181,6 +183,7 @@ fun CardBox(cards: List<@Composable () -> Unit>) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .fillMaxSize()
             .wrapContentHeight()
             .background(BackgroundColor)
             .padding(16.dp)
@@ -676,6 +679,7 @@ fun BudgetCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
+            .fillMaxSize()
             .wrapContentHeight()
             .clickable { onClick() },
         shape = RoundedCornerShape(50.dp),
