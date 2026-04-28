@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -15,8 +14,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.capocoinapp.data.ViewModels.CategoryViewModel
 import com.example.capocoinapp.data.entities.Category
 import com.example.capocoinapp.designUI.components.AppScaffold
@@ -24,10 +25,6 @@ import com.example.capocoinapp.designUI.components.BottomNavBar
 import com.example.capocoinapp.designUI.components.BudgetCard
 import com.example.capocoinapp.designUI.components.TopNavBar
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
-import androidx.compose.runtime.*
-
-import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 
 
 @Composable

@@ -1,9 +1,5 @@
 package com.example.capocoinapp
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Fastfood
-import androidx.compose.material.icons.filled.Movie
-import androidx.compose.material.icons.filled.Payments
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
@@ -35,7 +31,8 @@ fun TransactionsScreen(navController: NavController) {
                             "Empire Steak",
                             "200",
                             "5:00 PM",
-                            Icons.Default.Fastfood,
+                            "Teal",
+                            "Food",
                             "expense"
                         )
                     },
@@ -45,7 +42,8 @@ fun TransactionsScreen(navController: NavController) {
                             "Pavillion",
                             "150",
                             "7:45 AM",
-                            Icons.Default.Movie,
+                            "Grey",
+                            "Gym",
                             "expense"
                         )
                     },
@@ -55,8 +53,9 @@ fun TransactionsScreen(navController: NavController) {
                             "Dunder Mifflin",
                             "30 000",
                             "9:45 AM",
-                            Icons.Default.Payments,
-                            "income"
+                            "Emerald",
+                            "Savings",
+                            "expense"
                         )
 
                     }
