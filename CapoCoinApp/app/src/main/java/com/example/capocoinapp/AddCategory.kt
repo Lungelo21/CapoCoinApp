@@ -79,11 +79,13 @@ import androidx.compose.material.icons.Icons
 
 //importing question mark icon for default fallback icon
 import androidx.compose.material.icons.filled.QuestionMark
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 
 //Importing the Primary button from buttons.kt
 import com.example.capocoinapp.designUI.components.PrimaryButton
+import com.example.capocoinapp.ui.theme.TextWhite
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -140,9 +142,16 @@ fun AddCategory(viewModel: CategoryViewModel, service: CategoryService, navContr
                 value = transactionType,
                 onValueChange = {},
                 readOnly = true,
-                label = { Text("Transaction Type") },
+                label = { Text("Transaction Type", color = TextWhite) },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = transactionTypeExpanded) },
-                modifier = Modifier.menuAnchor().fillMaxWidth()
+                modifier = Modifier.menuAnchor().fillMaxWidth(),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedTextColor = TextWhite,
+                    unfocusedTextColor = TextWhite,
+                    focusedBorderColor = TextWhite,
+                    unfocusedBorderColor = Color(0xFF9E9E9E)
+                )
+
             )
             /*
                     * Author: Kotlin Programming Language
@@ -175,10 +184,16 @@ fun AddCategory(viewModel: CategoryViewModel, service: CategoryService, navContr
         OutlinedTextField(
             value = categoryTitle,
             onValueChange = { categoryTitle = it },
-            label = { Text("Category Title") },
-            placeholder = { Text("Rent, Education, Salary, etc.") },
+            label = { Text("Category Title", color = TextWhite) },
+            placeholder = { Text("Rent, Education, Salary, etc.", color = Color(0xFF9E9E9E)) },
             modifier = Modifier.fillMaxWidth(),
-            singleLine = true
+            singleLine = true,
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedTextColor = TextWhite,
+                unfocusedTextColor = TextWhite,
+                focusedBorderColor = TextWhite,
+                unfocusedBorderColor = Color(0xFF9E9E9E)
+            )
         )
         /*
                     * Author: Kotlin Programming Language
@@ -201,7 +216,13 @@ fun AddCategory(viewModel: CategoryViewModel, service: CategoryService, navContr
                 value = iconColour,
                 onValueChange = {},
                 readOnly = true,
-                label = { Text("Select a Colour") },
+                label = { Text("Select a Colour", color = TextWhite) },
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedTextColor = TextWhite,
+                    unfocusedTextColor = TextWhite,
+                    focusedBorderColor = TextWhite,
+                    unfocusedBorderColor = Color(0xFF9E9E9E)
+                ),
                 leadingIcon = {
                     Box(
                         modifier = Modifier
@@ -259,15 +280,22 @@ fun AddCategory(viewModel: CategoryViewModel, service: CategoryService, navContr
                 value = selectedIcon,
                 onValueChange = {},
                 readOnly = true,
-                label = { Text("Select an Icon") },
+                label = { Text("Select an Icon", color = TextWhite) },
                 leadingIcon = {
                     Icon(      //Setting a null value in the case no icon is selected or found -> ?
                         imageVector = currentIcon ?: Icons.Default.QuestionMark,
-                        contentDescription = null
+                        contentDescription = null,
+                        tint = TextWhite
                     )
                 },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = iconExpanded) },
-                modifier = Modifier.menuAnchor().fillMaxWidth()
+                modifier = Modifier.menuAnchor().fillMaxWidth(),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedTextColor = TextWhite,
+                    unfocusedTextColor = TextWhite,
+                    focusedBorderColor = TextWhite,
+                    unfocusedBorderColor = Color(0xFF9E9E9E)
+                )
             )
             /*
                     * Author: Kotlin Programming Language
@@ -299,7 +327,12 @@ fun AddCategory(viewModel: CategoryViewModel, service: CategoryService, navContr
 
         //Save button calling the Primary button method from Buttons.kt
         PrimaryButton(
-            buttonText = "Save Category",
+            buttonText = if(transactionType.isNotBlank() &&
+                categoryTitle.isNotBlank() &&
+                iconColour.isNotBlank() &&
+                selectedIcon.isNotBlank())
+            {"Save Category"}
+            else{""},
             enabled = transactionType.isNotBlank() &&
                     categoryTitle.isNotBlank() &&
                     iconColour.isNotBlank() &&
