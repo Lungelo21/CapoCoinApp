@@ -63,6 +63,8 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.SegmentedButtonDefaults.Icon
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.sp
+import com.example.capocoinapp.designUI.components.PrimaryButton
+import com.example.capocoinapp.ui.theme.Accent
 import com.example.capocoinapp.ui.theme.BackgroundColor
 
 import com.example.capocoinapp.ui.theme.CapoType
@@ -188,12 +190,14 @@ fun CategoryTotalRow(item: CategoryTotal) {
     ) {
         Text(
             text = item.categoryTitle,
-            style = MaterialTheme.typography.bodyLarge
+            style = MaterialTheme.typography.bodyLarge,
+            color = TextWhite
         )
         Text(
             text = "R ${String.format("%.2f", item.totalAmount)}",
             style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            color = TextWhite
         )
     }
 }
@@ -235,13 +239,13 @@ fun PreviewCategoryTotalsScreen() {
                         .fillMaxWidth()
                         .background(BackgroundColor)
                         .padding(16.dp),
-                    contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.TopStart
                 ) {
                     Text(
                         text = "Category Totals",
                         style = CapoType.cardTitle,
                         fontSize = 24.sp,
-                        color = TextWhite
+                        color = Accent
                     )
                 }
             },
@@ -283,14 +287,23 @@ fun PreviewCategoryTotalsScreen() {
             {
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp))
                 {
-                    OutlinedButton(onClick = {}, modifier = Modifier.weight(1f))
-                    {
-                        Text("From: 2026-04-01")
-                    }
-                    OutlinedButton(onClick = {}, modifier = Modifier.weight(1f))
-                    {
-                        Text("To: 2026-04-27")
-                    }
+                    PrimaryButton (text =
+                        if(startDate.isEmpty())
+                        {startDate = "Start Date"}
+                        else
+                        {startDate= "From: 2026-04-01"},
+                        onClick = {},
+                        modifier = Modifier.weight(1f)
+                    )
+
+                    PrimaryButton (text =
+                        if(startDate.isEmpty())
+                        {endDate = "End Date"}
+                        else
+                        {endDate= "To: 2026-04-27"},
+                        onClick = {},
+                        modifier = Modifier.weight(1f)
+                    )
                 }
 
                 //Spacer to space out page
