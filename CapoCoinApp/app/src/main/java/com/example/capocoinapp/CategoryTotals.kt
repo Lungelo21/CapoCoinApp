@@ -283,27 +283,33 @@ fun PreviewCategoryTotalsScreen() {
             containerColor = BackgroundColor // Uses your theme's background
         )
         { innerPadding ->
-            Column(modifier = Modifier.fillMaxSize().padding(innerPadding).padding(16.dp))
+            Column(modifier = Modifier.fillMaxSize().padding(innerPadding).padding(16.dp),
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.Start)
             {
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp))
                 {
-                    PrimaryButton (text =
-                        if(startDate.isEmpty())
-                        {startDate = "Start Date"}
-                        else
-                        {startDate= "From: 2026-04-01"},
-                        onClick = {},
-                        modifier = Modifier.weight(1f)
+                    Box(
+                        modifier = Modifier.weight(1f),
+                        contentAlignment = Alignment.Center
                     )
-
-                    PrimaryButton (text =
-                        if(startDate.isEmpty())
-                        {endDate = "End Date"}
-                        else
-                        {endDate= "To: 2026-04-27"},
-                        onClick = {},
-                        modifier = Modifier.weight(1f)
+                    {
+                        PrimaryButton (
+                            buttonText = "From: 2026-04-01", // Pass string directly
+                            onClick = {}
+                        )
+                    }
+                    
+                    Box(
+                        modifier = Modifier.weight(1f),
+                        contentAlignment = Alignment.Center
                     )
+                    {
+                        PrimaryButton (
+                            buttonText = "To: 2026-04-27", // Pass string directly
+                            onClick = {}
+                        )
+                    }
                 }
 
                 //Spacer to space out page
