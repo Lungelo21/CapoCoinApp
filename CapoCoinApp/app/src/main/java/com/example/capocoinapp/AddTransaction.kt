@@ -60,6 +60,7 @@ import com.example.capocoinapp.designUI.components.TimePickerCard
 import com.example.capocoinapp.designUI.components.TopNavBar
 import com.example.capocoinapp.designUI.components.inputCard
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
+import com.example.capocoinapp.ui.theme.TextRed
 
 
 @Composable
@@ -104,6 +105,9 @@ fun AddTransaction(navController: NavController) {
     // amount which confirms if the confirm button in the calculator has been clicked
     var isAmountConfirmed = state.isAmountConfirmed
 
+    // Validation message stored
+    var validationMessage = transactionViewModel.message
+
     CapoCoinAppTheme {
         val navController = rememberNavController()
         AppScaffold(
@@ -118,6 +122,15 @@ fun AddTransaction(navController: NavController) {
                         .weight(1f)
                         .fillMaxWidth()
                 ) {
+                    // Adding validation to ensure that users cannot log a transaction unless all required fields are entered
+                    if(validationMessage.isNotBlank()){
+                        Text(
+                            text = validationMessage,
+                            color = if(validationMessage == "Transaction Saved!") Primary else TextRed,
+                            modifier = Modifier.padding(8.dp)
+                        )
+                    }
+
                     // Dropdown for Transaction Type
                     SelectTransactionTypeDropDown(
                         transactionTypes = transactionTypes,
@@ -196,31 +209,28 @@ fun AddTransaction(navController: NavController) {
                                 calculatorViewModel.reOpenCalculator()
                             }
                         )
-
-                        Spacer(modifier = Modifier.height(12.dp))
-
-                        // log Transaction button
-                        LogTransactionButton(
-                            symbol = "Log Transaction",
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(60.dp)
-                                .background(Primary),
-                            // when Log Transaction is clicked passes the values to be entered into Transactions table
-                            onClick = {
-                                transactionViewModel.addTransaction(
-                                    type = chosenTransactionType,
-                                    name = title,
-                                    amount = state.number1,
-                                    categoryID = selectedCategory?.categoryID?: 0,
-                                    date = selectedDate,
-                                    time = selectedTime,
-                                    photoPath = selectedImageUri?.toString()
-                                )
-                            }
-                        )
                     }
 
+                    // log Transaction button
+                    LogTransactionButton(
+                        symbol = "Log Transaction",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(60.dp)
+                            .background(Primary),
+                        // when Log Transaction is clicked passes the values to be entered into Transactions table
+                        onClick = {
+                            transactionViewModel.addTransaction(
+                                type = chosenTransactionType,
+                                name = title,
+                                amount = state.number1,
+                                categoryID = selectedCategory?.categoryID?: 0,
+                                date = selectedDate,
+                                time = selectedTime,
+                                photoPath = selectedImageUri?.toString()
+                            )
+                        }
+                    )
                 }
             }
         }
