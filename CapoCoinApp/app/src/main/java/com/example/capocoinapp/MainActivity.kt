@@ -87,7 +87,11 @@ class MainActivity : ComponentActivity() {
 
                 // Nav Host wraps all composable routes
                 NavHost(
+<<<<<<< Updated upstream
                     navController = navController, startDestination = "AddTransaction"
+=======
+                    navController = navController, startDestination = "Categories"
+>>>>>>> Stashed changes
                 ){
                     composable("Home") {
                         HomeScreen(navController)
@@ -109,7 +113,9 @@ class MainActivity : ComponentActivity() {
                         MoreScreen(navController)
                     }
                     composable("Categories"){
-                        CategoriesScreen(navController)
+                        CategoriesScreen(navController = navController,
+                            categoryService = CategoryService(AppDatabase.getDatabase
+                            (applicationContext).categoryDao()))
                     }
                     composable("BottomNavBar"){
                         BottomNavBar(navController)
@@ -184,15 +190,6 @@ class MainActivity : ComponentActivity() {
 
                         }
                     }
-
-                    /*
-                    // composable route to Categories Screen
-                    composable("Categories"){
-                        // Ensures the Global UI layout is applied to the Categories Screen
-                        CapoCoinSharedLayout(screenTitle = "Transactions", navController = navController){ padding ->
-                            Text("Categories Content", modifier = Modifier.padding(padding))
-                        }
-                    }*/
 
                     // composable route to Add Categories Screen
                     composable("AddCategories"){
