@@ -383,6 +383,14 @@ fun PageTitleText(titleText: String) {
     )
 }
 
+@Composable
+fun PageSubTitleText(titleText: String) {
+    Text(
+        text = titleText,
+        style = CapoType.heading,
+    )
+}
+
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {

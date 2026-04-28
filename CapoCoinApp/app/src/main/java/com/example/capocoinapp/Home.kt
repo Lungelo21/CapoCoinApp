@@ -12,7 +12,8 @@ import com.example.capocoinapp.designUI.components.AppScaffold
 import com.example.capocoinapp.designUI.components.BottomNavBar
 import com.example.capocoinapp.designUI.components.CardBox
 import com.example.capocoinapp.designUI.components.CardComponent
-import com.example.capocoinapp.designUI.components.PageTitleText
+import com.example.capocoinapp.designUI.components.HomeCard
+import com.example.capocoinapp.designUI.components.PageSubTitleText
 import com.example.capocoinapp.designUI.components.TopNavBar
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 
@@ -24,14 +25,13 @@ fun HomeScreen(navController: NavController) {
             bottomBar = { BottomNavBar(navController) },
             pageTitle = "Home"
         ) { _ ->
-
-            //ToDo: add progress bar card
-
-            PageTitleText("Recent Transactions")
-
             // ToDo: replace with logic to show the actual transactions once database is set up
             CardBox(
                 cards = listOf(
+
+                    { HomeCard(1300.0, 2000.0, 15) },
+
+                    { PageSubTitleText("Recent Transactions") },
                     {
                         CardComponent(
                             "Dinner Night",
