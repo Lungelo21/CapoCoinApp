@@ -1,6 +1,13 @@
 package com.example.capocoinapp
 
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ContentPaste
+import androidx.compose.material.icons.filled.Flag
+import androidx.compose.material.icons.filled.PieChart
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -21,7 +28,51 @@ fun MoreScreen(navController: NavController) {
         ) { _ ->
 
             CardBox(
+
                 cards = listOf(
+                    {
+                        CardComponent(
+                            "Settings",
+                            "Change app settings",
+                            null,
+                            null,
+                            Icons.Default.Settings,
+                            null
+                        )
+                    },
+                    {
+                        CardComponent(
+                            "User's budget",
+                            "Change app settings",
+                            null,
+                            null,
+                            Icons.Default.PieChart,
+                            null,
+                            onClick = {
+                                navController.navigate("UserBudget")
+                            }
+                        )
+                    },
+                    {
+                        CardComponent(
+                            "User Spending Report",
+                            "Change app settings",
+                            null,
+                            null,
+                            Icons.Default.ContentPaste,
+                            null
+                        )
+                    },
+                    {
+                        CardComponent(
+                            "User Goals",
+                            "Change app settings",
+                            null,
+                            null,
+                            Icons.Default.Flag,
+                            null
+                        )
+                    }
 
                 )
             )

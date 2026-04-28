@@ -13,6 +13,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,6 +29,7 @@ import com.example.capocoinapp.data.ViewModels.CategoryViewModel
 import com.example.capocoinapp.data.ViewModels.CategoryViewModelFactory
 import com.example.capocoinapp.data.ViewModels.UserViewModel
 import com.example.capocoinapp.data.ViewModels.ViewModelFactory
+import com.example.capocoinapp.data.ViewModels.TransactionViewModelFactory
 import com.example.capocoinapp.designUI.components.BottomNavBar
 import com.example.capocoinapp.designUI.components.CapoCoinAuthenticationLayout
 import com.example.capocoinapp.designUI.components.CapoCoinSharedLayout
@@ -45,10 +47,12 @@ import com.example.capocoinapp.designUI.components.CapoCoinAuthenticationLayout
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 import androidx.room.Room
 import androidx.lifecycle.lifecycleScope
+import com.example.capocoinapp.data.ViewModels.TransactionViewModel
 
 import kotlinx.coroutines.launch
 
 import com.example.capocoinapp.data.entities.User
+import com.example.capocoinapp.designUI.components.AppScaffold
 
 //
 
@@ -62,6 +66,12 @@ class MainActivity : ComponentActivity() {
     private val categoryViewModel: CategoryViewModel by viewModels {
         val db = AppDatabase.getDatabase(applicationContext)
         CategoryViewModelFactory(CategoryService(db.categoryDao()))
+
+
+    }
+    private val transactionViewModel: TransactionViewModel by viewModels {
+        val db = AppDatabase.getDatabase(applicationContext)
+        TransactionViewModelFactory(db.transactionDao())
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,13 +86,20 @@ class MainActivity : ComponentActivity() {
 
                 // Nav Host wraps all composable routes
                 NavHost(
-                    navController = navController, startDestination = "Login"
+                    navController = navController, startDestination = "AddTransaction"
                 ){
                     composable("Home") {
                         HomeScreen(navController)
                     }
                     composable("Transactions"){
                         TransactionsScreen(navController)
+                    }
+                    composable("AddTransaction"){
+                        AddTransaction(
+                            navController = navController,
+                            categoryViewModel = categoryViewModel,
+                            transactionViewModel = transactionViewModel
+                        )
                     }
                     composable("Analytics"){
                         AnalyticsScreen(navController)
@@ -99,6 +116,10 @@ class MainActivity : ComponentActivity() {
                     composable("TopNavBar"){
                         TopNavBar(navController)
                     }
+                    composable("UserBudget"){
+                        UserBudgetScreen(navController=navController,
+                            categoryViewModel = categoryViewModel)
+                    }
                     composable("TransactionDetails"){
                         TransactionsDetailsScreen(navController)
                     }
@@ -108,18 +129,18 @@ class MainActivity : ComponentActivity() {
                     composable("Login"){
                         // Ensures the Authentication layout is applied to the Login Screen
                         CapoCoinAuthenticationLayout(screenTitle = "Login", navController = navController){ padding ->
+
+                            LaunchedEffect(userViewModel.isLoggedIn) {
+                                if (userViewModel.isLoggedIn) {
+                                    navController.navigate("Home")
+                                    userViewModel.clearLoginState()
+                                    userViewModel.clearMessage()
+                                }
+                            }
                             Login(
                                 modifier = Modifier.padding(padding),
-                                onLoginClick = { username, password ->
-
-                                    val validLogin = userViewModel.loginUser(
-                                        username = username,
-                                        password = password
-                                    )
-
-                                    if (validLogin) {
-                                        navController.navigate("Home")
-                                    }
+                                onLoginClick = { email, password ->
+                                    userViewModel.loginUser(email,password)
                                 },
                                 onRegisterClick = {
                                     navController.navigate("Register")
@@ -172,8 +193,18 @@ class MainActivity : ComponentActivity() {
                     // composable route to Add Categories Screen
                     composable("AddCategories"){
                         // Ensures the Global UI layout is applied to the Add Categories Screen
-                        CapoCoinSharedLayout(screenTitle = "Add Categories", navController = navController){ padding ->
-                            Text("Add Categories Content", modifier = Modifier.padding(padding))
+                        AppScaffold(
+                            topBar = { TopNavBar(navController) },
+                            bottomBar = { BottomNavBar(navController) },
+                            pageTitle = "Add Category"
+                        ){ padding ->
+                            Box(modifier = Modifier.padding(padding))
+                            {
+                                AddCategory(viewModel = categoryViewModel,
+                                service = CategoryService(AppDatabase.getDatabase
+                                    (applicationContext).categoryDao()),
+                                navController = navController)
+                            }
                         }
                     }
 

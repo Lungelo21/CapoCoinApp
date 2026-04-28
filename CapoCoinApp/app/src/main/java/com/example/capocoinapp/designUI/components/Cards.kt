@@ -2,7 +2,7 @@ package com.example.capocoinapp.designUI.components
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.icu.util.Calendar
+import java.util.Calendar
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -30,6 +30,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.AttachFile
 import androidx.compose.material.icons.filled.AttachMoney
 import androidx.compose.material.icons.filled.AutoAwesome
@@ -49,6 +50,7 @@ import androidx.compose.material.icons.filled.Movie
 import androidx.compose.material.icons.filled.Museum
 import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material.icons.filled.Payments
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Pets
 import androidx.compose.material.icons.filled.QuestionMark
 import androidx.compose.material.icons.filled.Restaurant
@@ -92,6 +94,7 @@ import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 import com.example.capocoinapp.ui.theme.CapoType
 import com.example.capocoinapp.ui.theme.CardBG
 import com.example.capocoinapp.ui.theme.Primary
+import com.example.capocoinapp.ui.theme.ProgressBarBlue
 import com.example.capocoinapp.ui.theme.ProgressBarOrange
 import com.example.capocoinapp.ui.theme.TextGreen
 import com.example.capocoinapp.ui.theme.TextRed
@@ -112,6 +115,7 @@ fun CardComponent(
 ) {
     Card(
         modifier = Modifier
+            .fillMaxSize()
             .fillMaxWidth()
             .wrapContentHeight()
             .clickable { onClick() },
@@ -197,6 +201,7 @@ fun CardBox(cards: List<@Composable () -> Unit>) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .fillMaxSize()
             .wrapContentHeight()
             .background(BackgroundColor)
             .padding(16.dp)
@@ -472,7 +477,7 @@ fun DatePickerCard(
                     DatePickerDialog(
                         context,
                         { _, year, month, dayOfMonth ->
-                            val formatted = "$dayOfMonth/${month + 1}/$year"
+                            val formatted = String.format("%04d-%02d-%02d", year, month + 1, dayOfMonth)
                             onTransactionDateSelected(formatted)
                         },
                         calendar.get(Calendar.YEAR),
@@ -524,25 +529,19 @@ fun TimePickerCard(
             .clickable(enabled = enabled) {
 
                 if (enabled) {
+                    // gets instance of calendar
+                    val calendar = Calendar.getInstance()
 
                     TimePickerDialog(
                         context,
                         { _, hourOfDay, minute ->
 
-                            // Converts to 12 hr format
-                            var amPM = if (hourOfDay >= 12) "PM" else "AM"
+                            val formatted = String.format("%02d:%02d", hourOfDay, minute)
 
-                            val hour12 = when {
-                                hourOfDay == 0 -> 12
-                                hourOfDay > 12 -> hourOfDay - 12
-                                else -> hourOfDay
-                            }
-
-                            val formatted = String.format("%02d:%02d %s", hour12, minute, amPM)
                             onTransactionTimeSelected(formatted)
                         },
-                        12,
-                        0,
+                        calendar.get(Calendar.HOUR_OF_DAY),
+                        calendar.get(Calendar.MINUTE),
                         true
                     ).show()
                 }
@@ -681,6 +680,207 @@ fun FinalAmountCard(
 }
 
 @Composable
+fun LogTransactionButton(
+    symbol: String,
+    modifier: Modifier,
+    onClick: () -> Unit
+) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .clip(RoundedCornerShape(20.dp))
+            .clickable { onClick() }
+            .then(modifier)
+    ) {
+
+        Text(
+            text = symbol,
+            fontSize = 18.sp,
+            color = Color.White
+        )
+    }
+}
+
+
+@Composable
+fun UserProfileCard(
+    firstName: String,
+    lastName: String,
+    level: Int,
+    profileTitle: String,
+    currentXP: Int,
+    nextLevelXP: Int,
+    onClick: () -> Unit = {}
+) {
+    // Formats the number to look nicer: 20000.0 -> R20 000,00
+    val xpRemaining = nextLevelXP - currentXP
+    val progressFloat = currentXP.toFloat() / nextLevelXP.toFloat()
+    val progressPercent = (progressFloat * 100).toInt()
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .clickable { onClick() },
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = CardBG
+        ),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Primary)
+        ) {
+
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // profile icon
+
+                Icon(
+                    imageVector = Icons.Default.AccountCircle,
+                    contentDescription = "User Profile",
+                    modifier = Modifier.size(56.dp),
+                    tint = TextWhite
+                )
+
+                Spacer(modifier = Modifier.width(12.dp))
+
+                Column {
+
+                    // Text with users first and last name
+                    Text(
+                        text = "$firstName $lastName",
+                        style = CapoType.cardTitle
+                    )
+
+                    Spacer(modifier = Modifier.width(16.dp))
+
+                    // Text with the users level and profile title
+                    Text(
+                        text = "Level $level: $profileTitle",
+                        style = CapoType.cardTitle,
+                    )
+                }
+            }
+        }
+
+        Column (
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ){
+            // Text which shows the amount of xp users needs to lvl up
+            Text(
+                text = "$xpRemaining more xp to Level ${level + 1}",
+                style = CapoType.cardTitle,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+
+            // Progress bar
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(20.dp)
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(BackgroundColor),
+                contentAlignment = Alignment.Center
+            ){
+                // Fills the progress bar from left to right
+                Box(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .fillMaxWidth(progressFloat)
+                        .align(Alignment.CenterStart)
+                        .background(ProgressBarBlue)
+                )
+
+                // Percentage of xp to next level
+                Text(
+                        text = "$progressPercent%",
+                        modifier = Modifier.fillMaxWidth(),
+                        style = CapoType.cardTitle,
+                        textAlign = TextAlign.Center
+                )
+            }
+        }
+    }
+
+}
+
+
+
+
+
+
+
+@Composable
+fun MilestoneAchievementCard(
+    milestoneTitle: String,
+    milestoneSubTitle: String,
+    milestonesTimesEarned: String?
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = CardBG
+        ),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(16.dp)
+                .wrapContentHeight(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            Column(modifier = Modifier.fillMaxWidth()) {
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = milestoneTitle,
+                        style = CapoType.cardTitle
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(6.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                        Text(
+                            text = milestoneSubTitle,
+                            style = CapoType.cardSubTitle
+                        )
+
+                        Text(
+                            text = milestonesTimesEarned?:"",
+                            style = CapoType.cardSubTitle
+                        )
+
+                }
+            }
+        }
+    }
+}
+
+
+
+@Composable
 fun BudgetCard(
     cardTitle: String,
     cardMin: Double?,
@@ -692,6 +892,7 @@ fun BudgetCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
+            .fillMaxSize()
             .wrapContentHeight()
             .clickable { onClick() },
         shape = RoundedCornerShape(50.dp),

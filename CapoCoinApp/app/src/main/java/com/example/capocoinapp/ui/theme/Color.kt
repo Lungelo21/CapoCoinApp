@@ -22,3 +22,5 @@ val SubTextWhite = Color(0XFFcbcbcb)
 val TextGreen = Color(0XFF54df65)
 val TextRed = Color(0XFFe73f3f)
 
+val ProgressBarBlue = Color(0XFF3EC1D3)
+
