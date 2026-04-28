@@ -2,6 +2,7 @@ package com.example.capocoinapp
 
 //Calling import call for composable annotation
 import android.graphics.drawable.Icon
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.runtime.Composable
 
@@ -344,6 +345,7 @@ fun AddCategory(viewModel: CategoryViewModel, service: CategoryService, navContr
                         iconColour.isNotBlank() &&
                         selectedIcon.isNotBlank(),
                 onClick = {
+                    Log.d("UI_Check", "PrimaryButton Clicked!") // See if the UI even registers the touch
                     viewModel.addCategory(
                         type = transactionType,
                         categoryTitle = categoryTitle,
@@ -352,6 +354,8 @@ fun AddCategory(viewModel: CategoryViewModel, service: CategoryService, navContr
                         minBudget = minBudget,
                         maxBudget = maxBudget
                     )
+
+                    navController.navigate("Categories")
                 }
             )
         }

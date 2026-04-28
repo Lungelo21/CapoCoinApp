@@ -1,5 +1,6 @@
 package com.example.capocoinapp.data.ViewModels
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -33,18 +34,36 @@ class CategoryViewModel(
                 categoryColour.isBlank() -> "Please select a colour"
                 categoryIcon.isBlank() -> "Please select an icon"
                 else -> {
-                    val newCategory = Category(
-                        transactionType = type,
-                        categoryTitle = categoryTitle,
-                        categoryColour = categoryColour,
-                        categoryIcon = categoryIcon,
+                    try {
+                        val newCategory = Category(
+                            transactionType = type,
+                            categoryTitle = categoryTitle,
+                            categoryColour = categoryColour,
+                            categoryIcon = categoryIcon,
 
-                        // Added to change in More User Budget
-                        minBudget = minBudget,
-                        maxBudget = maxBudget
-                    )
-                    service.createCategory(newCategory)
-                    "Category: '$categoryTitle' was added!"
+                            // Added to change in More User Budget
+                            minBudget = minBudget,
+                            maxBudget = maxBudget
+                        )
+                        //Log service calling dao method
+                        android.util.Log.d("ViewModelCheck", "Attempting service.createCategory...")
+
+                        //service calling createCategory method from dao
+                        service.createCategory(newCategory)
+
+                        //logging successful db entry
+                        android.util.Log.d("ViewModelCheck", "Database Insert Successful:")
+
+                        //Prompting user of successful category entry into db
+                        "Category: '$categoryTitle' was added!"
+                    } catch(e: Exception)
+                    {
+                        //Logging failed insertion into db
+                        android.util.Log.d("ViewModelCheck", "Database Insert Failed: ${e.message}")
+
+                        //Prompting error message
+                        "Category: '$categoryTitle' failed to be added!" // Returns error message
+                    }
                 }
             }
         }
