@@ -659,6 +659,28 @@ fun FinalAmountCard(
 }
 
 @Composable
+fun LogTransactionButton(
+    symbol: String,
+    modifier: Modifier,
+    onClick: () -> Unit
+) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .clip(RoundedCornerShape(20.dp))
+            .clickable { onClick() }
+            .then(modifier)
+    ) {
+
+        Text(
+            text = symbol,
+            fontSize = 18.sp,
+            color = Color.White
+        )
+    }
+}
+
+@Composable
 fun BudgetCard(
     cardTitle: String,
     cardMin: Double?,

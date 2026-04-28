@@ -51,6 +51,7 @@ import com.example.capocoinapp.designUI.components.CardBox
 import com.example.capocoinapp.designUI.components.CardComponent
 import com.example.capocoinapp.designUI.components.DatePickerCard
 import com.example.capocoinapp.designUI.components.FinalAmountCard
+import com.example.capocoinapp.designUI.components.LogTransactionButton
 import com.example.capocoinapp.designUI.components.SelectCategoryDropDown
 import com.example.capocoinapp.designUI.components.SelectTransactionTypeDropDown
 import com.example.capocoinapp.designUI.components.TimePickerCard
@@ -197,7 +198,7 @@ fun AddTransaction() {
                         Spacer(modifier = Modifier.height(12.dp))
 
                         // log Transaction button
-                        CalculatorButtonDesign(
+                        LogTransactionButton(
                             symbol = "Log Transaction",
                             modifier = Modifier
                                 .fillMaxWidth()
