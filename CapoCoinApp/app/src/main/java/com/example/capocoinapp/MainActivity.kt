@@ -87,11 +87,8 @@ class MainActivity : ComponentActivity() {
 
                 // Nav Host wraps all composable routes
                 NavHost(
-<<<<<<< Updated upstream
-                    navController = navController, startDestination = "AddTransaction"
-=======
-                    navController = navController, startDestination = "Categories"
->>>>>>> Stashed changes
+                    navController = navController, startDestination = "CategoryTotals"
+
                 ){
                     composable("Home") {
                         HomeScreen(navController)
