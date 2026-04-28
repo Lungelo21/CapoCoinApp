@@ -109,7 +109,7 @@ fun AddTransaction(navController: NavController) {
     var validationMessage = transactionViewModel.message
 
     CapoCoinAppTheme {
-        val navController = rememberNavController()
+
         AppScaffold(
             topBar = { TopNavBar(navController) },
             bottomBar = { BottomNavBar(navController) },
