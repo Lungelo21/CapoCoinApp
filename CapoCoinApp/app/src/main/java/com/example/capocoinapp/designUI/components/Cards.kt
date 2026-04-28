@@ -108,7 +108,8 @@ fun CardComponent(
     cardSubTitle: String?,
     cardAmount: String?,
     cardSubAmount: String?,
-    cardIcon: ImageVector,
+    cardColor: String,
+    cardIcon: String?,
     cardTransactionType: String?,
     onClick: () -> Unit = {}
 ) {
@@ -130,14 +131,23 @@ fun CardComponent(
                 .wrapContentHeight(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-
-            // Icon passed as parameter
-            Icon(
-                imageVector = cardIcon,
-                contentDescription = null,
-                modifier = Modifier.size(44.dp),
-                tint = TextWhite
-            )
+            if (cardIcon != null) {
+                Box(
+                    modifier = Modifier
+                        .size(40.dp)
+                        .background(
+                            color = getColorFromString(cardColor),
+                            shape = CircleShape
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = getIconFromString(cardIcon),
+                        contentDescription = null,
+                        tint = TextWhite,
+                    )
+                }
+            }
 
             Spacer(modifier = Modifier.width(8.dp))
 
@@ -1059,9 +1069,10 @@ fun HomeCard(
     // Formats the number to look nicer: 20000.0 -> R20 000,00
     val budgetString = NumberFormat.getCurrencyInstance().format(budget)
     val totalRemaining = NumberFormat.getCurrencyInstance().format(budget - totalSpent)
-    val dailyRemaining = NumberFormat.getCurrencyInstance().format((budget - totalSpent) / daysRemaining.toDouble())
+    val dailyRemaining =
+        NumberFormat.getCurrencyInstance().format((budget - totalSpent) / daysRemaining.toDouble())
 
-    val progressFloat = (totalSpent/budget).toFloat()
+    val progressFloat = (totalSpent / budget).toFloat()
     val progressPercent = (progressFloat * 100).toInt()
 
     Card(
@@ -1125,7 +1136,8 @@ fun HomeCard(
                         .fillMaxHeight()
                         .background(
                             color = BackgroundColor,
-                            shape = RoundedCornerShape(16.dp))
+                            shape = RoundedCornerShape(16.dp)
+                        )
                 )
 
                 LinearProgressIndicator(
@@ -1145,6 +1157,11 @@ fun HomeCard(
                     style = CapoType.cardTitle,
                     textAlign = TextAlign.Center
                 )
+                /*
+                 * Author: Android
+                 * Link: https://developer.android.com/develop/ui/compose/components/progress
+                 * DateAccessed: 28/04/2026
+                 * */
             }
         }
     }
@@ -1157,24 +1174,20 @@ fun CardPreview() {
     CapoCoinAppTheme {
         CardBox(
             cards = listOf(
-                {
-                    HomeCard(1300.0, 2000.0, 15)
-
-
-                },
-                {
-                    UserProfileCard("John", "Smith", 4, "Penny Pincher", 1000, 1200)
-                }
 //                {
-//                    CardComponent(
-//                        "Dinner Night",
-//                        "Empire Steak",
-//                        "200",
-//                        "5:00 PM",
-//                        Icons.Default.Fastfood,
-//                        "expense"
-//                    )
-//                },
+//                    HomeCard(1300.0, 2000.0, 15)
+//                }
+                {
+                    CardComponent(
+                        "Dinner Night",
+                        "Empire Steak",
+                        "200",
+                        "5:00 PM",
+                        "Teal",
+                        "Food",
+                        "expense"
+                    )
+                },
 //                {
 //                    CardComponent(
 //                        "Salary",

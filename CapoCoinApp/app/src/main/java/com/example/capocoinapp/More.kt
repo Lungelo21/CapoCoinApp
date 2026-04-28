@@ -14,7 +14,6 @@ import androidx.navigation.compose.rememberNavController
 import com.example.capocoinapp.designUI.components.AppScaffold
 import com.example.capocoinapp.designUI.components.BottomNavBar
 import com.example.capocoinapp.designUI.components.CardBox
-import com.example.capocoinapp.designUI.components.CardComponent
 import com.example.capocoinapp.designUI.components.TopNavBar
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 
