@@ -134,8 +134,7 @@ class CalculatorViewModel: ViewModel() {
             }
 
             state = state.copy(
-                number1 = state.number1 + number,
-                isAmountConfirmed = false
+                number1 = state.number1 + number
             )
             return
         }
@@ -145,8 +144,7 @@ class CalculatorViewModel: ViewModel() {
             return // return them
         }
         state = state.copy(
-            number2 = state.number2 + number,
-            isAmountConfirmed = false
+            number2 = state.number2 + number
         )
     }
 

@@ -25,15 +25,14 @@ import com.example.capocoinapp.ui.theme.Primary
 fun CalculatorSection(
     state: CalculatorState,
     modifier: Modifier = Modifier,
-    buttonSpacing: Dp = 2.dp,
+    buttonSpacing: Dp = 6.dp,
     onAction: (CalculatorFunctions) -> Unit
 ){
-    Box(modifier = modifier.fillMaxSize()) {
+    Box(modifier = modifier) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 140.dp),
+                .fillMaxSize()
+                .padding(bottom = 70.dp),
             verticalArrangement = Arrangement.spacedBy(buttonSpacing)
         ) {
             //display
@@ -49,7 +48,7 @@ fun CalculatorSection(
         Box(modifier = Modifier
             .fillMaxWidth()
             .align(Alignment.BottomCenter)
-            .padding(bottom = 50.dp)
+            .padding(bottom = 20.dp)
         )
         {
             CalculatorButtonDesign(
@@ -57,7 +56,7 @@ fun CalculatorSection(
 
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(60.dp)
+                    .height(50.dp)
                     .align(Alignment.BottomCenter)
                     .background(if(state.number1.isNotBlank()) Primary else NavBarBG),
                 onClick = {
