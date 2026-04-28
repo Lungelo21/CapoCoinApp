@@ -114,6 +114,7 @@ fun CardComponent(
 ) {
     Card(
         modifier = Modifier
+            .fillMaxSize()
             .fillMaxWidth()
             .wrapContentHeight()
             .clickable { onClick() },
@@ -190,6 +191,7 @@ fun CardBox(cards: List<@Composable () -> Unit>) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .fillMaxSize()
             .wrapContentHeight()
             .background(BackgroundColor)
             .padding(16.dp)
@@ -880,6 +882,7 @@ fun BudgetCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
+            .fillMaxSize()
             .wrapContentHeight()
             .clickable { onClick() },
         shape = RoundedCornerShape(50.dp),

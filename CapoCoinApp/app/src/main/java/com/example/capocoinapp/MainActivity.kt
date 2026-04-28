@@ -116,6 +116,10 @@ class MainActivity : ComponentActivity() {
                     composable("TopNavBar"){
                         TopNavBar(navController)
                     }
+                    composable("UserBudget"){
+                        UserBudgetScreen(navController=navController,
+                            categoryViewModel = categoryViewModel)
+                    }
                     composable("TransactionDetails"){
                         TransactionsDetailsScreen(navController)
                     }
@@ -125,18 +129,18 @@ class MainActivity : ComponentActivity() {
                     composable("Login"){
                         // Ensures the Authentication layout is applied to the Login Screen
                         CapoCoinAuthenticationLayout(screenTitle = "Login", navController = navController){ padding ->
+
+                            LaunchedEffect(userViewModel.isLoggedIn) {
+                                if (userViewModel.isLoggedIn) {
+                                    navController.navigate("Home")
+                                    userViewModel.clearLoginState()
+                                    userViewModel.clearMessage()
+                                }
+                            }
                             Login(
                                 modifier = Modifier.padding(padding),
-                                onLoginClick = { username, password ->
-
-                                    val validLogin = userViewModel.loginUser(
-                                        username = username,
-                                        password = password
-                                    )
-
-                                    if (validLogin) {
-                                        navController.navigate("Home")
-                                    }
+                                onLoginClick = { email, password ->
+                                    userViewModel.loginUser(email,password)
                                 },
                                 onRegisterClick = {
                                     navController.navigate("Register")

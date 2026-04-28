@@ -2,12 +2,14 @@ package com.example.capocoinapp
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,7 +18,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-
 import com.example.capocoinapp.data.ViewModels.CategoryViewModel
 import com.example.capocoinapp.data.entities.Category
 import com.example.capocoinapp.designUI.components.AppScaffold
@@ -25,13 +26,15 @@ import com.example.capocoinapp.designUI.components.BudgetCard
 import com.example.capocoinapp.designUI.components.TopNavBar
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 import androidx.compose.runtime.*
-
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.capocoinapp.ui.theme.Accent
+import com.example.capocoinapp.ui.theme.Primary
 
 
 @Composable
-fun UserBudget(
+fun UserBudgetScreen(
     modifier: Modifier = Modifier,
     categoryViewModel: CategoryViewModel,
     message: String = "",
@@ -56,9 +59,23 @@ fun UserBudget(
             Column(
                 modifier = modifier
                     .padding(16.dp)
+                    .fillMaxSize()
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
+                FilledTonalButton(
+                    onClick = {
+                        navController.navigate("AddCategories")
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.filledTonalButtonColors(
+                        Primary,
+                        Accent
+                    )
+                ) {
+                    Text("Add Category")
+                }
+
                 /*
                 * Author: Donn Felker
                 * Link: https://www.youtube.com/watch?v=VE7mCMK5djM
@@ -127,4 +144,26 @@ fun UserBudget(
 
 }
 
+@Preview(showBackground = true)
+@Composable
+fun BudgetCardPreviewList() {
+    CapoCoinAppTheme {
+        Column {
+            BudgetCard(
+                cardTitle = "Food",
+                cardMin = 100.0,
+                cardMax = 500.0,
+                cardColor = "Teal",
+                cardIcon = "Food"
+            )
 
+            BudgetCard(
+                cardTitle = "Transport",
+                cardMin = 200.0,
+                cardMax = 800.0,
+                cardColor = "Teal",
+                cardIcon = "Transport"
+            )
+        }
+    }
+}
