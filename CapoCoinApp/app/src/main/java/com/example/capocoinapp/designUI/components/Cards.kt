@@ -2,7 +2,7 @@ package com.example.capocoinapp.designUI.components
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.icu.util.Calendar
+import java.util.Calendar
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -456,7 +456,7 @@ fun DatePickerCard(
                     DatePickerDialog(
                         context,
                         { _, year, month, dayOfMonth ->
-                            val formatted = "$dayOfMonth/${month + 1}/$year"
+                            val formatted = String.format("%04d-%02d-%02d", year, month + 1, dayOfMonth)
                             onTransactionDateSelected(formatted)
                         },
                         calendar.get(Calendar.YEAR),
@@ -508,25 +508,19 @@ fun TimePickerCard(
             .clickable(enabled = enabled) {
 
                 if (enabled) {
+                    // gets instance of calendar
+                    val calendar = Calendar.getInstance()
 
                     TimePickerDialog(
                         context,
                         { _, hourOfDay, minute ->
 
-                            // Converts to 12 hr format
-                            var amPM = if (hourOfDay >= 12) "PM" else "AM"
+                            val formatted = String.format("%02d:%02d", hourOfDay, minute)
 
-                            val hour12 = when {
-                                hourOfDay == 0 -> 12
-                                hourOfDay > 12 -> hourOfDay - 12
-                                else -> hourOfDay
-                            }
-
-                            val formatted = String.format("%02d:%02d %s", hour12, minute, amPM)
                             onTransactionTimeSelected(formatted)
                         },
-                        12,
-                        0,
+                        calendar.get(Calendar.HOUR_OF_DAY),
+                        calendar.get(Calendar.MINUTE),
                         true
                     ).show()
                 }

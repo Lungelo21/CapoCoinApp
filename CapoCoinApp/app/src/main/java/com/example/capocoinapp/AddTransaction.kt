@@ -1,6 +1,7 @@
 package com.example.capocoinapp
 
 import android.net.Uri
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
@@ -24,6 +26,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.capocoinapp.Calculator.CalculatorViewModel
@@ -43,6 +46,7 @@ import com.example.capocoinapp.ui.theme.RobotoSlab
 import com.example.capocoinapp.designUI.components.AppScaffold
 import com.example.capocoinapp.designUI.components.AttachImageCard
 import com.example.capocoinapp.designUI.components.BottomNavBar
+import com.example.capocoinapp.designUI.components.CalculatorButtonDesign
 import com.example.capocoinapp.designUI.components.CardBox
 import com.example.capocoinapp.designUI.components.CardComponent
 import com.example.capocoinapp.designUI.components.DatePickerCard
@@ -57,36 +61,45 @@ import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 
 @Composable
 fun AddTransaction() {
-    val viewModel = viewModel<CalculatorViewModel>()
-    val state = viewModel.state
+    // variable holds the calculator view model
+    val calculatorViewModel = viewModel<CalculatorViewModel>()
 
+    // stores the value for the state of the calculator view model
+    val state = calculatorViewModel.state
+
+    // title for the transaction
     var title by remember { mutableStateOf("") }
 
+    // variable that holds the category viewmodel
     val catViewModel = viewModel<CategoryViewModel>()
     // stores the categories by retrieving the list of categories and storing them as an empty list state which is then filled
     val categories by catViewModel.getAllCategories().collectAsState(initial = emptyList())
 
+    // selected category for the transaction
     var selectedCategory by remember { mutableStateOf<Category?>(null) }
 
+    // variable that holds the transaction viewmodel
     val transactionViewModel = viewModel<TransactionViewModel>()
-    // transaction types
+    // list of the transaction types
     val transactionTypes = listOf(
         "Income",
         "Expense",
         "Transfer"
     )
-
+    // transaction type selected
     var chosenTransactionType by remember { mutableStateOf("") }
 
+    // selected date from the date picker
     var selectedDate by remember { mutableStateOf("") }
 
+    // selected time from the date picker
     var selectedTime by remember { mutableStateOf("") }
 
+    // selected image (path)
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
 
-    var isAmountConfirmed by remember { mutableStateOf(false) }
-
-    var showCalculator by remember { mutableStateOf(true) }
+    // amount which confirms if the confirm button in the calculator has been clicked
+    var isAmountConfirmed = state.isAmountConfirmed
 
     CapoCoinAppTheme {
         val navController = rememberNavController()
@@ -129,6 +142,7 @@ fun AddTransaction() {
                         enabled = isAmountConfirmed
                     )
 
+                    // Add date of transaction
                     DatePickerCard(
                         selectedTransactionDate = selectedDate,
                         onTransactionDateSelected = { selectedDate = it},
@@ -136,6 +150,7 @@ fun AddTransaction() {
                         enabled = isAmountConfirmed
                     )
 
+                    // Add Time to transaction
                     TimePickerCard(
                         selectedTransactionTime = selectedTime,
                         onTransactionTimeSelected = { selectedTime = it},
@@ -143,6 +158,7 @@ fun AddTransaction() {
                         enabled = isAmountConfirmed
                     )
 
+                    // Attach image button
                     AttachImageCard(
                         imageUri = selectedImageUri,
                         onImageSelected = { selectedImageUri = it},
@@ -151,55 +167,59 @@ fun AddTransaction() {
                     )
                 }
 
-
+                // if the confirm amount in calculator hasnt been clicked yet (remains in calculator view)
                 if(!isAmountConfirmed){
 
                     CalculatorSection(
                         state = state,
-                        onAction = viewModel::onAction,
+                        onAction = calculatorViewModel::onAction,
                         modifier = Modifier
                             .weight(1f)
                             .fillMaxWidth()
                     )
                 }
-                else
+                else // otherwise show rest of screen (without calculator)
                 {
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxWidth()
+                    ) {
+                        // Button(Card) which shows the final card and its total
+                        FinalAmountCard(
+                            transactionAmount = state.number1,
+                            cardIcon = Icons.Default.Calculate,
+                            onAmountClicked = {
+                                calculatorViewModel.reOpenCalculator()
+                            }
+                        )
 
-                    FinalAmountCard(
-                        transactionAmount = state.number1,
-                        cardIcon = Icons.Default.Calculate,
-                        onAmountClicked = {
-                             viewModel.reOpenCalculator()
-                        }
-                    )
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        // log Transaction button
+                        CalculatorButtonDesign(
+                            symbol = "Log Transaction",
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(60.dp)
+                                .background(Primary),
+                            // when Log Transaction is clicked passes the values to be entered into Transactions table
+                            onClick = {
+                                transactionViewModel.addTransaction(
+                                    type = chosenTransactionType,
+                                    name = title,
+                                    amount = state.number1,
+                                    categoryID = selectedCategory?.categoryID?: 0,
+                                    date = selectedDate,
+                                    time = selectedTime,
+                                    photoPath = selectedImageUri?.toString()
+                                )
+                            }
+                        )
+                    }
+
                 }
             }
-        }
-
-
-        if(!isAmountConfirmed){
-
-            CalculatorSection(
-                state = state,
-                onAction = viewModel::onAction,
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
-
-
-    //            ConfirmButton{
-    //                isAmountConfirmed = true
-    //            }
-        }
-        else {
-
-    //            FinalAmountSection(
-    //                state = state
-    //            )
-
-    //            AddTransactionButton{
-    //
-    //            }
         }
     }
 }
