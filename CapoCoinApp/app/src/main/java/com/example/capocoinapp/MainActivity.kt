@@ -29,6 +29,7 @@ import com.example.capocoinapp.data.ViewModels.CategoryViewModel
 import com.example.capocoinapp.data.ViewModels.CategoryViewModelFactory
 import com.example.capocoinapp.data.ViewModels.UserViewModel
 import com.example.capocoinapp.data.ViewModels.ViewModelFactory
+import com.example.capocoinapp.data.ViewModels.TransactionViewModelFactory
 import com.example.capocoinapp.designUI.components.BottomNavBar
 import com.example.capocoinapp.designUI.components.CapoCoinAuthenticationLayout
 import com.example.capocoinapp.designUI.components.CapoCoinSharedLayout
@@ -46,6 +47,7 @@ import com.example.capocoinapp.designUI.components.CapoCoinAuthenticationLayout
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 import androidx.room.Room
 import androidx.lifecycle.lifecycleScope
+import com.example.capocoinapp.data.ViewModels.TransactionViewModel
 
 import kotlinx.coroutines.launch
 
@@ -64,6 +66,12 @@ class MainActivity : ComponentActivity() {
     private val categoryViewModel: CategoryViewModel by viewModels {
         val db = AppDatabase.getDatabase(applicationContext)
         CategoryViewModelFactory(CategoryService(db.categoryDao()))
+
+
+    }
+    private val transactionViewModel: TransactionViewModel by viewModels {
+        val db = AppDatabase.getDatabase(applicationContext)
+        TransactionViewModelFactory(db.transactionDao())
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,7 +86,7 @@ class MainActivity : ComponentActivity() {
 
                 // Nav Host wraps all composable routes
                 NavHost(
-                    navController = navController, startDestination = "AddCategories"
+                    navController = navController, startDestination = "AddTransaction"
                 ){
                     composable("Home") {
                         HomeScreen(navController)
@@ -87,7 +95,11 @@ class MainActivity : ComponentActivity() {
                         TransactionsScreen(navController)
                     }
                     composable("AddTransaction"){
-                        AddTransaction(navController)
+                        AddTransaction(
+                            navController = navController,
+                            categoryViewModel = categoryViewModel,
+                            transactionViewModel = transactionViewModel
+                        )
                     }
                     composable("Analytics"){
                         AnalyticsScreen(navController)

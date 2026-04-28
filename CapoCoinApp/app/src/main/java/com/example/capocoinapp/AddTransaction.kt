@@ -64,7 +64,7 @@ import com.example.capocoinapp.ui.theme.TextRed
 
 
 @Composable
-fun AddTransaction(navController: NavController) {
+fun AddTransaction(navController: NavController, categoryViewModel: CategoryViewModel, transactionViewModel: TransactionViewModel) {
     // variable holds the calculator view model
     val calculatorViewModel = viewModel<CalculatorViewModel>()
 
@@ -74,16 +74,12 @@ fun AddTransaction(navController: NavController) {
     // title for the transaction
     var title by remember { mutableStateOf("") }
 
-    // variable that holds the category viewmodel
-    val catViewModel = viewModel<CategoryViewModel>()
     // stores the categories by retrieving the list of categories and storing them as an empty list state which is then filled
-    val categories by catViewModel.getAllCategories().collectAsState(initial = emptyList())
+    val categories by categoryViewModel.getAllCategories().collectAsState(initial = emptyList())
 
     // selected category for the transaction
     var selectedCategory by remember { mutableStateOf<Category?>(null) }
-
-    // variable that holds the transaction viewmodel
-    val transactionViewModel = viewModel<TransactionViewModel>()
+    
     // list of the transaction types
     val transactionTypes = listOf(
         "Income",
@@ -220,6 +216,14 @@ fun AddTransaction(navController: NavController) {
                             .background(Primary),
                         // when Log Transaction is clicked passes the values to be entered into Transactions table
                         onClick = {
+                            if(chosenTransactionType.isBlank() ||
+                                title.isBlank() ||
+                                selectedCategory == null ||
+                                selectedDate.isBlank() ||
+                                selectedTime.isBlank()
+                                )
+                                return@LogTransactionButton
+
                             transactionViewModel.addTransaction(
                                 type = chosenTransactionType,
                                 name = title,
