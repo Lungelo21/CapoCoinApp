@@ -1,6 +1,7 @@
 package com.example.capocoinapp
 
 import android.app.DatePickerDialog
+import android.graphics.Paint
 import android.icu.util.Calendar
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -113,6 +114,8 @@ fun CategoryTotalsScreen(service: TransactionService, navController: NavHostCont
 
     }
 
+    Box(modifier = Modifier.fillMaxSize())
+    {
     //UI Formatting
     Column(modifier = Modifier.fillMaxSize().padding(16.dp).verticalScroll(scrollState))
     {
@@ -253,7 +256,26 @@ fun CategoryTotalsScreen(service: TransactionService, navController: NavHostCont
             }
         }
 
+        //Adding Space to the page for a Back to User Budget  ensuring that the button
+        //will not be covered by the Category totals
+        Spacer(modifier = Modifier.height(100.dp))
     }
+
+    Box(modifier = Modifier.padding(16.dp).fillMaxSize(), contentAlignment = Alignment.BottomCenter)
+    {
+        //Primary button call for a redirect to budget functionality
+        PrimaryButton(
+            buttonText = "Back to Budget",
+            onClick = {
+                // Navigates back to the Budget screen
+                navController.navigate("UserBudget")
+            }
+        )
+    }
+
+    //Add Spacer to ensure the button is away from the bottom edge from the screen
+    Spacer(modifier = Modifier.height(16.dp))
+}
 }
 
 //Method which dictates the Format and what goes in each Row
