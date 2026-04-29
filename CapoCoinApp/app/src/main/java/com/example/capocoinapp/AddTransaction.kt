@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.AttachFile
@@ -134,15 +136,18 @@ fun AddTransaction(navController: NavController, categoryViewModel: CategoryView
                         onAction = calculatorViewModel::onAction,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .weight(1f)
+                            .weight(0.3f)
                     )
                 }
                 else // otherwise show rest of screen (without calculator)
                 {
+                    val scrollState = rememberScrollState()
+
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(12.dp),
+                            .padding(12.dp)
+                            .verticalScroll(scrollState),
                         verticalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
 
@@ -218,15 +223,9 @@ fun AddTransaction(navController: NavController, categoryViewModel: CategoryView
                                 .fillMaxWidth()
                                 .height(60.dp)
                                 .background(Primary),
+
                             // when Log Transaction is clicked passes the values to be entered into Transactions table
                             onClick = {
-//                                if(chosenTransactionType.isBlank() ||
-//                                    title.isBlank() ||
-//                                    selectedCategory == null ||
-//                                    selectedDate.isBlank() ||
-//                                    selectedTime.isBlank()
-//                                )
-//                                    return@LogTransactionButton
 
                                 transactionViewModel.addTransaction(
                                     type = chosenTransactionType,
@@ -237,6 +236,10 @@ fun AddTransaction(navController: NavController, categoryViewModel: CategoryView
                                     time = selectedTime,
                                     photoPath = selectedImageUri?.toString()
                                 )
+
+                                // Navigates to Transactions Page after onClick
+                                navController.navigate("Transactions")
+
                             }
                         )
                     }
