@@ -84,14 +84,19 @@ import com.example.capocoinapp.ui.theme.TextWhite
 
 @Composable
 fun CategoryTotalsScreen(service: TransactionService, navController: NavHostController) {
+    //Instantiating a variable to hold the users current
     val context = LocalContext.current
 
+    //Instantiating variables for the user selected start and end dates for filtering
     var startDate by rememberSaveable { mutableStateOf("") }
     var endDate by rememberSaveable { mutableStateOf("") }
 
+    //Instantiating a variable to hold the user's current scroll state
     val scrollState = androidx.compose.foundation.rememberScrollState()
 
+    //Instantiating a Date Picker
     val showDatePicker = { isStartDate: Boolean ->
+        //Instantiating a Calendar
         val calendar = Calendar.getInstance()
         DatePickerDialog(
             context,

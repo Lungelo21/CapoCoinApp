@@ -93,6 +93,7 @@ import com.example.capocoinapp.ui.theme.TextWhite
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddCategory(viewModel: CategoryViewModel, service: CategoryService, navController: NavHostController) {
+    //Instantiating all variables needed for the category
     var transactionType by rememberSaveable { mutableStateOf("") }
     var categoryTitle by rememberSaveable { mutableStateOf("") }
     var iconColour by rememberSaveable { mutableStateOf("") }
@@ -101,10 +102,12 @@ fun AddCategory(viewModel: CategoryViewModel, service: CategoryService, navContr
     var minBudget by rememberSaveable { mutableStateOf(0.0) }
     var maxBudget by rememberSaveable { mutableStateOf(0.0) }
 
+    //Instantiating variables for tracking the expanded dropdown
     var transactionTypeExpanded by rememberSaveable { mutableStateOf(false) }
     var iconColourExpanded by rememberSaveable { mutableStateOf(false) }
     var iconExpanded by rememberSaveable { mutableStateOf(false) }
 
+    //Instantiating variables to hold icon and colour info by calling service methods
     val currentColourHex = service.selectableColours[iconColour] ?: "#000000"
     val currentIcon = service.getIcon(selectedIcon)
 
