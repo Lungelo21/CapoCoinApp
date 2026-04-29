@@ -1,7 +1,5 @@
 package com.example.capocoinapp
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Help
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -17,6 +15,7 @@ import com.example.capocoinapp.designUI.components.CardComponent
 import com.example.capocoinapp.designUI.components.HomeCard
 import com.example.capocoinapp.designUI.components.PageSubTitleText
 import com.example.capocoinapp.designUI.components.TopNavBar
+import com.example.capocoinapp.designUI.components.rememberCategoryUI
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 
 @Composable
@@ -26,9 +25,7 @@ fun HomeScreen(
     transactionViewModel: TransactionViewModel
 ) {
 
-    val transactions by transactionViewModel
-        .getAllTransactions()
-        .collectAsState(initial = emptyList())
+    val transactions by transactionViewModel.getAllTransactions().collectAsState(initial = emptyList())
 
     CapoCoinAppTheme {
         AppScaffold(
@@ -36,7 +33,6 @@ fun HomeScreen(
             bottomBar = { BottomNavBar(navController, 1) },
             pageTitle = "Home"
         ) { _ ->
-            // ToDo: replace with logic to show the actual transactions once database is set up
             CardBox(
                 cards = listOf(
                     { HomeCard(1300.0, 2000.0, 15) },
@@ -48,17 +44,14 @@ fun HomeScreen(
                 CardBox(
                     cards = listOf(
                         {
+                            val (categoryColor, CategoryIcon) = rememberCategoryUI(t.categoryID, categoryViewModel)
                             CardComponent(
                                 t.transactionName,
-                                "date",
-//                                t.transactionDate,
+                                t.transactionDate,
                                 t.transactionAmount.toString(),
-//                                t.transactionTime,
-                                "time",
-                                "#000000",
-                                //categoryViewModel.getColour(category.categoryColour),
-                                //categoryViewModel.getIcon(category.categoryIcon),
-                                Icons.Default.Help,
+                                t.transactionTime,
+                                categoryColor,
+                                CategoryIcon,
                                 "expense",
                             )
                         }

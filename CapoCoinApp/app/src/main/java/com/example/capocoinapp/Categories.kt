@@ -32,7 +32,6 @@ fun CategoriesScreen(
             pageTitle = "Categories"
         ) { _ ->
 
-            // ToDo: replace with logic to show the actual transactions once database is set up
             categories.forEach { c ->
                 CardBox(
                     cards = listOf(

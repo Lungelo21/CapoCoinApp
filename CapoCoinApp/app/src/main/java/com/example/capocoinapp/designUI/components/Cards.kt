@@ -70,6 +70,7 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -87,6 +88,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
 import coil.compose.rememberAsyncImagePainter
+import com.example.capocoinapp.Services.CategoryService
+import com.example.capocoinapp.data.ViewModels.CategoryViewModel
 import com.example.capocoinapp.data.entities.Category
 import com.example.capocoinapp.ui.theme.BackgroundColor
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
@@ -192,6 +195,19 @@ fun CardComponent(
             }
         }
     }
+}
+
+@Composable
+fun rememberCategoryUI(
+    categoryId: Int,
+    categoryViewModel: CategoryViewModel
+): Pair<String, ImageVector> {
+
+    val categoryUI by categoryViewModel
+        .getCategoryUIById(categoryId)
+        .collectAsState(initial = Pair("#000000", Icons.Default.QuestionMark))
+
+    return categoryUI
 }
 
 @Composable

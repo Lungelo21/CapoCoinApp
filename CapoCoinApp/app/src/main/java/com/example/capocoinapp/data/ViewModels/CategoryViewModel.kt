@@ -25,7 +25,14 @@ class CategoryViewModel(
     }
 
     // Function to add a new category (e.g., "Salary" or "Groceries")
-    fun addCategory(type: String, categoryTitle: String, categoryColour: String, categoryIcon: String, minBudget: Double, maxBudget: Double) {
+    fun addCategory(
+        type: String,
+        categoryTitle: String,
+        categoryColour: String,
+        categoryIcon: String,
+        minBudget: Double,
+        maxBudget: Double
+    ) {
         viewModelScope.launch {
             message = when {
                 type.isBlank() -> "Please select a transaction type for category"
@@ -55,31 +62,34 @@ class CategoryViewModel(
         return service.getAllCategories()
     }
 
-    fun getCategoryById(id: Int): Category{
+    fun getCategoryById(id: Int): Flow<Category> {
         return service.getCategoryById(id)
     }
 
     //Function to get the icons
-    fun getIcon(iconName: String): ImageVector
-    {
+    fun getIcon(iconName: String): ImageVector {
         return service.getIcon(iconName)
     }
 
     //Function to get the colour for the icon
-    fun getColour(colour: String): String
-    {
-        return  service.getColour(colour)
+    fun getColour(colour: String): String {
+        return service.getColour(colour)
     }
+
+    fun getCategoryUIById(id: Int): Flow<Pair<String, ImageVector>> {
+        return service.getCategoryUIById(id)
+    }
+
 
     // Update fo the User Budget to Change Min and Max Budget Goals
     fun updateCategoryBudget(
         category: Category,
         minBudget: Double,
         maxBudget: Double
-    ){
-        viewModelScope.launch{
+    ) {
+        viewModelScope.launch {
             val updatedCategory = category.copy(
-                minBudget=minBudget,
+                minBudget = minBudget,
                 maxBudget = maxBudget
             )
             service.updateCategory(updatedCategory)

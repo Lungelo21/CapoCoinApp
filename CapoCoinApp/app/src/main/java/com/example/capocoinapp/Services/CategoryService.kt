@@ -40,6 +40,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.capocoinapp.data.dao.CategoryDAO
 import com.example.capocoinapp.data.entities.Category
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 
 public class CategoryService(private val categoryDao: CategoryDAO) {
@@ -120,7 +121,16 @@ public class CategoryService(private val categoryDao: CategoryDAO) {
     //Using a Query to get the full list of available categories
     fun getAllCategories(): Flow<List<Category>> = categoryDao.getAllCategories()
 
-    fun getCategoryById(id: Int): Category = categoryDao.getCategoryById(id)
+    fun getCategoryById(id: Int): Flow<Category> = categoryDao.getCategoryById(id)
+
+    // Fetches the category colour and icon from the id
+    fun getCategoryUIById(id: Int): Flow<Pair<String, ImageVector>> {
+        return categoryDao.getCategoryById(id).map { category ->
+            val colour = getColour(category.categoryColour ?: "")
+            val icon = getIcon(category.categoryIcon ?: "")
+            Pair(colour, icon)
+        }
+    }
 
     //Create suspended function to prevent duplicated names of categories
     suspend fun createCategory(category: Category) {
