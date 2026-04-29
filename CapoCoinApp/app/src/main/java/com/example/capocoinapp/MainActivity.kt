@@ -115,6 +115,9 @@ class MainActivity : ComponentActivity() {
                     composable("UserProfile"){
                         UserProfileScreen(navController, userViewModel)
                     }
+                    composable("Settings"){
+                        SettingsScreen(navController)
+                    }
 
                     // composable route to Login Screen
                     // ToDo: move to  dedicated screen file
