@@ -1,5 +1,6 @@
 package com.example.capocoinapp
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,6 +11,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -29,6 +31,7 @@ import com.example.capocoinapp.designUI.components.BudgetCard
 import com.example.capocoinapp.designUI.components.TopNavBar
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 import androidx.compose.runtime.*
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -80,16 +83,15 @@ fun UserBudgetScreen(
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                FilledTonalButton(
-                    onClick = {
-                        navController.navigate("AddCategories")
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = ButtonDefaults.filledTonalButtonColors(
-                        Primary,
-                        Accent
+                OutlinedButton(
+                    onClick = { navController.navigate("AddCategories")},
+                    border = BorderStroke(3.dp, Accent),
+
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        containerColor = Color.Transparent,
+                        contentColor = Accent
                     )
-                ) {
+                ){
                     Text("Add Category")
                 }
 
@@ -124,7 +126,7 @@ fun UserBudgetScreen(
                 */
 
                 selectedCategory?.let { category ->
-                    Text("Edit ${category.categoryTitle}")
+                    Text("Edit ${category.categoryTitle}", color = SubTextWhite)
 
                     OutlinedTextField(
                         value = minBudgetInput,

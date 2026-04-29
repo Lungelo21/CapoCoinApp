@@ -1,5 +1,7 @@
 package com.example.capocoinapp
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.tooling.preview.Preview
@@ -12,9 +14,13 @@ import com.example.capocoinapp.designUI.components.CardBox
 import com.example.capocoinapp.designUI.components.CategoryCard
 import com.example.capocoinapp.designUI.components.TopNavBar
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
-
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import com.example.capocoinapp.ui.theme.*
 
 @Composable
 fun CategoriesScreen(navController: NavController, categoryService: CategoryService) {
@@ -33,6 +39,18 @@ fun CategoriesScreen(navController: NavController, categoryService: CategoryServ
             CardBox(
                 cards = listOf(
                     {
+                        OutlinedButton(
+                            onClick = { navController.navigate("AddCategories")},
+                            border = BorderStroke(3.dp, Accent),
+
+                            colors = ButtonDefaults.outlinedButtonColors(
+                                containerColor = Color.Transparent,
+                                contentColor = Accent
+                            )
+                        ){
+                            Text("Add Category")
+                        }
+
                         categories.forEach { category ->
                             CategoryCard(
                                 cardTitle = category.categoryTitle,
