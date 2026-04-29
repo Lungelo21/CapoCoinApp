@@ -61,9 +61,15 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.SegmentedButtonDefaults.Icon
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.capocoinapp.designUI.components.CardBox
+import com.example.capocoinapp.designUI.components.DatePickerCard
 import com.example.capocoinapp.designUI.components.PrimaryButton
 import com.example.capocoinapp.ui.theme.Accent
 import com.example.capocoinapp.ui.theme.BackgroundColor
@@ -79,6 +85,10 @@ fun CategoryTotalsScreen(service: TransactionService, navController: NavHostCont
 
     var startDate by rememberSaveable { mutableStateOf("") }
     var endDate by rememberSaveable { mutableStateOf("") }
+
+    //Updated data when dates are changed
+    val totals by service.getCategoryTotals(startDate, endDate)
+        .collectAsState(initial = emptyList())
 
     val scrollState = androidx.compose.foundation.rememberScrollState()
 
@@ -105,41 +115,58 @@ fun CategoryTotalsScreen(service: TransactionService, navController: NavHostCont
     //UI Formatting
     Column(modifier = Modifier.fillMaxSize().padding(16.dp).verticalScroll(scrollState))
     {
-        //Row for Date Selection
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp))
-        {
-            // Start Date Button
-            OutlinedButton(onClick = { showDatePicker(true) }, modifier = Modifier.weight(1f))
-            {
-                Text(text = if (startDate.isEmpty()) "Start Date" else "From: $startDate", color = TextWhite)
-            }
-            // End Date Button
-            OutlinedButton(onClick = { showDatePicker(false) }, modifier = Modifier.weight(1f))
-            {
-                Text(text = if (endDate.isEmpty()) "End Date" else "To: $endDate", color = TextWhite)
-            }
-        }
+        CardBox(
+            cards = listOf(
+                {
+                    Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = "Filter Transactions",
+                    style = CapoType.cardTitle,
+                    textAlign = TextAlign.Center,
+                    color = Accent
+                )
+                },
 
-        //
-        if(startDate.isNotEmpty() || endDate.isNotEmpty())
-        {
-            OutlinedButton(onClick = {
-                startDate = ""
-                endDate = ""
-            },
-                modifier = Modifier.fillMaxWidth()
+                {
+                    DatePickerCard(
+                    selectedTransactionDate = startDate,
+                    onTransactionDateSelected = { showDatePicker(true) },
+                    placeholderText = "Select date to search from",
+                    enabled = true)
+                },
+                {
+                    DatePickerCard(
+                    selectedTransactionDate = endDate,
+                    onTransactionDateSelected = { showDatePicker(false) },
+                    placeholderText = "Select date to search to",
+                    enabled = true)
+                },
+                {
+                    //Check to ensure Clear Filters button wont appear if no filter has been made
+                    if(startDate.isNotEmpty() || endDate.isNotEmpty())
+                    {
+                        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center)
+                        {
+                            PrimaryButton(
+                                buttonText = "Clear All Filters",
+                                onClick = {
+                                    startDate = ""
+                                    endDate = ""
+                                }
+                            )
+                        }
+                    }
+                }
             )
-            {
-                Text("Clear All filters", color = TextWhite)
-            }
-        }
+        )
 
         Spacer(modifier = Modifier.height(24.dp))
 
+        /*
         //Updated data when dates are changed
         val totals by service.getCategoryTotals(startDate, endDate)
             .collectAsState(initial = emptyList())
-
+        */
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -190,10 +217,12 @@ fun CategoryTotalsScreen(service: TransactionService, navController: NavHostCont
                     }
                 }
             }
+            Spacer(modifier = Modifier.height(32.dp))
         }
 
     }
 }
+
 
 @Composable
 fun CategoryTotalRow(item: CategoryTotal) {
@@ -217,7 +246,7 @@ fun CategoryTotalRow(item: CategoryTotal) {
     }
 }
 
-
+/*
 @Preview(showBackground = true)
 @Composable
 fun PreviewCategoryTotals()
@@ -233,7 +262,8 @@ fun PreviewCategoryTotals()
         CategoryTotalRow(item = mockItem)
     }
 }
-
+*/
+/*
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun PreviewCategoryTotalsScreen() {
@@ -368,4 +398,4 @@ fun PreviewCategoryTotalsScreen() {
             }
         }
     }
-}
+}*/
