@@ -8,12 +8,6 @@ package com.example.capocoinapp
 
 //
 
-// import for nav host
-// import for composable
-// import for navController
-// import for shared layout referenced from the designUI folder
-// import for authentication layout referenced from the designUI folder
-
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -83,10 +77,10 @@ class MainActivity : ComponentActivity() {
 
                 // Nav Host wraps all composable routes
                 NavHost(
-                    navController = navController, startDestination = "CategoryTotals"
+                    navController = navController, startDestination = "AddTransaction"
                 ){
                     composable("Home") {
-                        HomeScreen(navController)
+                        HomeScreen(navController, categoryViewModel, transactionViewModel)
                     }
                     composable("Transactions"){
                         TransactionsScreen(navController)
@@ -110,7 +104,7 @@ class MainActivity : ComponentActivity() {
                             (applicationContext).categoryDao()))
                     }
                     composable("BottomNavBar"){
-                        BottomNavBar(navController)
+                        BottomNavBar(navController,1)
                     }
                     composable("TopNavBar"){
                         TopNavBar(navController)
@@ -125,9 +119,10 @@ class MainActivity : ComponentActivity() {
                         TransactionsDetailsScreen(navController)
                     }
                     composable("UserProfile"){
-                        UserProfileScreen(navController = navController,
-                            userViewModel= userViewModel
-                        )
+                        UserProfileScreen(navController, userViewModel)
+                    }
+                    composable("Settings"){
+                        SettingsScreen(navController)
                     }
 
                     // composable route to Login Screen
@@ -194,7 +189,7 @@ class MainActivity : ComponentActivity() {
                         // Ensures the Global UI layout is applied to the Add Categories Screen
                         AppScaffold(
                             topBar = { TopNavBar(navController) },
-                            bottomBar = { BottomNavBar(navController) },
+                            bottomBar = { BottomNavBar(navController,4) },
                             pageTitle = "Add Category"
                         ){ padding ->
                             Box(modifier = Modifier.padding(padding))

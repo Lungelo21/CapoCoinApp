@@ -7,6 +7,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.capocoinapp.designUI.components.AppScaffold
 import com.example.capocoinapp.designUI.components.BottomNavBar
 import com.example.capocoinapp.designUI.components.CardBox
+import com.example.capocoinapp.designUI.components.CardComponent
 import com.example.capocoinapp.designUI.components.TopNavBar
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 
@@ -15,7 +16,7 @@ fun TransactionsDetailsScreen(navController: NavController) {
     CapoCoinAppTheme {
         AppScaffold(
             topBar = { TopNavBar(navController) },
-            bottomBar = { BottomNavBar(navController) },
+            bottomBar = { BottomNavBar(navController,2) },
             pageTitle = "Transactions"
         ) { _ ->
 

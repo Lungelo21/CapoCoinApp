@@ -1,11 +1,10 @@
 package com.example.capocoinapp
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Category
-import androidx.compose.material.icons.filled.ContentPaste
-import androidx.compose.material.icons.filled.FileDownload
-import androidx.compose.material.icons.filled.FileUpload
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.CurrencyExchange
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
@@ -19,41 +18,35 @@ import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 
 //ToDo: this screen will need to be updated as more screens are added
 @Composable
-fun MoreScreen(navController: NavController) {
+fun SettingsScreen(navController: NavController) {
     CapoCoinAppTheme {
         AppScaffold(
             topBar = { TopNavBar(navController) },
             bottomBar = { BottomNavBar(navController,4) },
-            pageTitle = "More"
+            pageTitle = "Settings"
         ) { _ ->
 
             CardBox(
 
                 cards = listOf(
                     { MoreCard(
-                            "Settings",
-                            "Coming soon in Part 3",
-                            Icons.Default.Settings)},
-                    { MoreCard(
-                        "User's Budget",
-                        "View budgets for each category",
-                        Icons.Default.ContentPaste,
-                        {navController.navigate("UserBudget")})},
-                    { MoreCard(
-                        "Categories",
-                        "View and add transaction categories",
-                        Icons.Default.Category,
-                        {navController.navigate("Categories")})},
-                    { MoreCard(
-                        "Import",
+                        "Notifications",
                         "Coming soon in Part 3",
-                        Icons.Default.FileDownload)},
+                        Icons.Default.Notifications)},
                     { MoreCard(
-                        "Export",
+                        "App Lock",
+                        "Coming soo in Part 3",
+                        Icons.Default.Lock,)},
+                    { MoreCard(
+                        "Default Page",
                         "Coming soon in Part 3",
-                        Icons.Default.FileUpload)},
+                        Icons.Default.Home)},
+                    { MoreCard(
+                        "Default Currency",
+                        "Coming soon in Part 3",
+                        Icons.Default.CurrencyExchange)},
 
-                )
+                    )
             )
         }
     }
@@ -61,9 +54,9 @@ fun MoreScreen(navController: NavController) {
 
 @Preview(showBackground = true)
 @Composable
-fun CardPreview() {
+fun SettingsPreview() {
     CapoCoinAppTheme {
         val navController = rememberNavController()
-        MoreScreen(navController)
+        SettingsScreen(navController)
     }
 }
