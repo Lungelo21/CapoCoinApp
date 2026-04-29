@@ -27,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.capocoinapp.Services.CategoryService
 import com.example.capocoinapp.ui.theme.*
 
 
@@ -85,15 +86,16 @@ fun CategoriesScreen(navController: NavController, categoryService: CategoryServ
                             CategoryCard(
                                 cardTitle = category.categoryTitle,
                                 cardColor = categoryService.getColour(category.categoryColour),
-                                cardIcon = category.categoryIcon
+                                cardIcon = categoryService.getIcon(category.categoryIcon)
                             )
                         }
                     }
                 )
-            }
+            )
         }
     }
 }
+
 
 /*
 @Preview(showBackground = true)
