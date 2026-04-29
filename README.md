@@ -18,7 +18,7 @@ The app allows users to register, log in, and manage financial data such as tran
 - In app calculator
 - Custom Category Creation
 - Filtering transaction by user selectable peroid
-- View transction uploaded image 
+- View transctions uploaded image 
 - Multiple screens (Home, Transactions, Analytics, etc.)
 
 ---
@@ -26,3 +26,46 @@ The app allows users to register, log in, and manage financial data such as tran
 ## Architecture
 
 The project follows the MVVM pattern:
+
+UI ->ViewModel -> DAO -> Room Database local storage
+
+---
+
+## Prerequisite
+
+- Android Studio
+- Emulator (min SDK 24)
+
+---
+
+## Setup Instructions
+
+1. Clone the repository
+
+2. Open the project in Android Studio
+
+3. Allow Gradle to sync
+
+4. Run the application using an emulator or physical device
+
+---
+
+## Room Database
+
+The application uses Room Database for storing user data.
+
+Components used:
+- User entity  
+- UserDAO
+- Category entity
+- CategoryDAO
+- Transaction entity
+- TransactionDAO 
+- AppDatabase singleton instance
+
+---
+
+## ChangeLog 
+
+
+
