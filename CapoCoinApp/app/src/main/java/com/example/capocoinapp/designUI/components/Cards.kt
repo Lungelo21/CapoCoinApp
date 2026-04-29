@@ -2,7 +2,6 @@ package com.example.capocoinapp.designUI.components
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.icu.util.Calendar
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -317,16 +316,19 @@ fun inputCard(
     enabled: Boolean,
     onValueChange: (String) -> Unit
 ) {
+    // Card for the transaction title input
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = CardBG),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
+        // Adding row for the Icon
         Row(
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            // Icon
             Icon(
                 imageVector = icon,
                 contentDescription = null,
@@ -334,8 +336,10 @@ fun inputCard(
                 tint = TextWhite
             )
 
+            // Adding horizontal spacer between icon and Title input
             Spacer(modifier = Modifier.width(12.dp))
 
+            // Text field for user to enter transaction title
             TextField(
                 value = value,
                 onValueChange = onValueChange,
@@ -343,6 +347,14 @@ fun inputCard(
                 placeholder = { Text(placeholder, style = CapoType.cardTitle) },
                 textStyle = CapoType.cardTitle,
                 singleLine = true,
+
+                /*
+                * Author: Siddharth Jaswal
+                * Link: https://stackoverflow.com/a/78464953
+                * Date Accessed: 28/04/2026
+                * Stack Overflow original thread: https://stackoverflow.com/questions/64542659/jetpack-compose-custom-textfield-design/78464953#78464953
+                * */
+
                 // ensures that the container colour is set to CardBG like the rest of the card
                 colors = TextFieldDefaults.colors(
                     unfocusedContainerColor = CardBG,
@@ -368,6 +380,7 @@ fun SelectCategoryDropDown(
     placeholderText: String,
     enabled: Boolean
 ) {
+    // stores whether the dropdown is expanded or not
     var dropdownExpand by remember { mutableStateOf(false) }
 
     // sorts categories alphabetically
@@ -379,33 +392,40 @@ fun SelectCategoryDropDown(
     val viewMore = sortedCategories.size > 10
 
 
-
+    // Card for the select category dropdown
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = CardBG),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
+        // Row for the drop down
         Row(
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            // takes the selectedCategory that the user clicks on and finds the icon for that specific category
             selectedCategory?.let {
                 Icon(
+                    // image found through running the getIconFromString method with category icon passes in parameter
                     imageVector = getIconFromString(it.categoryIcon),
                     contentDescription = null,
                     modifier = Modifier.size(44.dp),
                     tint = TextWhite
                 )
+
                 Spacer(modifier = Modifier.width(12.dp))
             }
+            // Exposed DropDown menu box for category
             ExposedDropdownMenuBox(
                 expanded = dropdownExpand,
+                // when user expands drop down
                 onExpandedChange = {
                     if (enabled) dropdownExpand = !dropdownExpand
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
+                // Text Field containing the selected category title
                 TextField(
                     value = selectedCategory?.categoryTitle ?: "",
                     onValueChange = {},
@@ -420,6 +440,13 @@ fun SelectCategoryDropDown(
                     trailingIcon = {
                         ExposedDropdownMenuDefaults.TrailingIcon(expanded = dropdownExpand)
                                    },
+
+                    /*
+                    * Author: Siddharth Jaswal
+                    * Link: https://stackoverflow.com/a/78464953
+                    * Date Accessed: 28/04/2026
+                    * Stack Overflow original thread: https://stackoverflow.com/questions/64542659/jetpack-compose-custom-textfield-design/78464953#78464953
+                    * */
 
                     // ensures that the container colour is set to CardBG like the rest of the card
                     colors = TextFieldDefaults.colors(
@@ -439,17 +466,22 @@ fun SelectCategoryDropDown(
                         .menuAnchor()
                         .fillMaxWidth()
                 )
-
+                // Exposed drop down menu for category
                 ExposedDropdownMenu(
                     expanded = dropdownExpand,
+                    // onDismissRequest is set to the dropdown being not expanded
                     onDismissRequest = { dropdownExpand = false }
                 ) {
+                    // for each category (which is limited to 10 indexes)
                     categoryLimit.forEach { category ->
 
+                        // Dropdown menu item containing name for icon and category name
                         DropdownMenuItem(
                             text = {
+                                // Row for icon and Text
                                 Row(verticalAlignment = Alignment.CenterVertically) {
 
+                                    // icon for category
                                     Icon(
                                         imageVector = getIconFromString(category.categoryIcon),
                                         contentDescription = null,
@@ -457,8 +489,10 @@ fun SelectCategoryDropDown(
                                         tint = Color.Black
                                     )
 
+                                    // horizontal spacer between icon and text
                                     Spacer(modifier = Modifier.width(8.dp))
 
+                                    // Text for category title
                                     Text(
                                         text = category.categoryTitle,
                                         style = CapoType.cardTitle,
@@ -466,6 +500,7 @@ fun SelectCategoryDropDown(
                                     )
                                 }
                             },
+                            // oon users click on a category, sets categorySelected to that category and dropdown closes
                             onClick = {
                                 onCategorySelected(category)
                                 dropdownExpand = false
@@ -473,6 +508,7 @@ fun SelectCategoryDropDown(
                         )
                     }
 
+                    // if there are more than 10 indexes, it shows a dropdownmenu item at the bottom of the list for View all categories
                     if (viewMore) {
                         DropdownMenuItem(
                             text = {
@@ -498,20 +534,23 @@ fun SelectTransactionTypeDropDown(
     placeholderText: String,
     enabled: Boolean
 ) {
+    // stores whether the dropdown is expanded or not
     var dropdownExpand by remember { mutableStateOf(false) }
 
-
+    // Card for the TransactionTypeDropDown
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = CardBG),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
+        // Row including the transaction type
         Row(
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
 
+            // DropDown menu box for transaction types
             ExposedDropdownMenuBox(
                 expanded = dropdownExpand,
                 onExpandedChange = {
@@ -520,6 +559,7 @@ fun SelectTransactionTypeDropDown(
 
                 modifier = Modifier.fillMaxWidth()
             ) {
+                // textfield for the chosen transaction type
                 TextField(
                     value = selectedTransactionType,
                     onValueChange = {},
@@ -528,10 +568,22 @@ fun SelectTransactionTypeDropDown(
                     placeholder = { Text(placeholderText, style = CapoType.cardTitle) },
                     textStyle = CapoType.cardTitle,
 
+                    /*
+                    * Author: Santosh Yadav
+                    * Link: https://medium.com/@santosh_yadav321/dropdown-menu-with-icon-in-jetpack-compose-5ebebae75851
+                    * Date Accessed: 28/04/2026
+                    * */
                     // this is to add the arrow to let the user know that the box is a dropdown
                     trailingIcon = {
                         ExposedDropdownMenuDefaults.TrailingIcon(expanded = dropdownExpand)
                     },
+
+                    /*
+                    * Author: Siddharth Jaswal
+                    * Link: https://stackoverflow.com/a/78464953
+                    * Date Accessed: 28/04/2026
+                    * Stack Overflow original thread: https://stackoverflow.com/questions/64542659/jetpack-compose-custom-textfield-design/78464953#78464953
+                    * */
 
                     // ensures that the container colour is set to CardBG like the rest of the card
                     colors = TextFieldDefaults.colors(
@@ -551,20 +603,24 @@ fun SelectTransactionTypeDropDown(
                         .fillMaxWidth()
                 )
 
+                // Dropdown menu when expanded
                 ExposedDropdownMenu(
                     expanded = dropdownExpand,
                     onDismissRequest = { dropdownExpand = false }
                 ) {
+                    // for each transactionTypes
                     transactionTypes.forEach { transactionTypes ->
 
+                        // Menu item for each transaction type
                         DropdownMenuItem(
                             text = {
-                                Text(
+                                Text( // Text for each type
                                     text = transactionTypes,
                                     style = CapoType.cardTitle,
                                     color = Color.Black
                                 )
                             },
+                            // when one is clicked the onTransactionTypeSelected becomes the transaction type clicked
                             onClick = {
                                 onTransactionTypeSelected(transactionTypes)
                                 dropdownExpand = false
@@ -586,23 +642,42 @@ fun DatePickerCard(
     enabled: Boolean,
     icon: ImageVector = Icons.Default.DateRange
 ) {
+    // current and local context
     val context = LocalContext.current
 
+    // card for the date picker card
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(enabled = enabled) {
 
                 if (enabled) {
+                    // calendar current instance
                     val calendar = Calendar.getInstance()
 
+                    /*
+                    * Author: GeeksForGeeks
+                    * Link: https://www.geeksforgeeks.org/kotlin/date-picker-in-android-using-jetpack-compose/
+                    * Date Accessed: 27/04/2026
+                    * */
+
+                    // Date Picker dialog
                     DatePickerDialog(
                         context,
                         { _, year, month, dayOfMonth ->
+
+                            /*
+                            * Author: Deccon Tech
+                            * Link: https://www.youtube.com/watch?v=BH8fqeIKQRo
+                            * Date Accessed: 27/04/2026
+                            * */
+
+                            // format by year month day of month
                             val formatted =
                                 String.format("%04d-%02d-%02d", year, month + 1, dayOfMonth)
                             onTransactionDateSelected(formatted)
                         },
+                        // gets year, month and day in month from calendar
                         calendar.get(Calendar.YEAR),
                         calendar.get(Calendar.MONTH),
                         calendar.get(Calendar.DAY_OF_MONTH)
@@ -613,10 +688,12 @@ fun DatePickerCard(
         colors = CardDefaults.cardColors(containerColor = CardBG),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
+        // Row for the icon and Date in format
         Row(
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            // Icon
             Icon(
                 imageVector = icon,
                 contentDescription = null,
@@ -624,8 +701,10 @@ fun DatePickerCard(
                 tint = TextWhite
             )
 
+            // horizontal spacer between icon and date text
             Spacer(modifier = Modifier.width(12.dp))
 
+            // date text
             Text(
                 text = if (selectedTransactionDate.isEmpty()) placeholderText else selectedTransactionDate,
                 style = CapoType.cardTitle,
@@ -644,8 +723,10 @@ fun TimePickerCard(
     enabled: Boolean,
     icon: ImageVector = Icons.Default.AccessTime
 ) {
+    // current local context
     val context = LocalContext.current
 
+    // card for the time picker card
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -654,13 +735,17 @@ fun TimePickerCard(
                 if (enabled) {
                     // gets instance of calendar
                     val calendar = Calendar.getInstance()
-
+                    /*
+                    * Author: GeeksForGeeks
+                    * Link: https://www.geeksforgeeks.org/kotlin/time-picker-in-android-using-jetpack-compose/
+                    * Date Accessed: 27/04/2026
+                    * */
                     TimePickerDialog(
                         context,
                         { _, hourOfDay, minute ->
-
+                            // formats the time
                             val formatted = String.format("%02d:%02d", hourOfDay, minute)
-
+                            // formats the amount selected
                             onTransactionTimeSelected(formatted)
                         },
                         calendar.get(Calendar.HOUR_OF_DAY),
@@ -673,19 +758,22 @@ fun TimePickerCard(
         colors = CardDefaults.cardColors(containerColor = CardBG),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
+        // Row for the icon and time of transaction
         Row(
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            // icon
             Icon(
                 imageVector = icon,
                 contentDescription = null,
                 modifier = Modifier.size((44.dp)),
                 tint = TextWhite
             )
-
+            //spacer between icon and time
             Spacer(modifier = Modifier.width(12.dp))
 
+            // Time
             Text(   // If the entered time hasnt been shown yet, show the placeholderText otherwise show the selectedTime for the Transaction
                 text = if (selectedTransactionTime.isEmpty()) placeholderText else selectedTransactionTime,
                 style = CapoType.cardTitle,
@@ -704,19 +792,22 @@ fun AttachImageCard(
     enabled: Boolean,
     icon: ImageVector = Icons.Default.AttachFile
 ) {
+    // photo picker launcher
     val photoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia()
-    ) { uri ->
+    ) { uri -> //takes image uri
         onImageSelected(uri)
     }
 
+    // card for attach image photo
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(enabled = enabled) {
 
+                //launches photo picker launcher
                 photoPickerLauncher.launch(
-                    PickVisualMediaRequest(
+                    PickVisualMediaRequest(// allows image only
                         ActivityResultContracts.PickVisualMedia.ImageOnly
                     )
                 )
@@ -725,11 +816,14 @@ fun AttachImageCard(
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = CardBG),
     ) {
+        // row for icon and text for if image attached
         Row(
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+             //checks if img is null
             if (imageUri == null) {
+                // icon
                 Icon(
                     imageVector = icon,
                     tint = TextWhite,
@@ -737,7 +831,15 @@ fun AttachImageCard(
                     modifier = Modifier.size((44.dp))
                 )
             } else {
-                Image(
+                // img
+
+                /*
+                * Author:Mun Bonecci
+                * Link: https://medium.com/@munbonecci/how-to-use-coil-with-rememberasyncimagepainter-in-jetpack-compose-to-load-svg-f4d39cb829fb
+                * Date Accessed: 29/04/2026
+                * */
+
+                Image(// shows preview for attached photo
                     painter = rememberAsyncImagePainter(imageUri),
                     contentDescription = null,
                     modifier = Modifier
@@ -746,8 +848,10 @@ fun AttachImageCard(
                     contentScale = ContentScale.Crop
                 )
             }
+            //spacing between the img and the text
             Spacer(modifier = Modifier.width(12.dp))
 
+            // text for if img is attached or not
             Text(
                 text = if (imageUri == null) placeholderText else "Image Attached",
                 style = CapoType.cardTitle,
@@ -763,6 +867,7 @@ fun FinalAmountCard(
     cardIcon: ImageVector
 
 ) {
+    // Final amount card
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -772,21 +877,24 @@ fun FinalAmountCard(
         colors = CardDefaults.cardColors(containerColor = CardBG),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
+        // Row for the amount
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 14.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            // amount text
             Text(
                 text = "Amount: ",
                 style = CapoType.cardTitle
             )
-
+            //spacers
             Spacer(modifier = Modifier.width(8.dp))
 
             Spacer(modifier = Modifier.weight(1f))
 
+            //transaction amount
             Text(
                 text = "R $transactionAmount",
                 style = CapoType.cardTitle
@@ -794,6 +902,7 @@ fun FinalAmountCard(
 
             Spacer(modifier = Modifier.width(12.dp))
 
+            //icon for calc
             Icon(
                 imageVector = cardIcon,
                 contentDescription = "Adjust value",
@@ -809,6 +918,7 @@ fun LogTransactionButton(
     modifier: Modifier,
     onClick: () -> Unit
 ) {
+
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
@@ -816,7 +926,7 @@ fun LogTransactionButton(
             .clickable { onClick() }
             .then(modifier)
     ) {
-
+        // Text for Confirm Amount
         Text(
             text = symbol,
             fontSize = 18.sp,
@@ -836,11 +946,12 @@ fun UserProfileCard(
     nextLevelXP: Int,
     onClick: () -> Unit = {}
 ) {
-    // Formats the number to look nicer: 20000.0 -> R20 000,00
+    // variables to capture xpRemaining, progress bar total and progress bar percent
     val xpRemaining = nextLevelXP - currentXP
     val progressFloat = currentXP.toFloat() / nextLevelXP.toFloat()
     val progressPercent = (progressFloat * 100).toInt()
 
+    // Card for UserProfile Card
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -852,14 +963,14 @@ fun UserProfileCard(
         ),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
-
+        //Defining the top of the card
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Primary)
         ) {
 
-
+            // Row for the Icon, Users full name, level number and profile title
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -875,8 +986,10 @@ fun UserProfileCard(
                     tint = TextWhite
                 )
 
+                // Spacer between Icon and Details
                 Spacer(modifier = Modifier.width(12.dp))
 
+                // Column for User Details
                 Column {
 
                     // Text with users first and last name
@@ -895,7 +1008,7 @@ fun UserProfileCard(
                 }
             }
         }
-
+        // Column for the xp needed to reach the next level
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -946,6 +1059,7 @@ fun MilestoneAchievementCard(
     milestoneSubTitle: String,
     milestonesTimesEarned: String?
 ) {
+    // Card for Milestone achievements
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -965,29 +1079,34 @@ fun MilestoneAchievementCard(
 
             Column(modifier = Modifier.fillMaxWidth()) {
 
+                // Milestone Title and Times Earned Row
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
+                    // Milestone Title Text
                     Text(
                         text = milestoneTitle,
                         style = CapoType.cardTitle
                     )
+                    // Milestone Times Earned Amount Text
+                    Text(
+                        text = "Times Earned: ${milestonesTimesEarned ?: "0"}",
+                        style = CapoType.cardSubTitle
+                    )
                 }
 
+                // Spacing out the two rows
                 Spacer(modifier = Modifier.height(6.dp))
 
+                // Milestone SubTitle Row
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
+                    // Mileston Subtitle Text
                     Text(
                         text = milestoneSubTitle,
-                        style = CapoType.cardSubTitle
-                    )
-
-                    Text(
-                        text = milestonesTimesEarned ?: "",
                         style = CapoType.cardSubTitle
                     )
 

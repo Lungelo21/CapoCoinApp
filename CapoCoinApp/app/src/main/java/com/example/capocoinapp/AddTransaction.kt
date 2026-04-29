@@ -97,22 +97,22 @@ fun AddTransaction(navController: NavController, categoryViewModel: CategoryView
 
         AppScaffold(
             topBar = { TopNavBar(navController) },
-            bottomBar = { BottomNavBar(navController,2) },
+            bottomBar = { BottomNavBar(navController, 2) },
             pageTitle = "Add Transaction"
-        ){ _ ->
+        ) { _ ->
             Column(modifier = Modifier.fillMaxSize())
             {
                 // Adding validation to ensure that users cannot log a transaction unless all required fields are entered
-                if(validationMessage.isNotBlank()){
+                if (validationMessage.isNotBlank()) {
                     Text(
                         text = validationMessage,
-                        color = if(validationMessage == "Transaction Saved!") Primary else TextRed,
+                        color = TextRed,
                         modifier = Modifier.padding(8.dp)
                     )
                 }
 
                 // if the confirm amount in calculator hasnt been clicked yet (remains in calculator view)
-                if(!isAmountConfirmed){
+                if (!isAmountConfirmed) {
 
                     CalculatorSection(
                         state = state,
@@ -121,11 +121,12 @@ fun AddTransaction(navController: NavController, categoryViewModel: CategoryView
                             .fillMaxWidth()
                             .weight(0.3f)
                     )
-                }
-                else // otherwise show rest of screen (without calculator)
+                } else // otherwise show rest of screen (without calculator)
                 {
+                    // adding a scroll state so that when user can scroll when needed
                     val scrollState = rememberScrollState()
 
+                    // Column for the input fields
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
@@ -146,7 +147,7 @@ fun AddTransaction(navController: NavController, categoryViewModel: CategoryView
                         // input for Transaction Title
                         inputCard(
                             value = title,
-                            onValueChange = { title = it},
+                            onValueChange = { title = it },
                             placeholder = "Add a title",
                             icon = Icons.Default.Edit,
                             enabled = true
@@ -164,7 +165,7 @@ fun AddTransaction(navController: NavController, categoryViewModel: CategoryView
                         // Add date of transaction
                         DatePickerCard(
                             selectedTransactionDate = selectedDate,
-                            onTransactionDateSelected = { selectedDate = it},
+                            onTransactionDateSelected = { selectedDate = it },
                             placeholderText = "Select the date of Transaction",
                             enabled = true
                         )
@@ -172,7 +173,7 @@ fun AddTransaction(navController: NavController, categoryViewModel: CategoryView
                         // Add Time to transaction
                         TimePickerCard(
                             selectedTransactionTime = selectedTime,
-                            onTransactionTimeSelected = { selectedTime = it},
+                            onTransactionTimeSelected = { selectedTime = it },
                             placeholderText = "Select time of Transaction",
                             enabled = true
                         )
@@ -180,7 +181,7 @@ fun AddTransaction(navController: NavController, categoryViewModel: CategoryView
                         // Attach image button
                         AttachImageCard(
                             imageUri = selectedImageUri,
-                            onImageSelected = { selectedImageUri = it},
+                            onImageSelected = { selectedImageUri = it },
                             placeholderText = "Attach Receipt or Salary Image",
                             enabled = true
                         )
@@ -197,6 +198,7 @@ fun AddTransaction(navController: NavController, categoryViewModel: CategoryView
                             }
                         )
 
+                        // Adding spacer between the final amount card and log transaction button
                         Spacer(modifier = Modifier.height(12.dp))
 
                         // log Transaction button
@@ -209,12 +211,12 @@ fun AddTransaction(navController: NavController, categoryViewModel: CategoryView
 
                             // when Log Transaction is clicked passes the values to be entered into Transactions table
                             onClick = {
-
+                                // runs query to add the transaction
                                 transactionViewModel.addTransaction(
                                     type = chosenTransactionType,
                                     name = title,
                                     amount = state.number1,
-                                    categoryID = selectedCategory?.categoryID?: 0,
+                                    categoryID = selectedCategory?.categoryID ?: 0,
                                     date = selectedDate,
                                     time = selectedTime,
                                     photoPath = selectedImageUri?.toString()
@@ -226,12 +228,10 @@ fun AddTransaction(navController: NavController, categoryViewModel: CategoryView
                             }
                         )
                     }
-
-
                 }
             }
         }
-
+    }
 
 }
 
