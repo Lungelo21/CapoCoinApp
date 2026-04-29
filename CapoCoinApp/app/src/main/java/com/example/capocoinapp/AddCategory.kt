@@ -89,6 +89,7 @@ import com.example.capocoinapp.ui.theme.TextWhite
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddCategory(viewModel: CategoryViewModel, service: CategoryService, navController: NavHostController) {
+    //Instantiating all variables needed for the category
     var transactionType by rememberSaveable { mutableStateOf("") }
     var categoryTitle by rememberSaveable { mutableStateOf("") }
     var iconColour by rememberSaveable { mutableStateOf("") }
@@ -97,10 +98,12 @@ fun AddCategory(viewModel: CategoryViewModel, service: CategoryService, navContr
     var minBudget by rememberSaveable { mutableStateOf(0.0) }
     var maxBudget by rememberSaveable { mutableStateOf(0.0) }
 
+    //Instantiating variables for tracking the expanded dropdown
     var transactionTypeExpanded by rememberSaveable { mutableStateOf(false) }
     var iconColourExpanded by rememberSaveable { mutableStateOf(false) }
     var iconExpanded by rememberSaveable { mutableStateOf(false) }
 
+    //Instantiating variables to hold icon and colour info by calling service methods
     val currentColourHex = service.selectableColours[iconColour] ?: "#000000"
     val currentIcon = service.getIcon(selectedIcon)
 
@@ -244,6 +247,7 @@ fun AddCategory(viewModel: CategoryViewModel, service: CategoryService, navContr
                 expanded = iconColourExpanded,
                 onDismissRequest = { iconColourExpanded = false })
             {
+                //Looping through all service called base colours
                 service.selectableColours.forEach { (colourName, colourHex) ->
                     DropdownMenuItem(
                         text = { Text(colourName) },
@@ -306,12 +310,14 @@ fun AddCategory(viewModel: CategoryViewModel, service: CategoryService, navContr
                 onDismissRequest = { iconExpanded = false },
                 modifier = Modifier.heightIn(max = 280.dp) //Allows for scrolling if many icons are selectable
             ) {
+                //Looping through all service called base icons
                 service.baseIcons.forEach { (name, icon) ->
                     /*
                             * Author: Sumit Ohja
                             * Link: https://medium.com/@sumit-dev-07/foreach-loop-f7bcfb3032ab
                             * DateAccessed: 27/04/2026
                             * */
+                    //Populating the dropdown with the icon and name associated with the icon
                     DropdownMenuItem(
                         text = { Text(name) },
                         leadingIcon = { Icon(icon, contentDescription = null) },
@@ -343,6 +349,8 @@ fun AddCategory(viewModel: CategoryViewModel, service: CategoryService, navContr
                         selectedIcon.isNotBlank(),
                 onClick = {
                     Log.d("UI_Check", "PrimaryButton Clicked!") // See if the UI even registers the touch
+
+                    //Calling the view models add category model for validation
                     viewModel.addCategory(
                         type = transactionType,
                         categoryTitle = categoryTitle,
@@ -352,6 +360,7 @@ fun AddCategory(viewModel: CategoryViewModel, service: CategoryService, navContr
                         maxBudget = maxBudget
                     )
 
+                    //Navigate to the Categories screen
                     navController.navigate("Categories")
                 }
             )

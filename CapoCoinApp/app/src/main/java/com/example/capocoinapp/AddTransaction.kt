@@ -106,7 +106,7 @@ fun AddTransaction(navController: NavController, categoryViewModel: CategoryView
                 if(validationMessage.isNotBlank()){
                     Text(
                         text = validationMessage,
-                        color = if(validationMessage == "Transaction Saved!") Primary else TextRed,
+                        color = TextRed,
                         modifier = Modifier.padding(8.dp)
                     )
                 }
@@ -124,8 +124,10 @@ fun AddTransaction(navController: NavController, categoryViewModel: CategoryView
                 }
                 else // otherwise show rest of screen (without calculator)
                 {
+                    // adding a scroll state so that when user can scroll when needed
                     val scrollState = rememberScrollState()
 
+                    // Column for the input fields
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
@@ -197,6 +199,7 @@ fun AddTransaction(navController: NavController, categoryViewModel: CategoryView
                             }
                         )
 
+                        // Adding spacer between the final amount card and log transaction button
                         Spacer(modifier = Modifier.height(12.dp))
 
                         // log Transaction button
@@ -209,7 +212,7 @@ fun AddTransaction(navController: NavController, categoryViewModel: CategoryView
 
                             // when Log Transaction is clicked passes the values to be entered into Transactions table
                             onClick = {
-
+                                // runs query to add the transaction
                                 transactionViewModel.addTransaction(
                                     type = chosenTransactionType,
                                     name = title,
@@ -226,8 +229,6 @@ fun AddTransaction(navController: NavController, categoryViewModel: CategoryView
                             }
                         )
                     }
-
-
                 }
             }
         }

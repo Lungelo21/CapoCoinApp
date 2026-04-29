@@ -81,6 +81,7 @@ fun CategoriesScreen(navController: NavController, categoryService: CategoryServ
                         }
 
                         categories.forEach { category ->
+                            //Populating the card with all data for each incremented category
                             CategoryCard(
                                 cardTitle = category.categoryTitle,
                                 cardColor = categoryService.getColour(category.categoryColour),

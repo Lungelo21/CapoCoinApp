@@ -22,6 +22,12 @@ import com.example.capocoinapp.ui.theme.Primary
 import com.example.capocoinapp.ui.theme.PurpleGrey40
 
 
+/*
+    * Author: Phillip Lackner
+    * Link: https://www.youtube.com/watch?v=-aTcFJWxEQA
+    * DateAccessed: 14/04/2026
+    * */
+
 @Composable
 fun CalculatorButtons(
     state: CalculatorState,
