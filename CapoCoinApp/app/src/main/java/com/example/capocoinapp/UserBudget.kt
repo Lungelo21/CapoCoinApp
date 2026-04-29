@@ -22,12 +22,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.capocoinapp.data.ViewModels.CategoryViewModel
 import com.example.capocoinapp.data.entities.Category
 import com.example.capocoinapp.designUI.components.AppScaffold
 import com.example.capocoinapp.designUI.components.BottomNavBar
 import com.example.capocoinapp.designUI.components.BudgetCard
+import com.example.capocoinapp.designUI.components.BudgetHeader
 import com.example.capocoinapp.designUI.components.TopNavBar
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 import androidx.compose.runtime.*
@@ -37,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.capocoinapp.Services.CategoryService
 import com.example.capocoinapp.ui.theme.Accent
+import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 import com.example.capocoinapp.ui.theme.Primary
 import com.example.capocoinapp.ui.theme.SubTextWhite
 import com.example.capocoinapp.ui.theme.TextWhite
@@ -72,7 +76,7 @@ fun UserBudgetScreen(
     CapoCoinAppTheme {
         AppScaffold(
             topBar = { TopNavBar(navController) },
-            bottomBar = { BottomNavBar(navController) },
+            bottomBar = { BottomNavBar(navController,4) },
             pageTitle = "User Budget"
         ) { _ ->
 
@@ -100,6 +104,7 @@ fun UserBudgetScreen(
                 * Link: https://www.youtube.com/watch?v=VE7mCMK5djM
                 * Date Accessed: 27/04/2026
                 */
+                BudgetHeader()
 
                 categories.forEach { category ->
                     if(category.transactionType == "Expense")

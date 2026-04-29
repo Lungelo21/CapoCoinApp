@@ -16,7 +16,7 @@ fun TransactionsDetailsScreen(navController: NavController) {
     CapoCoinAppTheme {
         AppScaffold(
             topBar = { TopNavBar(navController) },
-            bottomBar = { BottomNavBar(navController) },
+            bottomBar = { BottomNavBar(navController,2) },
             pageTitle = "Transactions"
         ) { _ ->
 

@@ -8,10 +8,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.capocoinapp.Services.CategoryService
+import com.example.capocoinapp.data.ViewModels.CategoryViewModel
 import com.example.capocoinapp.designUI.components.AppScaffold
 import com.example.capocoinapp.designUI.components.BottomNavBar
 import com.example.capocoinapp.designUI.components.CardBox
@@ -39,7 +40,7 @@ fun CategoriesScreen(navController: NavController, categoryService: CategoryServ
     CapoCoinAppTheme {
         AppScaffold(
             topBar = { TopNavBar(navController) },
-            bottomBar = { BottomNavBar(navController) },
+            bottomBar = { BottomNavBar(navController, 4) },
             pageTitle = "Categories"
         ) { _ ->
 
@@ -88,7 +89,7 @@ fun CategoriesScreen(navController: NavController, categoryService: CategoryServ
                         }
                     }
                 )
-            )
+            }
         }
     }
 }
@@ -99,6 +100,5 @@ fun CategoriesScreen(navController: NavController, categoryService: CategoryServ
 fun CategoriesPreview() {
     CapoCoinAppTheme {
         val navController = rememberNavController()
-        CategoriesScreen(navController)
     }
 }*/
