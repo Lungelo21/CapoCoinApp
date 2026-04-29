@@ -7,6 +7,8 @@ import androidx.compose.material.icons.filled.PieChart
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.capocoinapp.designUI.components.AppScaffold
 import com.example.capocoinapp.designUI.components.BottomNavBar
 import com.example.capocoinapp.designUI.components.CardBox
@@ -16,11 +18,11 @@ import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 
 //ToDo: this screen will need to be updated as more screens are added
 @Composable
-fun MoreScreen() {
+fun MoreScreen(navController: NavController) {
     CapoCoinAppTheme {
         AppScaffold(
-            topBar = { TopNavBar() },
-            bottomBar = { BottomNavBar() },
+            topBar = { TopNavBar(navController) },
+            bottomBar = { BottomNavBar(navController) },
             pageTitle = "More"
         ) { _ ->
 
@@ -77,6 +79,7 @@ fun MoreScreen() {
 @Composable
 fun CardPreview() {
     CapoCoinAppTheme {
-        MoreScreen()
+        val navController = rememberNavController()
+        MoreScreen(navController)
     }
 }

@@ -16,15 +16,13 @@ import com.example.capocoinapp.designUI.components.TopNavBar
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 
 @Composable
-fun TransactionsScreen(navController: NavController) {
+fun TransactionsDetailsScreen(navController: NavController) {
     CapoCoinAppTheme {
         AppScaffold(
             topBar = { TopNavBar(navController) },
             bottomBar = { BottomNavBar(navController) },
             pageTitle = "Transactions"
         ) { _ ->
-
-            //ToDo: add transactions filtering
 
             // ToDo: replace with logic to show the actual transactions once database is set up
             CardBox(
@@ -33,7 +31,7 @@ fun TransactionsScreen(navController: NavController) {
                         CardComponent(
                             "Dinner Night",
                             "Empire Steak",
-                            "200",
+                            "- R200",
                             "5:00 PM",
                             Icons.Default.Fastfood,
                             "expense"
@@ -43,7 +41,7 @@ fun TransactionsScreen(navController: NavController) {
                         CardComponent(
                             "Movie",
                             "Pavillion",
-                            "150",
+                            "- R150",
                             "7:45 AM",
                             Icons.Default.Movie,
                             "expense"
@@ -53,7 +51,7 @@ fun TransactionsScreen(navController: NavController) {
                         CardComponent(
                             "Salary",
                             "Dunder Mifflin",
-                            "30 000",
+                            "+ R30 000",
                             "9:45 AM",
                             Icons.Default.Payments,
                             "income"
@@ -68,8 +66,9 @@ fun TransactionsScreen(navController: NavController) {
 
 @Preview(showBackground = true)
 @Composable
-fun TransactionsPreview() {
+fun TransactionDetailsPreview() {
     CapoCoinAppTheme {
-        TransactionsScreen()
+        val navController = rememberNavController()
+        TransactionsDetailsScreen(navController)
     }
 }

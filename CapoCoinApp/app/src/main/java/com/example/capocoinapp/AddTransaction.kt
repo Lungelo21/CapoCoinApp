@@ -25,12 +25,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
 import com.example.capocoinapp.Calculator.CalculatorFunctions
 import com.example.capocoinapp.Calculator.CalculatorViewModel
 import com.example.capocoinapp.data.ViewModels.CategoryViewModel
 import com.example.capocoinapp.data.ViewModels.TransactionViewModel
 import com.example.capocoinapp.data.dao.CategoryDAO
 import com.example.capocoinapp.data.dao.TransactionsDAO
+import com.example.capocoinapp.data.entities.Category
 import com.example.capocoinapp.designUI.components.CalculatorSection
 import com.example.capocoinapp.ui.theme.Accent
 import com.example.capocoinapp.ui.theme.BackgroundColor
@@ -52,6 +54,7 @@ import com.example.capocoinapp.designUI.components.SelectTransactionTypeDropDown
 import com.example.capocoinapp.designUI.components.TimePickerCard
 import com.example.capocoinapp.designUI.components.TopNavBar
 import com.example.capocoinapp.designUI.components.inputCard
+import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 
 
 @Composable
@@ -65,7 +68,7 @@ fun AddTransaction() {
     // stores the categories by retrieving the list of categories and storing them as an empty list state which is then filled
     val categories by catViewModel.getAllCategories().collectAsState(initial = emptyList())
 
-    var selectedCategory by remember { mutableStateOf("") }
+    var selectedCategory by remember { mutableStateOf<Category?>(null) }
 
     val transactionViewModel = viewModel<TransactionViewModel>()
     // transaction types
@@ -89,8 +92,8 @@ fun AddTransaction() {
 
     CapoCoinAppTheme {
         AppScaffold(
-            topBar = { TopNavBar() },
-            bottomBar = { BottomNavBar() },
+            topBar = { TopNavBar(navController) },
+            bottomBar = { BottomNavBar(navController) },
             pageTitle = "Add Transaction"
         ){ _ ->
             Column(modifier = Modifier.fillMaxSize())
@@ -120,7 +123,7 @@ fun AddTransaction() {
 
                     // Dropdown for Category Selection
                     SelectCategoryDropDown(
-                        categories = categories.map { it.categoryTitle },
+                        categories = categories,
                         selectedCategory = selectedCategory,
                         onCategorySelected = { selectedCategory = it },
                         placeholderText = "Select Category",
@@ -173,7 +176,6 @@ fun AddTransaction() {
                 }
             }
         }
-    }
 
 
 }

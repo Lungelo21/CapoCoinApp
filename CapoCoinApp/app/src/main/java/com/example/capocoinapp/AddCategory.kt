@@ -78,6 +78,7 @@ import androidx.compose.material.icons.Icons
 
 //importing question mark icon for default fallback icon
 import androidx.compose.material.icons.filled.QuestionMark
+import androidx.navigation.compose.rememberNavController
 
 //Importing the Primary button from buttons.kt
 import com.example.capocoinapp.designUI.components.PrimaryButton
@@ -103,9 +104,10 @@ fun AddCategory(viewModel: CategoryViewModel, service: CategoryService)
     val currentIcon = service.getIcon(selectedIcon)
 
     CapoCoinAppTheme{
+        val navController = rememberNavController()
         AppScaffold(
-            topBar = { TopNavBar() },
-            bottomBar = { BottomNavBar() },
+            topBar = { TopNavBar(navController) },
+            bottomBar = { BottomNavBar(navController) },
             pageTitle = "Add Category"
         ) { paddingValues ->
             Column(

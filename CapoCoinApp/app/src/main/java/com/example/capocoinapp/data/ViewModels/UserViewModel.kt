@@ -98,15 +98,29 @@ class UserViewModel (
 
     }
 
-    fun loginUser(username: String, password: String) : Boolean {
-
-        var validUser = true
+    fun loginUser(email: String, password: String) {
         viewModelScope.launch {
-            dao?.getAllUsers()?.collect{ users ->
-                validUser =users.isNotEmpty() && users.any{it.username == username && it.password == password}
+            message = when {
+                email.isBlank() || password.isBlank() -> {
+                    "Please enter email and password"
+                }
+
+                else -> {
+                    val user = dao?.loginUser(
+                        emailInput = email.trim(),
+                        passwordInput = password
+                    )
+
+                    if (user != null) {
+                        isLoggedIn = true
+                        "Login successful"
+                    }else{
+                        isLoggedIn =false
+                        "Invalid email or password"
+                    }
+                }
             }
         }
-        return validUser
     }
 
     fun getAllUsers() : Flow<List<User>> {

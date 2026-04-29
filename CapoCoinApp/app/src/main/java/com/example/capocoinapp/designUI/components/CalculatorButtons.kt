@@ -52,7 +52,7 @@ fun CalculatorButtons(
                 modifier = Modifier
                     .background(Primary)
                     .aspectRatio(1f)
-                    .weight(2f),
+                    .weight(1f),
 
                 onClick = {
                     onAction(CalculatorFunctions.DeleteFunction)
@@ -63,8 +63,8 @@ fun CalculatorButtons(
                 symbol = "/",
                 modifier = Modifier
                     .background(Primary)
-                    .aspectRatio(2f)
-                    .weight(2f),
+                    .aspectRatio(1f)
+                    .weight(1f),
 
                 onClick = {
                     onAction(CalculatorFunctions.Operation(CalculatorOperation.Divide))
@@ -292,34 +292,6 @@ fun CalculatorButtons(
             )
         }
 
-        // Row 6 confirm amount
-        Row(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            val isAmountConfirmed =
-                state.number1.isNotBlank() &&
-                        (state.operation == null || state.number2.isNotBlank())
-
-            CalculatorButtonDesign(
-                symbol = "Confirm",
-                modifier = Modifier
-                    .background(
-
-                        if(isAmountConfirmed) Primary
-                            else PurpleGrey40
-                    )
-                    .fillMaxWidth()
-                    .weight(1f),
-
-                onClick = {
-                    if(isAmountConfirmed){
-                        onAction(CalculatorFunctions.ConfirmAmount)
-                    }
-
-                }
-            )
-
-        }
-
     }
+
 }
