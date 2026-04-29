@@ -26,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -75,7 +76,7 @@ class MainActivity : ComponentActivity() {
 
                 // Nav Host wraps all composable routes
                 NavHost(
-                    navController = navController, startDestination = "AddTransaction"
+                    navController = navController, startDestination = "Login"
                 ){
                     composable("Home") {
                         HomeScreen(navController)
@@ -157,6 +158,7 @@ class MainActivity : ComponentActivity() {
                             Register(
                                 modifier = Modifier.padding(padding),
                                 message = userViewModel.message,
+                                navController= navController,
                                 onRegisterClick = { name, username, email, password, confirmPassword ->
 
                                     userViewModel.registerUser(

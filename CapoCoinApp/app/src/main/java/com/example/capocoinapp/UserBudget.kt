@@ -11,6 +11,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -33,6 +34,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.capocoinapp.ui.theme.Accent
 import com.example.capocoinapp.ui.theme.Primary
+import com.example.capocoinapp.ui.theme.SubTextWhite
+import com.example.capocoinapp.ui.theme.TextWhite
 
 
 @Composable
@@ -46,6 +49,16 @@ fun UserBudgetScreen(
     val categories by categoryViewModel
         .getAllCategories()
         .collectAsState(initial = emptyList())
+
+    val capoColorTextField = OutlinedTextFieldDefaults.colors(
+        focusedBorderColor = TextWhite,
+        unfocusedBorderColor = SubTextWhite,
+        focusedTextColor = TextWhite,
+        unfocusedTextColor = TextWhite,
+        cursorColor = Accent,
+        focusedLabelColor = Accent,
+        unfocusedLabelColor = SubTextWhite
+    )
 
     var selectedCategory by remember { mutableStateOf<Category?>(null) }
     var minBudgetInput by remember { mutableStateOf("") }
@@ -85,6 +98,7 @@ fun UserBudgetScreen(
                 */
 
                 categories.forEach { category ->
+                    if(category.transactionType == "Expenses")
                     BudgetCard(
                         cardTitle = category.categoryTitle,
                         cardMin = category.minBudget,
@@ -112,6 +126,7 @@ fun UserBudgetScreen(
                         value = minBudgetInput,
                         onValueChange = { minBudgetInput = it },
                         label = { Text("Minimum Budget") },
+                        colors = capoColorTextField,
                         modifier = Modifier.fillMaxWidth()
                     )
 
@@ -119,6 +134,7 @@ fun UserBudgetScreen(
                         value = maxBudgetInput,
                         onValueChange = { maxBudgetInput = it },
                         label = { Text("Maximum Budget") },
+                        colors = capoColorTextField,
                         modifier = Modifier.fillMaxWidth()
                     )
 

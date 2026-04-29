@@ -48,6 +48,11 @@ fun Login(
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
 
+    /*  Author: Kotlin Programming Language
+        Link: https://kotlinlang.org/api/compose-multiplatform/material3/androidx.compose.material3/-outlined-text-field.html
+        Date Accessed: 27/04/2026
+    */
+
     val capoColorTextField = OutlinedTextFieldDefaults.colors(
         focusedBorderColor = TextWhite,
         unfocusedBorderColor = SubTextWhite,
@@ -130,15 +135,7 @@ fun Login(
             Text("Login")
         }
 
-        Spacer(modifier = Modifier.height(32.dp))
 
-        // Clickable if user forgot password
-        Text(
-            text = "Forgot Password?",
-            color = Accent,
-            modifier = Modifier.clickable {
-
-            })
 
         Spacer(modifier = Modifier.height(20.dp))
 
