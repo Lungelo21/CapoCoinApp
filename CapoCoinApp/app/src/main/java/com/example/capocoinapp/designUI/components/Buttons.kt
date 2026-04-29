@@ -1,5 +1,6 @@
 package com.example.capocoinapp.designUI.components
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.Button
@@ -36,10 +37,43 @@ fun PrimaryButton(
     }
 }
 
+@Composable
+fun WideButton(
+    buttonText: String,
+    enabled: Boolean = true,
+    onClick: () -> Unit
+) {
+    Button(
+        onClick = onClick,
+        enabled = enabled,
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight(),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Primary
+        )
+    ) {
+        Text(
+            text = buttonText,
+            style = CapoType.cardTitle,
+            maxLines = 1
+        )
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun ButtonPreview() {
     CapoCoinAppTheme {
         PrimaryButton("Add Transaction", true) {}
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun WideButtonPreview() {
+    CapoCoinAppTheme {
+        WideButton("Add Transaction", true) {}
     }
 }

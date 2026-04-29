@@ -73,6 +73,7 @@ import androidx.navigation.NavHostController
 import com.example.capocoinapp.designUI.components.CardBox
 import com.example.capocoinapp.designUI.components.DatePickerCard
 import com.example.capocoinapp.designUI.components.PrimaryButton
+import com.example.capocoinapp.designUI.components.WideButton
 import com.example.capocoinapp.ui.theme.Accent
 import com.example.capocoinapp.ui.theme.BackgroundColor
 
@@ -109,9 +110,17 @@ fun CategoryTotalsScreen(service: TransactionService, navController: NavHostCont
             calendar.get(Calendar.DAY_OF_MONTH)
         ).show()
 
-        //https://kotlinlang.org/api/compose-multiplatform/material3/androidx.compose.material3/-date-picker-dialog.html
-        //https://www.geeksforgeeks.org/android/datepickerdialog-in-android/
+        /*
+         * Author: Kotlin Programming Language
+         * Link: https://kotlinlang.org/api/compose-multiplatform/material3/androidx.compose.material3/-date-picker-dialog.html
+         * DateAccessed: 28/04/2026
+         * */
 
+        /*
+         * Author: GeeksforGeeks
+         * Link: https://www.geeksforgeeks.org/android/datepickerdialog-in-android/
+         * DateAccessed: 28/04/2026
+         * */
     }
 
     Box(modifier = Modifier.fillMaxSize())
@@ -264,7 +273,7 @@ fun CategoryTotalsScreen(service: TransactionService, navController: NavHostCont
     Box(modifier = Modifier.padding(16.dp).fillMaxSize(), contentAlignment = Alignment.BottomCenter)
     {
         //Primary button call for a redirect to budget functionality
-        PrimaryButton(
+        WideButton(
             buttonText = "Back to Budget",
             onClick = {
                 // Navigates back to the Budget screen
