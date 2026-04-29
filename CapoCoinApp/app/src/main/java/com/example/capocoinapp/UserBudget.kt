@@ -1,22 +1,28 @@
 package com.example.capocoinapp
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-
+import androidx.compose.ui.unit.dp
 import com.example.capocoinapp.data.ViewModels.CategoryViewModel
 import com.example.capocoinapp.data.entities.Category
 import com.example.capocoinapp.designUI.components.AppScaffold
@@ -25,16 +31,22 @@ import com.example.capocoinapp.designUI.components.BudgetCard
 import com.example.capocoinapp.designUI.components.TopNavBar
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 import androidx.compose.runtime.*
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.capocoinapp.Services.CategoryService
+import com.example.capocoinapp.ui.theme.Accent
+import com.example.capocoinapp.ui.theme.Primary
+import com.example.capocoinapp.ui.theme.SubTextWhite
+import com.example.capocoinapp.ui.theme.TextWhite
 
 
 @Composable
-fun UserBudget(
+fun UserBudgetScreen(
     modifier: Modifier = Modifier,
     categoryViewModel: CategoryViewModel,
+    categoryService: CategoryService,
     message: String = "",
     onAddCategoryClick: () -> Unit = {},
     navController: NavController
@@ -42,6 +54,16 @@ fun UserBudget(
     val categories by categoryViewModel
         .getAllCategories()
         .collectAsState(initial = emptyList())
+
+    val capoColorTextField = OutlinedTextFieldDefaults.colors(
+        focusedBorderColor = TextWhite,
+        unfocusedBorderColor = SubTextWhite,
+        focusedTextColor = TextWhite,
+        unfocusedTextColor = TextWhite,
+        cursorColor = Accent,
+        focusedLabelColor = Accent,
+        unfocusedLabelColor = SubTextWhite
+    )
 
     var selectedCategory by remember { mutableStateOf<Category?>(null) }
     var minBudgetInput by remember { mutableStateOf("") }
@@ -57,9 +79,22 @@ fun UserBudget(
             Column(
                 modifier = modifier
                     .padding(16.dp)
+                    .fillMaxSize()
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
+                OutlinedButton(
+                    onClick = { navController.navigate("AddCategories")},
+                    border = BorderStroke(3.dp, Accent),
+
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        containerColor = Color.Transparent,
+                        contentColor = Accent
+                    )
+                ){
+                    Text("Add Category")
+                }
+
                 /*
                 * Author: Donn Felker
                 * Link: https://www.youtube.com/watch?v=VE7mCMK5djM
@@ -67,18 +102,21 @@ fun UserBudget(
                 */
 
                 categories.forEach { category ->
-                    BudgetCard(
-                        cardTitle = category.categoryTitle,
-                        cardMin = category.minBudget,
-                        cardMax = category.maxBudget,
-                        cardColor = "Teal",
-                        cardIcon = category.categoryIcon,
-                        onClick = {
-                            selectedCategory = category
-                            minBudgetInput = category.minBudget.toString()
-                            maxBudgetInput = category.maxBudget.toString()
-                        }
-                    )
+                    if(category.transactionType == "Expense")
+                    {
+                        BudgetCard(
+                            cardTitle = category.categoryTitle,
+                            cardMin = category.minBudget,
+                            cardMax = category.maxBudget,//Changed from hard coded colour to take from DB
+                            cardColor = categoryService.getColour(category.categoryColour),//using service called method
+                            cardIcon = category.categoryIcon,
+                            onClick = {
+                                selectedCategory = category
+                                minBudgetInput = category.minBudget.toString()
+                                maxBudgetInput = category.maxBudget.toString()
+                            }
+                        )
+                    }
                 }
 
                 /*
@@ -88,12 +126,13 @@ fun UserBudget(
                 */
 
                 selectedCategory?.let { category ->
-                    Text("Edit ${category.categoryTitle}")
+                    Text("Edit ${category.categoryTitle}", color = SubTextWhite)
 
                     OutlinedTextField(
                         value = minBudgetInput,
                         onValueChange = { minBudgetInput = it },
                         label = { Text("Minimum Budget") },
+                        colors = capoColorTextField,
                         modifier = Modifier.fillMaxWidth()
                     )
 
@@ -101,6 +140,7 @@ fun UserBudget(
                         value = maxBudgetInput,
                         onValueChange = { maxBudgetInput = it },
                         label = { Text("Maximum Budget") },
+                        colors = capoColorTextField,
                         modifier = Modifier.fillMaxWidth()
                     )
 

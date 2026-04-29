@@ -13,12 +13,14 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -26,30 +28,22 @@ import com.example.capocoinapp.Services.CategoryService
 import com.example.capocoinapp.data.DB.AppDatabase
 import com.example.capocoinapp.data.ViewModels.CategoryViewModel
 import com.example.capocoinapp.data.ViewModels.CategoryViewModelFactory
+import com.example.capocoinapp.data.ViewModels.TransactionViewModel
+import com.example.capocoinapp.data.ViewModels.TransactionViewModelFactory
 import com.example.capocoinapp.data.ViewModels.UserViewModel
 import com.example.capocoinapp.data.ViewModels.ViewModelFactory
+import com.example.capocoinapp.designUI.components.AppScaffold
 import com.example.capocoinapp.designUI.components.BottomNavBar
 import com.example.capocoinapp.designUI.components.CapoCoinAuthenticationLayout
-import com.example.capocoinapp.designUI.components.CapoCoinSharedLayout
 import com.example.capocoinapp.designUI.components.TopNavBar
-// import for nav host
-import androidx.navigation.compose.NavHost
-// import for composable
-import androidx.navigation.compose.composable
-// import for navController
-import androidx.navigation.compose.rememberNavController
-// import for shared layout referenced from the designUI folder
-import com.example.capocoinapp.designUI.components.CapoCoinSharedLayout
-// import for authentication layout referenced from the designUI folder
-import com.example.capocoinapp.designUI.components.CapoCoinAuthenticationLayout
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 import androidx.room.Room
 import androidx.lifecycle.lifecycleScope
-import com.example.capocoinapp.Services.CategoryService
-import com.example.capocoinapp.data.DB.AppDatabase
+import com.example.capocoinapp.Services.TransactionService
 import kotlinx.coroutines.launch
 
 import com.example.capocoinapp.data.entities.User
+import com.example.capocoinapp.designUI.components.AppScaffold
 
 //
 
@@ -63,6 +57,12 @@ class MainActivity : ComponentActivity() {
     private val categoryViewModel: CategoryViewModel by viewModels {
         val db = AppDatabase.getDatabase(applicationContext)
         CategoryViewModelFactory(CategoryService(db.categoryDao()))
+
+
+    }
+    private val transactionViewModel: TransactionViewModel by viewModels {
+        val db = AppDatabase.getDatabase(applicationContext)
+        TransactionViewModelFactory(db.transactionDao())
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,13 +77,20 @@ class MainActivity : ComponentActivity() {
 
                 // Nav Host wraps all composable routes
                 NavHost(
-                    navController = navController, startDestination = "Login"
+                    navController = navController, startDestination = "AddTransaction"
                 ){
                     composable("Home") {
                         HomeScreen(navController)
                     }
                     composable("Transactions"){
                         TransactionsScreen(navController)
+                    }
+                    composable("AddTransaction"){
+                        AddTransaction(
+                            navController = navController,
+                            categoryViewModel = categoryViewModel,
+                            transactionViewModel = transactionViewModel
+                        )
                     }
                     composable("Analytics"){
                         AnalyticsScreen(navController)
@@ -92,7 +99,9 @@ class MainActivity : ComponentActivity() {
                         MoreScreen(navController)
                     }
                     composable("Categories"){
-                        CategoriesScreen(navController)
+                        CategoriesScreen(navController = navController,
+                            categoryService = CategoryService(AppDatabase.getDatabase
+                            (applicationContext).categoryDao()))
                     }
                     composable("BottomNavBar"){
                         BottomNavBar(navController)
@@ -100,8 +109,17 @@ class MainActivity : ComponentActivity() {
                     composable("TopNavBar"){
                         TopNavBar(navController)
                     }
+                    composable("UserBudget"){
+                        UserBudgetScreen(navController=navController,
+                            categoryViewModel = categoryViewModel,
+                            categoryService = CategoryService(AppDatabase.getDatabase
+                                (applicationContext).categoryDao()))
+                    }
                     composable("TransactionDetails"){
                         TransactionsDetailsScreen(navController)
+                    }
+                    composable("UserProfile"){
+                        UserProfileScreen(navController)
                     }
 
                     // composable route to Login Screen
@@ -145,6 +163,7 @@ class MainActivity : ComponentActivity() {
                             Register(
                                 modifier = Modifier.padding(padding),
                                 message = userViewModel.message,
+                                navController= navController,
                                 onRegisterClick = { name, username, email, password, confirmPassword ->
 
                                     userViewModel.registerUser(
@@ -162,19 +181,40 @@ class MainActivity : ComponentActivity() {
                         }
                     }
 
-                    // composable route to Categories Screen
-                    composable("Categories"){
-                        // Ensures the Global UI layout is applied to the Categories Screen
-                        CapoCoinSharedLayout(screenTitle = "Transactions", navController = navController){ padding ->
-                            Text("Categories Content", modifier = Modifier.padding(padding))
-                        }
-                    }
-
                     // composable route to Add Categories Screen
                     composable("AddCategories"){
                         // Ensures the Global UI layout is applied to the Add Categories Screen
-                        CapoCoinSharedLayout(screenTitle = "Add Categories", navController = navController){ padding ->
-                            Text("Add Categories Content", modifier = Modifier.padding(padding))
+                        AppScaffold(
+                            topBar = { TopNavBar(navController) },
+                            bottomBar = { BottomNavBar(navController) },
+                            pageTitle = "Add Category"
+                        ){ padding ->
+                            Box(modifier = Modifier.padding(padding))
+                            {
+                                AddCategory(viewModel = categoryViewModel,
+                                service = CategoryService(AppDatabase.getDatabase
+                                    (applicationContext).categoryDao()),
+                                navController = navController)
+                            }
+                        }
+                    }
+
+                    //composable route to Category Totals Screen
+                    composable("CategoryTotals")
+                    {
+                        // Ensures the Global UI layout is applied to the Categories Totals Screen
+                        AppScaffold(
+                            topBar = { TopNavBar(navController) },
+                            bottomBar = { BottomNavBar(navController) },
+                            pageTitle = "Category Totals"
+                        ){ padding ->
+                            Box(modifier = Modifier.padding(padding))
+                            {
+                                CategoryTotalsScreen(service = TransactionService
+                                    (AppDatabase.getDatabase
+                                    (applicationContext).transactionDao()),
+                                    navController = navController)
+                            }
                         }
                     }
 

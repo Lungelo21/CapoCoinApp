@@ -63,6 +63,9 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.SegmentedButtonDefaults.Icon
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import com.example.capocoinapp.designUI.components.PrimaryButton
+import com.example.capocoinapp.ui.theme.Accent
 import com.example.capocoinapp.ui.theme.BackgroundColor
 
 import com.example.capocoinapp.ui.theme.CapoType
@@ -71,7 +74,7 @@ import com.example.capocoinapp.ui.theme.TextWhite
 
 
 @Composable
-fun CategoryTotalsScreen(service: TransactionService) {
+fun CategoryTotalsScreen(service: TransactionService, navController: NavHostController) {
     val context = LocalContext.current
 
     var startDate by rememberSaveable { mutableStateOf("") }
@@ -108,12 +111,26 @@ fun CategoryTotalsScreen(service: TransactionService) {
             // Start Date Button
             OutlinedButton(onClick = { showDatePicker(true) }, modifier = Modifier.weight(1f))
             {
-                Text(text = if (startDate.isEmpty()) "Start Date" else "From: $startDate")
+                Text(text = if (startDate.isEmpty()) "Start Date" else "From: $startDate", color = TextWhite)
             }
             // End Date Button
             OutlinedButton(onClick = { showDatePicker(false) }, modifier = Modifier.weight(1f))
             {
-                Text(text = if (endDate.isEmpty()) "End Date" else "To: $endDate")
+                Text(text = if (endDate.isEmpty()) "End Date" else "To: $endDate", color = TextWhite)
+            }
+        }
+
+        //
+        if(startDate.isNotEmpty() || endDate.isNotEmpty())
+        {
+            OutlinedButton(onClick = {
+                startDate = ""
+                endDate = ""
+            },
+                modifier = Modifier.fillMaxWidth()
+            )
+            {
+                Text("Clear All filters", color = TextWhite)
             }
         }
 
@@ -188,12 +205,14 @@ fun CategoryTotalRow(item: CategoryTotal) {
     ) {
         Text(
             text = item.categoryTitle,
-            style = MaterialTheme.typography.bodyLarge
+            style = MaterialTheme.typography.bodyLarge,
+            color = TextWhite
         )
         Text(
             text = "R ${String.format("%.2f", item.totalAmount)}",
             style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            color = TextWhite
         )
     }
 }
@@ -235,13 +254,13 @@ fun PreviewCategoryTotalsScreen() {
                         .fillMaxWidth()
                         .background(BackgroundColor)
                         .padding(16.dp),
-                    contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.TopStart
                 ) {
                     Text(
                         text = "Category Totals",
                         style = CapoType.cardTitle,
                         fontSize = 24.sp,
-                        color = TextWhite
+                        color = Accent
                     )
                 }
             },
@@ -279,17 +298,32 @@ fun PreviewCategoryTotalsScreen() {
             containerColor = BackgroundColor // Uses your theme's background
         )
         { innerPadding ->
-            Column(modifier = Modifier.fillMaxSize().padding(innerPadding).padding(16.dp))
+            Column(modifier = Modifier.fillMaxSize().padding(innerPadding).padding(16.dp),
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.Start)
             {
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp))
                 {
-                    OutlinedButton(onClick = {}, modifier = Modifier.weight(1f))
+                    Box(
+                        modifier = Modifier.weight(1f),
+                        contentAlignment = Alignment.Center
+                    )
                     {
-                        Text("From: 2026-04-01")
+                        PrimaryButton (
+                            buttonText = "From: 2026-04-01", // Pass string directly
+                            onClick = {}
+                        )
                     }
-                    OutlinedButton(onClick = {}, modifier = Modifier.weight(1f))
+                    
+                    Box(
+                        modifier = Modifier.weight(1f),
+                        contentAlignment = Alignment.Center
+                    )
                     {
-                        Text("To: 2026-04-27")
+                        PrimaryButton (
+                            buttonText = "To: 2026-04-27", // Pass string directly
+                            onClick = {}
+                        )
                     }
                 }
 

@@ -2,8 +2,10 @@ package com.example.capocoinapp
 
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -32,6 +34,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.capocoinapp.ui.theme.*
 
 
@@ -39,6 +42,7 @@ import com.example.capocoinapp.ui.theme.*
 @Composable
 fun Register(
     modifier: Modifier = Modifier,
+    navController: NavController,
     message: String = "",
     onRegisterClick: (name:String,
                       username:String,
@@ -189,7 +193,7 @@ fun Register(
                 passwordError = it != password
             },
             label = {
-                Text("Enter your password.")
+                Text("Enter your password.", color = SubTextWhite)
             },
             visualTransformation = PasswordVisualTransformation(),
             isError = passwordError,
@@ -222,15 +226,25 @@ fun Register(
             Text("Register")
         }
 
+        Spacer(modifier = Modifier.height(28.dp))
+
+        Row {
+            // Clickable text if user needs to register
+            Text(text = "Already have an Account? ", color = TextWhite)
+
+
+            Text(
+                text = "Login",
+                color = Accent,
+                modifier = Modifier.clickable {
+                    navController.navigate("Login")
+                },
+            )
+        }
+
     }
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun RegisterPreview() {
-    CapoCoinAppTheme {
-        Register()
-    }
-}
+
 

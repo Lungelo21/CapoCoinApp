@@ -1,43 +1,44 @@
 package com.example.capocoinapp
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.runtime.mutableStateOf
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.capocoinapp.designUI.components.AppScaffold
 import com.example.capocoinapp.designUI.components.BottomNavBar
 import com.example.capocoinapp.designUI.components.CardBox
 import com.example.capocoinapp.designUI.components.HomeCard
+import com.example.capocoinapp.designUI.components.MilestoneAchievementCard
 import com.example.capocoinapp.designUI.components.PageSubTitleText
 import com.example.capocoinapp.designUI.components.TopNavBar
+import com.example.capocoinapp.designUI.components.UserProfileCard
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 
 @Composable
-fun HomeScreen(navController: NavController) {
+fun UserProfileScreen(navController: NavController) {
     CapoCoinAppTheme {
         AppScaffold(
             topBar = { TopNavBar(navController) },
             bottomBar = { BottomNavBar(navController) },
             pageTitle = "Home"
         ) { _ ->
-            // ToDo: replace with logic to show the actual transactions once database is set up
+
+            //val firstName by remember{ mutableStateOf() }
+
             CardBox(
                 cards = listOf(
+                    {
+                        UserProfileCard("Harry", "Davis", 4, "Penny Pincher", 100, 1100)
+                    },
 
-                    { HomeCard(1300.0, 2000.0, 15) },
+                    {
+                        PageSubTitleText("Recent Milestones")
+                    },
 
-                    { PageSubTitleText("Recent Transactions") }
+                    {
+                        MilestoneAchievementCard("Weekly Logger", "Log Expenses everyday for a week", "5")
+                    }
                 )
             )
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun HomePreview() {
-    CapoCoinAppTheme {
-        val navController = rememberNavController()
-        HomeScreen(navController)
     }
 }
