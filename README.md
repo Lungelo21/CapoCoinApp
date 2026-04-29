@@ -21,9 +21,10 @@ The app allows users to register, log in, and manage financial data such as tran
 - PhotoPicker Image upload
 - In app calculator
 - Custom Category Creation
-- Filtering transaction by user selectable peroid
+- Filtering transaction by user selectable period
+- Filtering Category Totals by user selecteable period
 - View transctions uploaded image 
-- Multiple screens (Home, Transactions, Analytics, etc.)
+- Top and bottom navigation for ease-of-use
 
 ---
 
