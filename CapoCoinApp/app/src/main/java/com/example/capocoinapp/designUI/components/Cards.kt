@@ -79,7 +79,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.VerticalAlignmentLine
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -1015,6 +1014,32 @@ fun BudgetCard(
 }
 
 @Composable
+fun BudgetHeader() {
+    Row(
+        modifier = Modifier
+            .padding(horizontal = 32.dp)
+            .wrapContentHeight()
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.End
+    ) {
+        Text(
+            modifier = Modifier.width(70.dp),
+            text = "Min",
+            style = CapoType.cardTitle,
+        )
+
+        Spacer(modifier = Modifier.width(8.dp))
+
+        Text(
+            modifier = Modifier.width(70.dp),
+            text = "Max",
+            style = CapoType.cardTitle,
+        )
+    }
+}
+
+@Composable
 fun CategoryCard(
     cardTitle: String,
     cardColor: String,
@@ -1253,6 +1278,7 @@ fun CardPreview() {
 //                        "income"
 //                    )
 //                },
+                { BudgetHeader() },
                 {
                     BudgetCard(
                         "Gym",
