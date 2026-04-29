@@ -54,7 +54,6 @@ import androidx.compose.material.icons.filled.QuestionMark
 import androidx.compose.material.icons.filled.Restaurant
 import androidx.compose.material.icons.filled.Savings
 import androidx.compose.material.icons.filled.School
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.ShoppingBag
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.Spa
@@ -80,6 +79,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.VerticalAlignmentLine
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -201,7 +201,6 @@ fun CardBox(cards: List<@Composable () -> Unit>) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxSize()
             .wrapContentHeight()
             .background(BackgroundColor)
             .padding(16.dp)
@@ -1223,13 +1222,13 @@ fun CardPreview() {
     CapoCoinAppTheme {
         CardBox(
             cards = listOf(
-                {
-                    MoreCard(
-                        "Settings",
-                        "Change app settings",
-                        Icons.Default.Settings
-                    )
-                }
+//                {
+//                    MoreCard(
+//                        "Settings",
+//                        "Change app settings",
+//                        Icons.Default.Settings
+//                    )
+//                }
 //                {
 //                    HomeCard(1300.0, 2000.0, 15)
 //                }
@@ -1254,15 +1253,15 @@ fun CardPreview() {
 //                        "income"
 //                    )
 //                },
-//                {
-//                    BudgetCard(
-//                        "Gym",
-//                        200.0,
-//                        400.0,
-//                        "Gym",
-//                        "Teal"
-//                    )
-//                },
+                {
+                    BudgetCard(
+                        "Gym",
+                        200.0,
+                        400.0,
+                        "Gym",
+                        "Teal"
+                    )
+                },
 //                {
 //                    CategoryCard(
 //                        "Food",
