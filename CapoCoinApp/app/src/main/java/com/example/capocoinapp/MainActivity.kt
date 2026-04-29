@@ -100,7 +100,7 @@ class MainActivity : ComponentActivity() {
                         CategoriesScreen(navController)
                     }
                     composable("BottomNavBar"){
-                        BottomNavBar(navController)
+                        BottomNavBar(navController,1)
                     }
                     composable("TopNavBar"){
                         TopNavBar(navController)
@@ -179,7 +179,7 @@ class MainActivity : ComponentActivity() {
                         // Ensures the Global UI layout is applied to the Add Categories Screen
                         AppScaffold(
                             topBar = { TopNavBar(navController) },
-                            bottomBar = { BottomNavBar(navController) },
+                            bottomBar = { BottomNavBar(navController,4) },
                             pageTitle = "Add Category"
                         ){ padding ->
                             Box(modifier = Modifier.padding(padding))

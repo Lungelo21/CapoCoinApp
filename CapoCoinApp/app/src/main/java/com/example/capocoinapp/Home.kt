@@ -17,7 +17,7 @@ fun HomeScreen(navController: NavController) {
     CapoCoinAppTheme {
         AppScaffold(
             topBar = { TopNavBar(navController) },
-            bottomBar = { BottomNavBar(navController) },
+            bottomBar = { BottomNavBar(navController, 1) },
             pageTitle = "Home"
         ) { _ ->
             // ToDo: replace with logic to show the actual transactions once database is set up

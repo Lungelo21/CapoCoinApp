@@ -26,7 +26,7 @@ fun UserProfileScreen(
     CapoCoinAppTheme {
         AppScaffold(
             topBar = { TopNavBar(navController) },
-            bottomBar = { BottomNavBar(navController) },
+            bottomBar = { BottomNavBar(navController,4) },
             pageTitle = "Home"
         ) { _ ->
 
