@@ -46,8 +46,6 @@ import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 import androidx.room.Room
 import androidx.lifecycle.lifecycleScope
 import com.example.capocoinapp.Services.TransactionService
-import com.example.capocoinapp.data.ViewModels.TransactionViewModel
-
 import kotlinx.coroutines.launch
 
 import com.example.capocoinapp.data.entities.User
