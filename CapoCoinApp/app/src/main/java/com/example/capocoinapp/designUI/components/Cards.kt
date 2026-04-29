@@ -69,6 +69,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -326,6 +327,10 @@ fun inputCard(
                 placeholder = { Text(placeholder, style = CapoType.cardTitle) },
                 textStyle = CapoType.cardTitle,
                 singleLine = true,
+                // ensures that the container colour is set to CardBG like the rest of the card
+                colors = TextFieldDefaults.colors(
+                    unfocusedContainerColor = CardBG
+                ),
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -385,9 +390,17 @@ fun SelectCategoryDropDown(
                     onValueChange = {},
                     readOnly = true,
                     enabled = enabled,
-                    placeholder = { Text(placeholderText, style = CapoType.cardTitle) },
+                    placeholder = { Text(placeholderText, style = CapoType.cardTitle, color = Color.Gray) },
 
-                    textStyle = CapoType.cardTitle,
+                    textStyle = CapoType.cardTitle.copy(
+                        color = if(selectedCategory == null) Color.Gray else TextWhite
+                    ),
+
+                    // ensures that the container colour is set to CardBG like the rest of the card
+                    colors = TextFieldDefaults.colors(
+                        unfocusedContainerColor = CardBG
+                    ),
+
                     modifier = Modifier
                         .menuAnchor()
                         .fillMaxWidth()
@@ -469,6 +482,7 @@ fun SelectTransactionTypeDropDown(
                 onExpandedChange = {
                     if (enabled) dropdownExpand = !dropdownExpand
                 },
+
                 modifier = Modifier.fillMaxWidth()
             ) {
                 TextField(
@@ -477,8 +491,13 @@ fun SelectTransactionTypeDropDown(
                     readOnly = true,
                     enabled = enabled,
                     placeholder = { Text(placeholderText, style = CapoType.cardTitle) },
-
                     textStyle = CapoType.cardTitle,
+
+                    // ensures that the container colour is set to CardBG like the rest of the card
+                    colors = TextFieldDefaults.colors(
+                        unfocusedContainerColor = CardBG
+                    ),
+
                     modifier = Modifier
                         .menuAnchor()
                         .fillMaxWidth()
@@ -494,7 +513,8 @@ fun SelectTransactionTypeDropDown(
                             text = {
                                 Text(
                                     text = transactionTypes,
-                                    style = CapoType.cardTitle
+                                    style = CapoType.cardTitle,
+                                    color = TextWhite
                                 )
                             },
                             onClick = {
@@ -663,7 +683,8 @@ fun AttachImageCard(
         ) {
             if (imageUri == null) {
                 Icon(
-                    imageVector = Icons.Default.Image,
+                    imageVector = icon,
+                    tint = TextWhite,
                     contentDescription = null,
                     modifier = Modifier.size((44.dp))
                 )

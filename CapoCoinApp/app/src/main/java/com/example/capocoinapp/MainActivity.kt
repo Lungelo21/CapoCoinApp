@@ -43,6 +43,15 @@ import com.example.capocoinapp.designUI.components.BottomNavBar
 import com.example.capocoinapp.designUI.components.CapoCoinAuthenticationLayout
 import com.example.capocoinapp.designUI.components.TopNavBar
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
+import androidx.room.Room
+import androidx.lifecycle.lifecycleScope
+import com.example.capocoinapp.Services.TransactionService
+import com.example.capocoinapp.data.ViewModels.TransactionViewModel
+
+import kotlinx.coroutines.launch
+
+import com.example.capocoinapp.data.entities.User
+import com.example.capocoinapp.designUI.components.AppScaffold
 
 //
 
@@ -98,7 +107,9 @@ class MainActivity : ComponentActivity() {
                         MoreScreen(navController)
                     }
                     composable("Categories"){
-                        CategoriesScreen(navController)
+                        CategoriesScreen(navController = navController,
+                            categoryService = CategoryService(AppDatabase.getDatabase
+                            (applicationContext).categoryDao()))
                     }
                     composable("BottomNavBar"){
                         BottomNavBar(navController)
@@ -108,7 +119,9 @@ class MainActivity : ComponentActivity() {
                     }
                     composable("UserBudget"){
                         UserBudgetScreen(navController=navController,
-                            categoryViewModel = categoryViewModel)
+                            categoryViewModel = categoryViewModel,
+                            categoryService = CategoryService(AppDatabase.getDatabase
+                                (applicationContext).categoryDao()))
                     }
                     composable("TransactionDetails"){
                         TransactionsDetailsScreen(navController)
@@ -190,6 +203,25 @@ class MainActivity : ComponentActivity() {
                                 service = CategoryService(AppDatabase.getDatabase
                                     (applicationContext).categoryDao()),
                                 navController = navController)
+                            }
+                        }
+                    }
+
+                    //composable route to Category Totals Screen
+                    composable("CategoryTotals")
+                    {
+                        // Ensures the Global UI layout is applied to the Categories Totals Screen
+                        AppScaffold(
+                            topBar = { TopNavBar(navController) },
+                            bottomBar = { BottomNavBar(navController) },
+                            pageTitle = "Category Totals"
+                        ){ padding ->
+                            Box(modifier = Modifier.padding(padding))
+                            {
+                                CategoryTotalsScreen(service = TransactionService
+                                    (AppDatabase.getDatabase
+                                    (applicationContext).transactionDao()),
+                                    navController = navController)
                             }
                         }
                     }

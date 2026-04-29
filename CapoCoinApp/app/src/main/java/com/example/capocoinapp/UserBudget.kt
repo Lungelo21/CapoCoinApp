@@ -32,6 +32,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.capocoinapp.Services.CategoryService
 import com.example.capocoinapp.ui.theme.Accent
 import com.example.capocoinapp.ui.theme.Primary
 import com.example.capocoinapp.ui.theme.SubTextWhite
@@ -42,6 +43,7 @@ import com.example.capocoinapp.ui.theme.TextWhite
 fun UserBudgetScreen(
     modifier: Modifier = Modifier,
     categoryViewModel: CategoryViewModel,
+    categoryService: CategoryService,
     message: String = "",
     onAddCategoryClick: () -> Unit = {},
     navController: NavController
@@ -98,19 +100,21 @@ fun UserBudgetScreen(
                 */
 
                 categories.forEach { category ->
-                    if(category.transactionType == "Expenses")
-                    BudgetCard(
-                        cardTitle = category.categoryTitle,
-                        cardMin = category.minBudget,
-                        cardMax = category.maxBudget,
-                        cardColor = "Teal",
-                        cardIcon = category.categoryIcon,
-                        onClick = {
-                            selectedCategory = category
-                            minBudgetInput = category.minBudget.toString()
-                            maxBudgetInput = category.maxBudget.toString()
-                        }
-                    )
+                    if(category.transactionType == "Expense")
+                    {
+                        BudgetCard(
+                            cardTitle = category.categoryTitle,
+                            cardMin = category.minBudget,
+                            cardMax = category.maxBudget,//Changed from hard coded colour to take from DB
+                            cardColor = categoryService.getColour(category.categoryColour),//using service called method
+                            cardIcon = category.categoryIcon,
+                            onClick = {
+                                selectedCategory = category
+                                minBudgetInput = category.minBudget.toString()
+                                maxBudgetInput = category.maxBudget.toString()
+                            }
+                        )
+                    }
                 }
 
                 /*

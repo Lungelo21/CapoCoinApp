@@ -29,7 +29,7 @@ fun CalculatorButtonDesign(
 
         Text(
             text = symbol,
-            fontSize = 18.sp,
+            fontSize = 22.sp,
             color = Color.White
         )
     }
