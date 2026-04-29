@@ -43,6 +43,7 @@ import androidx.compose.material.icons.filled.DirectionsCar
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.Flight
 import androidx.compose.material.icons.filled.Handshake
+import androidx.compose.material.icons.filled.Help
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.MedicalServices
 import androidx.compose.material.icons.filled.Movie
@@ -107,8 +108,8 @@ fun CardComponent(
     cardSubTitle: String?,
     cardAmount: String?,
     cardSubAmount: String?,
-    cardColor: String,
-    cardIcon: String?,
+    categoryColor: String,
+    categoryIcon: ImageVector,
     cardTransactionType: String?,
     onClick: () -> Unit = {}
 ) {
@@ -130,22 +131,20 @@ fun CardComponent(
                 .wrapContentHeight(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            if (cardIcon != null) {
-                Box(
-                    modifier = Modifier
-                        .size(40.dp)
-                        .background(
-                            color = getColorFromString(cardColor),
-                            shape = CircleShape
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = getIconFromString(cardIcon),
-                        contentDescription = null,
-                        tint = TextWhite,
-                    )
-                }
+            Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .background(
+                        color = getColorFromString(categoryColor),
+                        shape = CircleShape
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = categoryIcon,
+                    contentDescription = null,
+                    tint = TextWhite,
+                )
             }
 
             Spacer(modifier = Modifier.width(8.dp))
@@ -1043,7 +1042,7 @@ fun BudgetHeader() {
 fun CategoryCard(
     cardTitle: String,
     cardColor: String,
-    cardIcon: String?,
+    cardIcon: ImageVector,
     onClick: () -> Unit = {}
 ) {
     Card(
@@ -1064,23 +1063,20 @@ fun CategoryCard(
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-
-            if (cardIcon != null) {
-                Box(
-                    modifier = Modifier
-                        .size(35.dp)
-                        .background(
-                            color = getColorFromString(cardColor),
-                            shape = CircleShape
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = getIconFromString(cardIcon),
-                        contentDescription = null,
-                        tint = TextWhite,
-                    )
-                }
+            Box(
+                modifier = Modifier
+                    .size(35.dp)
+                    .background(
+                        color = getColorFromString(cardColor),
+                        shape = CircleShape
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = cardIcon,
+                    contentDescription = null,
+                    tint = TextWhite,
+                )
             }
 
             Spacer(modifier = Modifier.width(16.dp))
@@ -1257,17 +1253,17 @@ fun CardPreview() {
 //                {
 //                    HomeCard(1300.0, 2000.0, 15)
 //                }
-//                {
-//                    CardComponent(
-//                        "Dinner Night",
-//                        "Empire Steak",
-//                        "200",
-//                        "5:00 PM",
-//                        "Teal",
-//                        "Food",
-//                        "expense"
-//                    )
-//                },
+                {
+                    CardComponent(
+                        "Dinner Night",
+                        "Empire Steak",
+                        "200",
+                        "5:00 PM",
+                        "Teal",
+                        Icons.Default.Help,
+                        "expense"
+                    )
+                },
 //                {
 //                    CardComponent(
 //                        "Salary",
@@ -1278,16 +1274,16 @@ fun CardPreview() {
 //                        "income"
 //                    )
 //                },
-                { BudgetHeader() },
-                {
-                    BudgetCard(
-                        "Gym",
-                        200.0,
-                        400.0,
-                        "Gym",
-                        "Teal"
-                    )
-                },
+//                { BudgetHeader() },
+//                {
+//                    BudgetCard(
+//                        "Gym",
+//                        200.0,
+//                        400.0,
+//                        "Gym",
+//                        "Teal"
+//                    )
+//                },
 //                {
 //                    CategoryCard(
 //                        "Food",

@@ -78,7 +78,7 @@ class MainActivity : ComponentActivity() {
                     navController = navController, startDestination = "AddTransaction"
                 ){
                     composable("Home") {
-                        HomeScreen(navController)
+                        HomeScreen(navController, categoryViewModel, transactionViewModel)
                     }
                     composable("Transactions"){
                         TransactionsScreen(navController)
@@ -97,7 +97,7 @@ class MainActivity : ComponentActivity() {
                         MoreScreen(navController)
                     }
                     composable("Categories"){
-                        CategoriesScreen(navController)
+                        CategoriesScreen(navController, categoryViewModel)
                     }
                     composable("BottomNavBar"){
                         BottomNavBar(navController,1)
