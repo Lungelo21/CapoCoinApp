@@ -366,18 +366,11 @@ fun TransactionDetailsCard(
                     painter = rememberAsyncImagePainter(imageUri),
                     contentDescription = null,
                     modifier = Modifier
-                        .size(44.dp)
+                        .size(380.dp)
                         .clip(RoundedCornerShape(8.dp)),
                     contentScale = ContentScale.Crop
                 )
-                AsyncImage(
-                    model = imageUri,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(44.dp)
-                        .clip(RoundedCornerShape(8.dp)),
-                    contentScale = ContentScale.Crop
-                )
+
             }
 
             Spacer(modifier = Modifier.height(16.dp))
