@@ -1,20 +1,19 @@
 package com.example.capocoinapp
 
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.ContentPaste
-import androidx.compose.material.icons.filled.Flag
-import androidx.compose.material.icons.filled.PieChart
+import androidx.compose.material.icons.filled.FileDownload
+import androidx.compose.material.icons.filled.FileUpload
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.capocoinapp.designUI.components.AppScaffold
 import com.example.capocoinapp.designUI.components.BottomNavBar
 import com.example.capocoinapp.designUI.components.CardBox
-import com.example.capocoinapp.designUI.components.CardComponent
+import com.example.capocoinapp.designUI.components.MoreCard
 import com.example.capocoinapp.designUI.components.TopNavBar
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 
@@ -31,49 +30,28 @@ fun MoreScreen(navController: NavController) {
             CardBox(
 
                 cards = listOf(
-                    {
-                        CardComponent(
+                    { MoreCard(
                             "Settings",
-                            "Change app settings",
-                            null,
-                            null,
-                            Icons.Default.Settings,
-                            null
-                        )
-                    },
-                    {
-                        CardComponent(
-                            "User's budget",
-                            "Change app settings",
-                            null,
-                            null,
-                            Icons.Default.PieChart,
-                            null,
-                            onClick = {
-                                navController.navigate("UserBudget")
-                            }
-                        )
-                    },
-                    {
-                        CardComponent(
-                            "User Spending Report",
-                            "Change app settings",
-                            null,
-                            null,
-                            Icons.Default.ContentPaste,
-                            null
-                        )
-                    },
-                    {
-                        CardComponent(
-                            "User Goals",
-                            "Change app settings",
-                            null,
-                            null,
-                            Icons.Default.Flag,
-                            null
-                        )
-                    }
+                            "Coming soon in Part 3",
+                            Icons.Default.Settings)},
+                    { MoreCard(
+                        "User's Budget",
+                        "View budgets for each category",
+                        Icons.Default.ContentPaste,
+                        {navController.navigate("UserBudget")})},
+                    { MoreCard(
+                        "Categories",
+                        "View and add transaction categories",
+                        Icons.Default.Category,
+                        {navController.navigate("Categories")})},
+                    { MoreCard(
+                        "Import",
+                        "Coming soon in Part 3",
+                        Icons.Default.FileDownload)},
+                    { MoreCard(
+                        "Export",
+                        "Coming soon in Part 3",
+                        Icons.Default.FileUpload)},
 
                 )
             )
