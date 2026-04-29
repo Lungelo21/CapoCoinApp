@@ -30,7 +30,6 @@ fun CategoriesScreen(navController: NavController, categoryService: CategoryServ
             pageTitle = "Categories"
         ) { _ ->
 
-            // ToDo: replace with logic to show the actual transactions once database is set up
             CardBox(
                 cards = listOf(
                     {
