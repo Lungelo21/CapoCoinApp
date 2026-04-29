@@ -1,0 +1,426 @@
+package com.example.capocoinapp.designUI.components
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.LocalOffer
+import androidx.compose.material.icons.filled.MoreHoriz
+import androidx.compose.material.icons.filled.PieChart
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.outlined.AccountCircle
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.MoreHoriz
+import androidx.compose.material.icons.outlined.PieChart
+import androidx.compose.material.icons.outlined.Sell
+import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.example.capocoinapp.ui.theme.BackgroundColor
+import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
+import com.example.capocoinapp.ui.theme.CapoType
+import com.example.capocoinapp.ui.theme.TextWhite
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CapoCoinSharedLayout(
+    screenTitle: String,
+    navController: NavController,
+    content: @Composable (PaddingValues) -> Unit
+) {
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = screenTitle,
+                        style = MaterialTheme.typography.titleLarge,
+                        color = Color(0xFF292929)
+                    )
+                },
+                navigationIcon = {
+                    IconButton(
+                        onClick =
+                            {
+                                navController.navigate("UserProfile")
+                            }) {
+                        Icon(
+                            imageVector = Icons.Outlined.AccountCircle,
+                            contentDescription = "User Profile",
+                            tint = Color(0xFFD9D9D9),
+                            modifier = Modifier.size(32.dp)
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(
+                        onClick =
+                            {
+                                navController.navigate("Settings")
+                            }) {
+                        Icon(
+                            imageVector = Icons.Outlined.Settings,
+                            contentDescription = "Settings",
+                            tint = Color(0xFFD9D9D9),
+                            modifier = Modifier.size(32.dp)
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color(0xFF292929),
+                    navigationIconContentColor = Color(0xFFD9D9D9),
+                    actionIconContentColor = Color(0xFFD9D9D9)
+                )
+            )
+        },
+        /*
+         * Author: IGNATIAH XAVIER
+         * Link: https://medium.com/@ignatiah.x/scaffold-topappbar-and-bottomnavigation-in-jetpack-compose-build-structured-uis-9742c64df6e6
+         * DateAccessed: 25/04/2026
+         * */
+        bottomBar = {
+            NavigationBar(containerColor = Color(0xFF292929))
+            {
+                NavigationBarItem(
+                    icon = { Icon(Icons.Outlined.Home, "Home", tint = Color(0xFFE9B44C)) },
+                    label = { Text("Home", color = Color(0xFFD4AF37)) },
+                    selected = false,
+                    onClick = { navController.navigate("Home") }
+                )
+                NavigationBarItem(
+                    icon = { Icon(Icons.Outlined.Sell, "Transactions", tint = Color(0xFFE9B44C)) },
+                    label = {
+                        Text(
+                            "Transactions",
+                            color = Color(0xFFD4AF37),
+                            maxLines = 1,
+                            fontSize = 11.sp
+                        )
+                    },
+
+                    selected = false,
+                    onClick = { navController.navigate("Transactions") }
+                )
+                NavigationBarItem(
+                    icon = {
+                        Box(
+                            modifier = Modifier
+                                .size(48.dp)
+                                .background(Color(0xFFD4AF37), CircleShape),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Add,
+                                contentDescription = "Add Transactions",
+                                modifier = Modifier.size(28.dp),
+                                tint = Color(0xFF1A2421)
+                            )
+                        }
+                    },
+                    selected = false,
+                    onClick = { navController.navigate("AddTransactions") },
+                )
+                NavigationBarItem(
+                    icon = { Icon(Icons.Outlined.PieChart, "Analytics", tint = Color(0xFFE9B44C)) },
+                    label = { Text("Analytics", color = Color(0xFFD4AF37)) },
+                    selected = false,
+                    onClick = { navController.navigate("Analytics") }
+                )
+                NavigationBarItem(
+                    icon = { Icon(Icons.Outlined.MoreHoriz, "More", tint = Color(0xFFE9B44C)) },
+                    label = { Text("More", color = Color(0xFFD4AF37)) },
+                    selected = false,
+                    onClick = { navController.navigate("More") }
+                )
+            }
+        }
+        /*
+         * Author: IGNATIAH XAVIER
+         * Link: https://medium.com/@ignatiah.x/scaffold-topappbar-and-bottomnavigation-in-jetpack-compose-build-structured-uis-9742c64df6e6
+         * DateAccessed: 25/04/2026
+         * */
+    )
+    { paddingValues ->
+        content(paddingValues)
+    }
+}
+
+@Composable
+fun AppScaffold(
+    topBar: @Composable () -> Unit,
+    bottomBar: @Composable () -> Unit,
+    pageTitle: String?,
+    content: @Composable (PaddingValues) -> Unit
+) {
+    Scaffold(
+        contentWindowInsets = WindowInsets.systemBars,
+        topBar = topBar,
+        bottomBar = bottomBar,
+        containerColor = BackgroundColor
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
+            if (pageTitle != null) {
+                PageTitleText(pageTitle)
+            }
+            content(paddingValues)
+        }
+    }
+}
+
+//@Composable
+//fun Screen(navController: NavController) {
+//    CapoCoinAppTheme {
+//        AppScaffold(
+//            topBar = { TopNavBar(navController) },
+//            bottomBar = { BottomNavBar(navController) },
+//            pageTitle = "Title"
+//        ) { paddingValues ->
+//
+//            //Content goes here
+
+//        }
+//    }
+//}
+
+@Composable
+fun TopNavBar(navController: NavController) {
+    val iconSize = 50.dp
+    Box(
+        modifier = Modifier
+            .background(
+                color = Color(0xFF292929),
+                shape = RoundedCornerShape(
+                    bottomEnd = 20.dp,
+                    bottomStart = 20.dp
+                )
+            )
+            .statusBarsPadding()
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 32.dp, vertical = 16.dp)
+                .align(Alignment.TopCenter),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = Icons.Default.AccountCircle,
+                contentDescription = null,
+                tint = TextWhite,
+                modifier = Modifier
+                    .size(iconSize)
+                    .clickable {
+                        navController.navigate("UserProfile")
+                    }
+            )
+
+            Icon(
+                imageVector = Icons.Default.Settings,
+                contentDescription = null,
+                tint = TextWhite,
+                modifier = Modifier
+                    .size(iconSize)
+                    .clickable {
+                        navController.navigate("Settings")
+                    }
+            )
+        }
+    }
+}
+
+// Pass 1,2,3,4 to select which icon is selected
+@Composable
+fun BottomNavBar(navController: NavController, selection: Int?) {
+    val iconSize = 50.dp
+    Box(
+        modifier = Modifier
+            .background(
+                color = Color(0xFF292929),
+                shape = RoundedCornerShape(
+                    topEnd = 20.dp,
+                    topStart = 20.dp
+                )
+            )
+            .fillMaxWidth()
+    ) {
+
+        // Main bar
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            BottomIcon(
+                icon = Icons.Default.Home,
+                label = "Home",
+                selected = isSelected(1, selection),
+            onClick = { navController.navigate("Home") }
+            )
+
+            BottomIcon(
+                icon = Icons.Default.LocalOffer,
+                label = "Transactions",
+                selected = isSelected(2, selection),
+                onClick = { navController.navigate("Transactions") }
+            )
+
+            Spacer(modifier = Modifier.width(55.dp)) // space for center FAB
+
+            BottomIcon(
+                icon = Icons.Default.PieChart,
+                label = "Analytics",
+                selected = isSelected(3, selection),
+                onClick = { navController.navigate("Analytics") }
+            )
+
+            BottomIcon(
+                icon = Icons.Default.MoreHoriz,
+                label = "More",
+                selected = isSelected(4, selection),
+                onClick = { navController.navigate("More") }
+            )
+        }
+
+        // Floating center button
+        Box(
+            modifier = Modifier
+                .size(55.dp)
+                .align(Alignment.Center)
+                .clip(CircleShape)
+                .background(Color(0xFFE9B44C))
+                .clickable { navController.navigate("AddTransaction")}
+        ) {
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = "AddTransaction",
+
+                tint = BackgroundColor,
+                modifier = Modifier
+                    .size(40.dp)
+                    .align(Alignment.Center)
+            )
+        }
+    }
+}
+
+// Returns true if the current icon is the one that needs to be selected
+fun isSelected(screen: Int, selection: Int?): Boolean {
+    if (selection != null) {
+        return screen == selection
+    }
+    return false
+}
+
+@Composable
+fun BottomIcon(
+    icon: ImageVector,
+    label: String,
+    selected: Boolean = false,
+    onClick: () -> Unit = {}
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(6.dp),
+        modifier = Modifier.clickable { onClick() }
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = label,
+            tint = if (selected) Color(0xFFE9B44C) else Color.Gray,
+            modifier = Modifier.size(28.dp)
+        )
+
+        Text(
+            text = label,
+            fontSize = 12.sp,
+            fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
+            color = if (selected) Color(0xFFE9B44C) else Color.Gray
+        )
+    }
+}
+
+@Composable
+fun PageTitleText(titleText: String) {
+
+    Spacer(Modifier.height(16.dp))
+
+    Text(
+        text = titleText,
+        style = CapoType.heading,
+        modifier = Modifier.padding(horizontal = 16.dp)
+    )
+}
+
+@Composable
+fun PageSubTitleText(titleText: String) {
+    Text(
+        text = titleText,
+        style = CapoType.heading,
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun GreetingPreview() {
+    CapoCoinAppTheme {
+        CapoCoinAppTheme {
+            val navController = rememberNavController()
+            AppScaffold(
+                topBar = { TopNavBar(navController) },
+                bottomBar = { BottomNavBar(navController, 1) },
+                pageTitle = "Preview"
+            ) { paddingValues ->
+
+                //Content goes here
+
+            }
+        }
+    }
+}
