@@ -446,7 +446,8 @@ fun SelectCategoryDropDown(
 
                                     Text(
                                         text = category.categoryTitle,
-                                        style = CapoType.cardTitle
+                                        style = CapoType.cardTitle,
+                                        color = Color.Black
                                     )
                                 }
                             },

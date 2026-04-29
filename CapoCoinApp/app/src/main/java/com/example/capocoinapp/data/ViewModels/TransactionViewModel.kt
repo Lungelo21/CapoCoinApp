@@ -93,7 +93,7 @@ class TransactionViewModel(
 
                     dao.insertTransactions(transaction)
 
-                    message = "Transaction saved!"
+                    //message = "Transaction saved!"
                 }
 
         }

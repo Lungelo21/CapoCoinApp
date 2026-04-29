@@ -223,6 +223,7 @@ fun AddTransaction(navController: NavController, categoryViewModel: CategoryView
                                 .fillMaxWidth()
                                 .height(60.dp)
                                 .background(Primary),
+
                             // when Log Transaction is clicked passes the values to be entered into Transactions table
                             onClick = {
 
@@ -235,6 +236,10 @@ fun AddTransaction(navController: NavController, categoryViewModel: CategoryView
                                     time = selectedTime,
                                     photoPath = selectedImageUri?.toString()
                                 )
+
+                                // Navigates to Transactions Page after onClick
+                                navController.navigate("Transactions")
+
                             }
                         )
                     }
