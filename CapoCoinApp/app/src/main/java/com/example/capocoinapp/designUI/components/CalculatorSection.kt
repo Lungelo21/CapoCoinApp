@@ -4,6 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -28,49 +30,61 @@ fun CalculatorSection(
     buttonSpacing: Dp = 2.dp,
     onAction: (CalculatorFunctions) -> Unit
 ){
-    Box(modifier = modifier.fillMaxSize()) {
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 140.dp),
-            verticalArrangement = Arrangement.spacedBy(buttonSpacing)
+                .fillMaxHeight()
         ) {
-            //display
-            CalculatorDisplay(state)
+            Column(
+                modifier = Modifier
+                    .weight(1f),
+                verticalArrangement = Arrangement.spacedBy(buttonSpacing)
+            ) {
+                //display
+                CalculatorDisplay(
+                    state = state,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(0.2f)
+                )
 
-            CalculatorButtons(
-                state = state,
-                onAction = onAction,
-                buttonSpacing = buttonSpacing
-            )
-        }
-
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .align(Alignment.BottomCenter)
-            .padding(bottom = 50.dp)
-        )
-        {
-            CalculatorButtonDesign(
-                symbol = "Confirm Amount",
-
+                // Calculator Buttons
+                CalculatorButtons(
+                    state = state,
+                    onAction = onAction,
+                    buttonSpacing = (buttonSpacing),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(0.8f)
+                )
+            }
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(60.dp)
-                    .align(Alignment.BottomCenter)
-                    .background(if(state.number1.isNotBlank()) Primary else NavBarBG),
-                onClick = {
-                    if(state.number1.isNotBlank()){
-                        onAction(CalculatorFunctions.ConfirmAmount)
-                    }
-                }
+                    .padding(bottom = 8.dp)
+            ){
+                CalculatorButtonDesign(
+                    symbol = "Confirm Amount",
 
-            )
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp)
+                        .background(if(state.number1.isNotBlank()) Primary else NavBarBG),
+                    onClick = {
+                        if(state.number1.isNotBlank()){
+                            onAction(CalculatorFunctions.ConfirmAmount)
+                        }
+                    }
+
+                )
+            }
+
+
         }
 
+
     }
-}
 
 @Preview()
 @Composable

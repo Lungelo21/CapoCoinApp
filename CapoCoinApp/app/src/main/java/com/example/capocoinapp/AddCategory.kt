@@ -1,6 +1,10 @@
 package com.example.capocoinapp
 
 //Calling import call for composable annotation
+import android.graphics.drawable.Icon
+import android.util.Log
+import androidx.compose.foundation.background
+import androidx.compose.runtime.Composable
 
 //Import the Experimental Material API which is used to allow for experimental code
 
@@ -102,6 +106,7 @@ fun AddCategory(viewModel: CategoryViewModel, service: CategoryService, navContr
 
     /*
     CapoCoinAppTheme{
+        val navController = rememberNavController()
         AppScaffold(
             topBar = { TopNavBar(navController) },
             bottomBar = { BottomNavBar(navController) },
@@ -319,29 +324,38 @@ fun AddCategory(viewModel: CategoryViewModel, service: CategoryService, navContr
         //Spacing out the entry fields from the Add Category Button
         Spacer(modifier = Modifier.height(32.dp))
 
-        //Save button calling the Primary button method from Buttons.kt
-        PrimaryButton(
-            buttonText = if(transactionType.isNotBlank() &&
-                categoryTitle.isNotBlank() &&
-                iconColour.isNotBlank() &&
-                selectedIcon.isNotBlank())
-            {"Save Category"}
-            else{""},
-            enabled = transactionType.isNotBlank() &&
+        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center)
+        {
+            //Save button calling the Primary button method from Buttons.kt
+            PrimaryButton(
+                buttonText = if (transactionType.isNotBlank() &&
                     categoryTitle.isNotBlank() &&
                     iconColour.isNotBlank() &&
-                    selectedIcon.isNotBlank(),
-            onClick = {
-                viewModel.addCategory(
-                    type = transactionType,
-                    categoryTitle = categoryTitle,
-                    categoryColour = iconColour,
-                    categoryIcon = selectedIcon,
-                    minBudget = minBudget,
-                    maxBudget = maxBudget
-                )
-            }
-        )
+                    selectedIcon.isNotBlank()
+                ) {
+                    "Save Category"
+                } else {
+                    ""
+                },
+                enabled = transactionType.isNotBlank() &&
+                        categoryTitle.isNotBlank() &&
+                        iconColour.isNotBlank() &&
+                        selectedIcon.isNotBlank(),
+                onClick = {
+                    Log.d("UI_Check", "PrimaryButton Clicked!") // See if the UI even registers the touch
+                    viewModel.addCategory(
+                        type = transactionType,
+                        categoryTitle = categoryTitle,
+                        categoryColour = iconColour,
+                        categoryIcon = selectedIcon,
+                        minBudget = minBudget,
+                        maxBudget = maxBudget
+                    )
+
+                    navController.navigate("Categories")
+                }
+            )
+        }
     }
     //}
     //}

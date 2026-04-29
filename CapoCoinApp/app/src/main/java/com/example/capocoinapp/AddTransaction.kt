@@ -2,11 +2,19 @@ package com.example.capocoinapp
 
 import android.net.Uri
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Calculate
 import androidx.compose.material.icons.filled.Edit
@@ -58,7 +66,7 @@ fun AddTransaction(navController: NavController, categoryViewModel: CategoryView
 
     // selected category for the transaction
     var selectedCategory by remember { mutableStateOf<Category?>(null) }
-    
+
     // list of the transaction types
     val transactionTypes = listOf(
         "Income",
@@ -83,6 +91,8 @@ fun AddTransaction(navController: NavController, categoryViewModel: CategoryView
     // Validation message stored
     var validationMessage = transactionViewModel.message
 
+    var showCalculator by remember { mutableStateOf(true) }
+
     CapoCoinAppTheme {
 
         AppScaffold(
@@ -92,69 +102,12 @@ fun AddTransaction(navController: NavController, categoryViewModel: CategoryView
         ){ _ ->
             Column(modifier = Modifier.fillMaxSize())
             {
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxWidth()
-                ) {
-                    // Adding validation to ensure that users cannot log a transaction unless all required fields are entered
-                    if(validationMessage.isNotBlank()){
-                        Text(
-                            text = validationMessage,
-                            color = if(validationMessage == "Transaction Saved!") Primary else TextRed,
-                            modifier = Modifier.padding(8.dp)
-                        )
-                    }
-
-                    // Dropdown for Transaction Type
-                    SelectTransactionTypeDropDown(
-                        transactionTypes = transactionTypes,
-                        selectedTransactionType = chosenTransactionType,
-                        onTransactionTypeSelected = { chosenTransactionType = it },
-                        placeholderText = "Select Transaction Type",
-                        enabled = isAmountConfirmed
-                    )
-
-                    // input for Transaction Title
-                    inputCard(
-                        value = title,
-                        onValueChange = { title = it},
-                        placeholder = "Add a title",
-                        icon = Icons.Default.Edit,
-                        enabled = isAmountConfirmed
-                    )
-
-                    // Dropdown for Category Selection
-                    SelectCategoryDropDown(
-                        categories = categories,
-                        selectedCategory = selectedCategory,
-                        onCategorySelected = { selectedCategory = it },
-                        placeholderText = "Select Category",
-                        enabled = isAmountConfirmed
-                    )
-
-                    // Add date of transaction
-                    DatePickerCard(
-                        selectedTransactionDate = selectedDate,
-                        onTransactionDateSelected = { selectedDate = it},
-                        placeholderText = "Select the date of Transaction",
-                        enabled = isAmountConfirmed
-                    )
-
-                    // Add Time to transaction
-                    TimePickerCard(
-                        selectedTransactionTime = selectedTime,
-                        onTransactionTimeSelected = { selectedTime = it},
-                        placeholderText = "Select time of Transaction",
-                        enabled = isAmountConfirmed
-                    )
-
-                    // Attach image button
-                    AttachImageCard(
-                        imageUri = selectedImageUri,
-                        onImageSelected = { selectedImageUri = it},
-                        placeholderText = "Attach Receipt or Salary Image",
-                        enabled = isAmountConfirmed
+                // Adding validation to ensure that users cannot log a transaction unless all required fields are entered
+                if(validationMessage.isNotBlank()){
+                    Text(
+                        text = validationMessage,
+                        color = if(validationMessage == "Transaction Saved!") Primary else TextRed,
+                        modifier = Modifier.padding(8.dp)
                     )
                 }
 
@@ -165,59 +118,121 @@ fun AddTransaction(navController: NavController, categoryViewModel: CategoryView
                         state = state,
                         onAction = calculatorViewModel::onAction,
                         modifier = Modifier
-                            .weight(1f)
                             .fillMaxWidth()
+                            .weight(0.3f)
                     )
                 }
                 else // otherwise show rest of screen (without calculator)
                 {
+                    val scrollState = rememberScrollState()
+
                     Column(
                         modifier = Modifier
-                            .weight(1f)
-                            .fillMaxWidth()
+                            .fillMaxSize()
+                            .padding(12.dp)
+                            .verticalScroll(scrollState),
+                        verticalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
+
+                        // Dropdown for Transaction Type
+                        SelectTransactionTypeDropDown(
+                            transactionTypes = transactionTypes,
+                            selectedTransactionType = chosenTransactionType,
+                            onTransactionTypeSelected = { chosenTransactionType = it },
+                            placeholderText = "Select Transaction Type",
+                            enabled = true
+                        )
+
+                        // input for Transaction Title
+                        inputCard(
+                            value = title,
+                            onValueChange = { title = it},
+                            placeholder = "Add a title",
+                            icon = Icons.Default.Edit,
+                            enabled = true
+                        )
+
+                        // Dropdown for Category Selection
+                        SelectCategoryDropDown(
+                            categories = categories,
+                            selectedCategory = selectedCategory,
+                            onCategorySelected = { selectedCategory = it },
+                            placeholderText = "Select Category",
+                            enabled = true
+                        )
+
+                        // Add date of transaction
+                        DatePickerCard(
+                            selectedTransactionDate = selectedDate,
+                            onTransactionDateSelected = { selectedDate = it},
+                            placeholderText = "Select the date of Transaction",
+                            enabled = true
+                        )
+
+                        // Add Time to transaction
+                        TimePickerCard(
+                            selectedTransactionTime = selectedTime,
+                            onTransactionTimeSelected = { selectedTime = it},
+                            placeholderText = "Select time of Transaction",
+                            enabled = true
+                        )
+
+                        // Attach image button
+                        AttachImageCard(
+                            imageUri = selectedImageUri,
+                            onImageSelected = { selectedImageUri = it},
+                            placeholderText = "Attach Receipt or Salary Image",
+                            enabled = true
+                        )
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
                         // Button(Card) which shows the final card and its total
                         FinalAmountCard(
                             transactionAmount = state.number1,
                             cardIcon = Icons.Default.Calculate,
                             onAmountClicked = {
                                 calculatorViewModel.reOpenCalculator()
+                                transactionViewModel.clearMessage()
+                            }
+                        )
+
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        // log Transaction button
+                        LogTransactionButton(
+                            symbol = "Log Transaction",
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(60.dp)
+                                .background(Primary),
+
+                            // when Log Transaction is clicked passes the values to be entered into Transactions table
+                            onClick = {
+
+                                transactionViewModel.addTransaction(
+                                    type = chosenTransactionType,
+                                    name = title,
+                                    amount = state.number1,
+                                    categoryID = selectedCategory?.categoryID?: 0,
+                                    date = selectedDate,
+                                    time = selectedTime,
+                                    photoPath = selectedImageUri?.toString()
+                                )
+
+                                // Navigates to Transactions Page after onClick
+                                navController.navigate("Transactions")
+
                             }
                         )
                     }
 
-                    // log Transaction button
-                    LogTransactionButton(
-                        symbol = "Log Transaction",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(60.dp)
-                            .background(Primary),
-                        // when Log Transaction is clicked passes the values to be entered into Transactions table
-                        onClick = {
-                            if(chosenTransactionType.isBlank() ||
-                                title.isBlank() ||
-                                selectedCategory == null ||
-                                selectedDate.isBlank() ||
-                                selectedTime.isBlank()
-                                )
-                                return@LogTransactionButton
 
-                            transactionViewModel.addTransaction(
-                                type = chosenTransactionType,
-                                name = title,
-                                amount = state.number1,
-                                categoryID = selectedCategory?.categoryID?: 0,
-                                date = selectedDate,
-                                time = selectedTime,
-                                photoPath = selectedImageUri?.toString()
-                            )
-                        }
-                    )
                 }
             }
         }
-    }
+
+
 }
 
 

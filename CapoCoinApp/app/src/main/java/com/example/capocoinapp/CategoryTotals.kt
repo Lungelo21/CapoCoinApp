@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.capocoinapp.Services.TransactionService
 import com.example.capocoinapp.data.dto.CategoryTotal
+import androidx.navigation.NavHostController
 import com.example.capocoinapp.designUI.components.PrimaryButton
 import com.example.capocoinapp.ui.theme.Accent
 import com.example.capocoinapp.ui.theme.BackgroundColor
@@ -53,7 +54,7 @@ import com.example.capocoinapp.ui.theme.TextWhite
 
 
 @Composable
-fun CategoryTotalsScreen(service: TransactionService) {
+fun CategoryTotalsScreen(service: TransactionService, navController: NavHostController) {
     val context = LocalContext.current
 
     var startDate by rememberSaveable { mutableStateOf("") }
@@ -90,12 +91,26 @@ fun CategoryTotalsScreen(service: TransactionService) {
             // Start Date Button
             OutlinedButton(onClick = { showDatePicker(true) }, modifier = Modifier.weight(1f))
             {
-                Text(text = if (startDate.isEmpty()) "Start Date" else "From: $startDate")
+                Text(text = if (startDate.isEmpty()) "Start Date" else "From: $startDate", color = TextWhite)
             }
             // End Date Button
             OutlinedButton(onClick = { showDatePicker(false) }, modifier = Modifier.weight(1f))
             {
-                Text(text = if (endDate.isEmpty()) "End Date" else "To: $endDate")
+                Text(text = if (endDate.isEmpty()) "End Date" else "To: $endDate", color = TextWhite)
+            }
+        }
+
+        //
+        if(startDate.isNotEmpty() || endDate.isNotEmpty())
+        {
+            OutlinedButton(onClick = {
+                startDate = ""
+                endDate = ""
+            },
+                modifier = Modifier.fillMaxWidth()
+            )
+            {
+                Text("Clear All filters", color = TextWhite)
             }
         }
 

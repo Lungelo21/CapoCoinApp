@@ -26,9 +26,13 @@ import com.example.capocoinapp.ui.theme.PurpleGrey40
 fun CalculatorButtons(
     state: CalculatorState,
     onAction: (CalculatorFunctions) -> Unit,
-    buttonSpacing: Dp
+    buttonSpacing: Dp,
+    modifier: Modifier = Modifier
 ){
-    Column(verticalArrangement = Arrangement.spacedBy(buttonSpacing)) {
+    Column(
+        modifier = Modifier.fillMaxWidth()
+            .padding(4.dp),
+        verticalArrangement = Arrangement.spacedBy(buttonSpacing)) {
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -40,7 +44,7 @@ fun CalculatorButtons(
                 modifier = Modifier
                     .background(NavBarBG)
                     .aspectRatio(2f)
-                    .weight(2f),
+                    .weight(1.6f),
 
                 onClick = {
                     onAction(CalculatorFunctions.ClearFunction)
@@ -52,7 +56,7 @@ fun CalculatorButtons(
                 modifier = Modifier
                     .background(Primary)
                     .aspectRatio(1f)
-                    .weight(1f),
+                    .weight(0.8f),
 
                 onClick = {
                     onAction(CalculatorFunctions.DeleteFunction)
@@ -64,7 +68,7 @@ fun CalculatorButtons(
                 modifier = Modifier
                     .background(Primary)
                     .aspectRatio(1f)
-                    .weight(1f),
+                    .weight(0.8f),
 
                 onClick = {
                     onAction(CalculatorFunctions.Operation(CalculatorOperation.Divide))
@@ -83,7 +87,7 @@ fun CalculatorButtons(
                 modifier = Modifier
                     .background(CardBG)
                     .aspectRatio(1f)
-                    .weight(1f),
+                    .weight(0.8f),
 
                 onClick = {
                     onAction(CalculatorFunctions.Number(7))
@@ -96,7 +100,7 @@ fun CalculatorButtons(
                 modifier = Modifier
                     .background(CardBG)
                     .aspectRatio(1f)
-                    .weight(1f),
+                    .weight(0.8f),
 
                 onClick = {
                     onAction(CalculatorFunctions.Number(8))
@@ -109,7 +113,7 @@ fun CalculatorButtons(
                 modifier = Modifier
                     .background(CardBG)
                     .aspectRatio(1f)
-                    .weight(1f),
+                    .weight(0.8f),
 
                 onClick = {
                     onAction(CalculatorFunctions.Number(9))
@@ -122,7 +126,7 @@ fun CalculatorButtons(
                 modifier = Modifier
                     .background(Primary)
                     .aspectRatio(1f)
-                    .weight(1f),
+                    .weight(0.8f),
 
                 onClick = {
                     onAction(CalculatorFunctions.Operation(CalculatorOperation.Multiply))
@@ -141,7 +145,7 @@ fun CalculatorButtons(
                 modifier = Modifier
                     .background(CardBG)
                     .aspectRatio(1f)
-                    .weight(1f),
+                    .weight(0.8f),
 
                 onClick = {
                     onAction(CalculatorFunctions.Number(4))
@@ -154,7 +158,7 @@ fun CalculatorButtons(
                 modifier = Modifier
                     .background(CardBG)
                     .aspectRatio(1f)
-                    .weight(1f),
+                    .weight(0.8f),
 
                 onClick = {
                     onAction(CalculatorFunctions.Number(5))
@@ -167,7 +171,7 @@ fun CalculatorButtons(
                 modifier = Modifier
                     .background(CardBG)
                     .aspectRatio(1f)
-                    .weight(1f),
+                    .weight(0.8f),
 
                 onClick = {
                     onAction(CalculatorFunctions.Number(6))
@@ -180,7 +184,7 @@ fun CalculatorButtons(
                 modifier = Modifier
                     .background(Primary)
                     .aspectRatio(1f)
-                    .weight(1f),
+                    .weight(0.8f),
 
                 onClick = {
                     onAction(CalculatorFunctions.Operation(CalculatorOperation.Subtract))
@@ -199,7 +203,7 @@ fun CalculatorButtons(
                 modifier = Modifier
                     .background(CardBG)
                     .aspectRatio(1f)
-                    .weight(1f),
+                    .weight(0.8f),
 
                 onClick = {
                     onAction(CalculatorFunctions.Number(1))
@@ -212,7 +216,7 @@ fun CalculatorButtons(
                 modifier = Modifier
                     .background(CardBG)
                     .aspectRatio(1f)
-                    .weight(1f),
+                    .weight(0.8f),
 
                 onClick = {
                     onAction(CalculatorFunctions.Number(2))
@@ -225,7 +229,7 @@ fun CalculatorButtons(
                 modifier = Modifier
                     .background(CardBG)
                     .aspectRatio(1f)
-                    .weight(1f),
+                    .weight(0.8f),
 
                 onClick = {
                     onAction(CalculatorFunctions.Number(3))
@@ -238,7 +242,7 @@ fun CalculatorButtons(
                 modifier = Modifier
                     .background(Primary)
                     .aspectRatio(1f)
-                    .weight(1f),
+                    .weight(0.8f),
 
                 onClick = {
                     onAction(CalculatorFunctions.Operation(CalculatorOperation.Add))
@@ -258,7 +262,7 @@ fun CalculatorButtons(
                 modifier = Modifier
                     .background(CardBG)
                     .aspectRatio(2f)
-                    .weight(2f),
+                    .weight(1.6f),
 
                 onClick = {
                     onAction(CalculatorFunctions.Number(0))
@@ -271,7 +275,7 @@ fun CalculatorButtons(
                 modifier = Modifier
                     .background(CardBG)
                     .aspectRatio(1f)
-                    .weight(1f),
+                    .weight(0.8f),
 
                 onClick = {
                     onAction(CalculatorFunctions.DecimalFunction)
@@ -284,7 +288,7 @@ fun CalculatorButtons(
                 modifier = Modifier
                     .background(Primary)
                     .aspectRatio(1f)
-                    .weight(1f),
+                    .weight(0.8f),
 
                 onClick = {
                     onAction(CalculatorFunctions.CalculateFunction)

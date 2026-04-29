@@ -8,12 +8,6 @@ package com.example.capocoinapp
 
 //
 
-// import for nav host
-// import for composable
-// import for navController
-// import for shared layout referenced from the designUI folder
-// import for authentication layout referenced from the designUI folder
-
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -26,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -42,6 +37,13 @@ import com.example.capocoinapp.designUI.components.BottomNavBar
 import com.example.capocoinapp.designUI.components.CapoCoinAuthenticationLayout
 import com.example.capocoinapp.designUI.components.TopNavBar
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
+import androidx.room.Room
+import androidx.lifecycle.lifecycleScope
+import com.example.capocoinapp.Services.TransactionService
+import kotlinx.coroutines.launch
+
+import com.example.capocoinapp.data.entities.User
+import com.example.capocoinapp.designUI.components.AppScaffold
 
 //
 
@@ -97,7 +99,9 @@ class MainActivity : ComponentActivity() {
                         MoreScreen(navController)
                     }
                     composable("Categories"){
-                        CategoriesScreen(navController, categoryViewModel)
+                        CategoriesScreen(navController = navController,
+                            categoryService = CategoryService(AppDatabase.getDatabase
+                            (applicationContext).categoryDao()))
                     }
                     composable("BottomNavBar"){
                         BottomNavBar(navController,1)
@@ -107,7 +111,9 @@ class MainActivity : ComponentActivity() {
                     }
                     composable("UserBudget"){
                         UserBudgetScreen(navController=navController,
-                            categoryViewModel = categoryViewModel)
+                            categoryViewModel = categoryViewModel,
+                            categoryService = CategoryService(AppDatabase.getDatabase
+                                (applicationContext).categoryDao()))
                     }
                     composable("TransactionDetails"){
                         TransactionsDetailsScreen(navController)
@@ -160,6 +166,7 @@ class MainActivity : ComponentActivity() {
                             Register(
                                 modifier = Modifier.padding(padding),
                                 message = userViewModel.message,
+                                navController= navController,
                                 onRegisterClick = { name, username, email, password, confirmPassword ->
 
                                     userViewModel.registerUser(
@@ -191,6 +198,25 @@ class MainActivity : ComponentActivity() {
                                 service = CategoryService(AppDatabase.getDatabase
                                     (applicationContext).categoryDao()),
                                 navController = navController)
+                            }
+                        }
+                    }
+
+                    //composable route to Category Totals Screen
+                    composable("CategoryTotals")
+                    {
+                        // Ensures the Global UI layout is applied to the Categories Totals Screen
+                        AppScaffold(
+                            topBar = { TopNavBar(navController) },
+                            bottomBar = { BottomNavBar(navController) },
+                            pageTitle = "Category Totals"
+                        ){ padding ->
+                            Box(modifier = Modifier.padding(padding))
+                            {
+                                CategoryTotalsScreen(service = TransactionService
+                                    (AppDatabase.getDatabase
+                                    (applicationContext).transactionDao()),
+                                    navController = navController)
                             }
                         }
                     }
