@@ -6,7 +6,7 @@ CapoCoin is an Android application built using Jetpack Compose, Room Database, a
 The app allows users to register, log in, and manage financial data such as transactions and categories.
 
 ---
-[Youtube Link] ()
+[Youtube Link] (https://youtu.be/BmEcXMdU0PY)
 
 
 ## Features
