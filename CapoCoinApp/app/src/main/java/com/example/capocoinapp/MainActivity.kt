@@ -8,6 +8,12 @@ package com.example.capocoinapp
 
 //
 
+// import for nav host
+// import for composable
+// import for navController
+// import for shared layout referenced from the designUI folder
+// import for authentication layout referenced from the designUI folder
+
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -27,32 +33,15 @@ import com.example.capocoinapp.Services.CategoryService
 import com.example.capocoinapp.data.DB.AppDatabase
 import com.example.capocoinapp.data.ViewModels.CategoryViewModel
 import com.example.capocoinapp.data.ViewModels.CategoryViewModelFactory
+import com.example.capocoinapp.data.ViewModels.TransactionViewModel
+import com.example.capocoinapp.data.ViewModels.TransactionViewModelFactory
 import com.example.capocoinapp.data.ViewModels.UserViewModel
 import com.example.capocoinapp.data.ViewModels.ViewModelFactory
-import com.example.capocoinapp.data.ViewModels.TransactionViewModelFactory
+import com.example.capocoinapp.designUI.components.AppScaffold
 import com.example.capocoinapp.designUI.components.BottomNavBar
 import com.example.capocoinapp.designUI.components.CapoCoinAuthenticationLayout
-import com.example.capocoinapp.designUI.components.CapoCoinSharedLayout
 import com.example.capocoinapp.designUI.components.TopNavBar
-// import for nav host
-import androidx.navigation.compose.NavHost
-// import for composable
-import androidx.navigation.compose.composable
-// import for navController
-import androidx.navigation.compose.rememberNavController
-// import for shared layout referenced from the designUI folder
-import com.example.capocoinapp.designUI.components.CapoCoinSharedLayout
-// import for authentication layout referenced from the designUI folder
-import com.example.capocoinapp.designUI.components.CapoCoinAuthenticationLayout
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
-import androidx.room.Room
-import androidx.lifecycle.lifecycleScope
-import com.example.capocoinapp.data.ViewModels.TransactionViewModel
-
-import kotlinx.coroutines.launch
-
-import com.example.capocoinapp.data.entities.User
-import com.example.capocoinapp.designUI.components.AppScaffold
 
 //
 
@@ -123,6 +112,9 @@ class MainActivity : ComponentActivity() {
                     composable("TransactionDetails"){
                         TransactionsDetailsScreen(navController)
                     }
+                    composable("UserProfile"){
+                        UserProfileScreen(navController)
+                    }
 
                     // composable route to Login Screen
                     // ToDo: move to  dedicated screen file
@@ -179,14 +171,6 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
 
-                        }
-                    }
-
-                    // composable route to Categories Screen
-                    composable("Categories"){
-                        // Ensures the Global UI layout is applied to the Categories Screen
-                        CapoCoinSharedLayout(screenTitle = "Transactions", navController = navController){ padding ->
-                            Text("Categories Content", modifier = Modifier.padding(padding))
                         }
                     }
 
