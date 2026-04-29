@@ -39,12 +39,39 @@ class TransactionViewModel(
         viewModelScope.launch {
             val amountDouble = amount.toDoubleOrNull()
 
-            message = when {
-                type.isBlank() -> "Please select a Transaction type"
-                name.isBlank() -> "Please enter a title"
-                amountDouble == null || amountDouble <= 0 -> "Please enter a valid amount"
-                categoryID == 0 -> "Please select a category"
-                else -> {
+            // list of error messages
+            val errors = mutableListOf<String>()
+
+            // checks if the transaction type is empty
+            if(type.isBlank()) {
+                errors.add("Please select a Transaction type")
+            }
+            // checks if the transaction name is empty
+            if(name.isBlank()){
+                errors.add("Please enter a title")
+            }
+            // checks if the transaction amount is null or less than 0
+            if(amountDouble == null || amountDouble <= 0) {
+                errors.add("Please enter a valid amount")
+            }
+            // checks if the category id is empty
+            if(categoryID == 0) {
+                errors.add("Please select a category")
+            }
+            // checks if the date of transaction is empty
+            if(date.isBlank()) {
+                errors.add("Please enter a date")
+            }
+            // checks if the time of transaction is empty
+            if(time.isBlank()) {
+                errors.add("Please enter the time the transaction was made at")
+            }
+
+            // checks if errors list is not empty, if fill, message composes the errors and returns them
+            if(errors.isNotEmpty()) {
+                message = errors.joinToString("\n")
+                return@launch
+            }
 
                     //Storing the current date and time
                     val calendar = Calendar.getInstance()
@@ -55,7 +82,7 @@ class TransactionViewModel(
                     val transaction = Transactions(
                         transactionType = type,
                         transactionName = name,
-                        transactionAmount = amountDouble,
+                        transactionAmount = amountDouble!!,
                         categoryID = categoryID,
                         transactionDate = date,
                         transactionTime = time,
@@ -65,11 +92,11 @@ class TransactionViewModel(
                     )
 
                     dao.insertTransactions(transaction)
-                    "Transaction saved!"
+
+                    message = "Transaction saved!"
                 }
-            }
+
         }
-    }
 
     // Get all transactions for your view transactions screen
     fun getAllTransactions(): Flow<List<Transactions>> {

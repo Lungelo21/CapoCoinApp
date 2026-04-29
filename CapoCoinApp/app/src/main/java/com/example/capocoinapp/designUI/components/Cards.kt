@@ -66,6 +66,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
@@ -265,7 +266,12 @@ fun inputCard(
                 singleLine = true,
                 // ensures that the container colour is set to CardBG like the rest of the card
                 colors = TextFieldDefaults.colors(
-                    unfocusedContainerColor = CardBG
+                    unfocusedContainerColor = CardBG,
+                    focusedContainerColor = CardBG,
+                    disabledContainerColor = CardBG,
+
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent
                 ),
                 modifier = Modifier.fillMaxWidth()
             )
@@ -326,15 +332,28 @@ fun SelectCategoryDropDown(
                     onValueChange = {},
                     readOnly = true,
                     enabled = enabled,
-                    placeholder = { Text(placeholderText, style = CapoType.cardTitle, color = Color.Gray) },
+                    placeholder = { Text(placeholderText, style = CapoType.cardTitle, color = TextWhite) },
 
                     textStyle = CapoType.cardTitle.copy(
-                        color = if(selectedCategory == null) Color.Gray else TextWhite
+                        color =  TextWhite
                     ),
+                    // this is to add the arrow to let the user know that the box is a dropdown
+                    trailingIcon = {
+                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = dropdownExpand)
+                                   },
 
                     // ensures that the container colour is set to CardBG like the rest of the card
                     colors = TextFieldDefaults.colors(
-                        unfocusedContainerColor = CardBG
+                        unfocusedContainerColor = CardBG,
+                        focusedContainerColor = CardBG,
+                        disabledContainerColor = CardBG,
+
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                        disabledIndicatorColor = Color.Transparent,
+
+                        focusedTrailingIconColor = TextWhite,
+                        unfocusedTrailingIconColor = TextWhite
                     ),
 
                     modifier = Modifier
@@ -356,7 +375,7 @@ fun SelectCategoryDropDown(
                                         imageVector = getIconFromString(category.categoryIcon),
                                         contentDescription = null,
                                         modifier = Modifier.size(20.dp),
-                                        tint = TextWhite
+                                        tint = Color.Black
                                     )
 
                                     Spacer(modifier = Modifier.width(8.dp))
@@ -429,9 +448,22 @@ fun SelectTransactionTypeDropDown(
                     placeholder = { Text(placeholderText, style = CapoType.cardTitle) },
                     textStyle = CapoType.cardTitle,
 
+                    // this is to add the arrow to let the user know that the box is a dropdown
+                    trailingIcon = {
+                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = dropdownExpand)
+                    },
+
                     // ensures that the container colour is set to CardBG like the rest of the card
                     colors = TextFieldDefaults.colors(
-                        unfocusedContainerColor = CardBG
+                        unfocusedContainerColor = CardBG,
+                        focusedContainerColor = CardBG,
+                        disabledContainerColor = CardBG,
+
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+
+                        focusedTrailingIconColor = TextWhite,
+                        unfocusedTrailingIconColor = TextWhite
                     ),
 
                     modifier = Modifier
@@ -450,7 +482,7 @@ fun SelectTransactionTypeDropDown(
                                 Text(
                                     text = transactionTypes,
                                     style = CapoType.cardTitle,
-                                    color = TextWhite
+                                    color = Color.Black
                                 )
                             },
                             onClick = {
@@ -516,7 +548,7 @@ fun DatePickerCard(
             Text(
                 text = if (selectedTransactionDate.isEmpty()) placeholderText else selectedTransactionDate,
                 style = CapoType.cardTitle,
-                color = if (selectedTransactionDate.isEmpty()) Color.Gray else TextWhite
+                color = TextWhite
             )
         }
     }
@@ -576,7 +608,7 @@ fun TimePickerCard(
             Text(   // If the entered time hasnt been shown yet, show the placeholderText otherwise show the selectedTime for the Transaction
                 text = if (selectedTransactionTime.isEmpty()) placeholderText else selectedTransactionTime,
                 style = CapoType.cardTitle,
-                color = if (selectedTransactionTime.isEmpty()) Color.Gray else TextWhite // sets chosen time to TextWhite otherwise it remains gray
+                color =  TextWhite // sets chosen time to TextWhite
             )
         }
     }

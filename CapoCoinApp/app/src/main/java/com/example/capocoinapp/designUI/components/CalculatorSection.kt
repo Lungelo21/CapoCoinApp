@@ -46,17 +46,17 @@ fun CalculatorSection(
                     state = state,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .weight(0.25f)
+                        .weight(0.2f)
                 )
 
                 // Calculator Buttons
                 CalculatorButtons(
                     state = state,
                     onAction = onAction,
-                    buttonSpacing = buttonSpacing,
+                    buttonSpacing = (buttonSpacing),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .weight(0.75f)
+                        .weight(0.8f)
                 )
             }
             Box(
