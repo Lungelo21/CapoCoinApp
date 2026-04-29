@@ -86,8 +86,6 @@ fun CalculatorSection(
 
     }
 
-
-
 @Preview()
 @Composable
 fun CalculatorPreview(){

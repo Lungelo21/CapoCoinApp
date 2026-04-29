@@ -110,6 +110,7 @@ fun AddCategory(viewModel: CategoryViewModel, service: CategoryService, navContr
 
     /*
     CapoCoinAppTheme{
+        val navController = rememberNavController()
         AppScaffold(
             topBar = { TopNavBar(navController) },
             bottomBar = { BottomNavBar(navController) },

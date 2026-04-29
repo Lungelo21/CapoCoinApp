@@ -248,7 +248,8 @@ fun AddTransaction(navController: NavController, categoryViewModel: CategoryView
                 }
             }
         }
-    }
+
+
 }
 
 

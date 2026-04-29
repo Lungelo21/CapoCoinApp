@@ -8,12 +8,6 @@ package com.example.capocoinapp
 
 //
 
-// import for nav host
-// import for composable
-// import for navController
-// import for shared layout referenced from the designUI folder
-// import for authentication layout referenced from the designUI folder
-
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
