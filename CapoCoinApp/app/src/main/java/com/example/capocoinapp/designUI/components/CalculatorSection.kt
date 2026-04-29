@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -32,8 +33,8 @@ fun CalculatorSection(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 140.dp),
+                .align(Alignment.TopCenter)
+                .padding(bottom = 40.dp),
             verticalArrangement = Arrangement.spacedBy(buttonSpacing)
         ) {
             //display

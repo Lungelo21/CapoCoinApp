@@ -73,7 +73,6 @@ fun HomeScreen(navController: NavController) {
 @Composable
 fun HomePreview() {
     CapoCoinAppTheme {
-        val navController = rememberNavController()
-        HomeScreen(navController)
+        HomeScreen()
     }
 }

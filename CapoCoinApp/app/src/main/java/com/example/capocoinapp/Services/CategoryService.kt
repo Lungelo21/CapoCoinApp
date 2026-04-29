@@ -41,7 +41,6 @@ import androidx.compose.material.icons.filled.SportsEsports
 import androidx.compose.material.icons.filled.SportsSoccer
 import androidx.compose.ui.graphics.vector.ImageVector
 
-
 public class CategoryService(private val categoryDao: CategoryDAO) {
 
     val transactionTypes = listOf("Expense", "Income")
@@ -140,13 +139,11 @@ public class CategoryService(private val categoryDao: CategoryDAO) {
                 transactionType = "Income",
                 categoryTitle = "Salary",
                 categoryIcon = "Salary", //Using ? to ensure if dark navy cant be found,
-                categoryColour = selectableColours["Dark Navy"]
-                    ?: "#2D344B",//it will predefine with the
+                categoryColour = selectableColours["Dark Navy"] ?: "#2D344B",//it will predefine with the
                 minBudget = 0.0,                                             //colour hex of dark navy
                 maxBudget = 0.0
-            ),
-            Category(
-                transactionType = "Expense",
+                ),
+            Category(transactionType = "Expense",
                 categoryTitle = "Food",
                 categoryIcon = "Food",
                 categoryColour = selectableColours["Grey"] ?: "#4A4A4A",
@@ -174,5 +171,4 @@ public class CategoryService(private val categoryDao: CategoryDAO) {
         //Create the categories so that the user will be able to see them upon running the code
         defaultCategories.forEach { createCategory(it) }
     }
-
 }

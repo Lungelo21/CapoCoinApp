@@ -70,7 +70,6 @@ fun TransactionsScreen(navController: NavController) {
 @Composable
 fun TransactionsPreview() {
     CapoCoinAppTheme {
-        val navController = rememberNavController()
-        TransactionsScreen(navController)
+        TransactionsScreen()
     }
 }

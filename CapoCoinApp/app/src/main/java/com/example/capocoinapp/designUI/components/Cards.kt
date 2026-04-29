@@ -669,8 +669,7 @@ fun BudgetCard(
     cardTitle: String,
     cardMin: Double?,
     cardMax: Double?,
-    cardIcon: String,
-    cardColor: String,
+    cardIcon: ImageVector,
     onClick: () -> Unit = {}
 ) {
     Card(
@@ -698,13 +697,14 @@ fun BudgetCard(
                 modifier = Modifier
                     .size(35.dp)
                     .background(
-                        color = getColorFromString(cardColor),
+                        color = Accent,
                         shape = CircleShape
                     ),
                 contentAlignment = Alignment.Center
             ) {
+                // Icon passed as parameter
                 Icon(
-                    imageVector = getIconFromString(cardIcon),
+                    imageVector = cardIcon,
                     contentDescription = null,
                     tint = TextWhite,
                 )

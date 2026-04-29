@@ -26,6 +26,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
+import com.example.capocoinapp.Calculator.CalculatorFunctions
 import com.example.capocoinapp.Calculator.CalculatorViewModel
 import com.example.capocoinapp.data.ViewModels.CategoryViewModel
 import com.example.capocoinapp.data.ViewModels.TransactionViewModel
@@ -43,6 +44,7 @@ import com.example.capocoinapp.ui.theme.RobotoSlab
 import com.example.capocoinapp.designUI.components.AppScaffold
 import com.example.capocoinapp.designUI.components.AttachImageCard
 import com.example.capocoinapp.designUI.components.BottomNavBar
+import com.example.capocoinapp.designUI.components.BudgetCard
 import com.example.capocoinapp.designUI.components.CardBox
 import com.example.capocoinapp.designUI.components.CardComponent
 import com.example.capocoinapp.designUI.components.DatePickerCard
@@ -84,12 +86,11 @@ fun AddTransaction() {
 
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
 
-    var isAmountConfirmed by remember { mutableStateOf(false) }
+    val isAmountConfirmed = state.isAmountConfirmed
 
     var showCalculator by remember { mutableStateOf(true) }
 
     CapoCoinAppTheme {
-        val navController = rememberNavController()
         AppScaffold(
             topBar = { TopNavBar(navController) },
             bottomBar = { BottomNavBar(navController) },
@@ -177,32 +178,8 @@ fun AddTransaction() {
         }
 
 
-        if(!isAmountConfirmed){
-
-            CalculatorSection(
-                state = state,
-                onAction = viewModel::onAction,
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
-
-
-    //            ConfirmButton{
-    //                isAmountConfirmed = true
-    //            }
-        }
-        else {
-
-    //            FinalAmountSection(
-    //                state = state
-    //            )
-
-    //            AddTransactionButton{
-    //
-    //            }
-        }
-    }
 }
+
 
 
 
