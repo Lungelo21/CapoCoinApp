@@ -31,4 +31,7 @@ interface TransactionsDAO {
             "ORDER BY transactionID DESC")
     fun getFilterTransactions(startDate: String, endDate: String): Flow<List<Transactions>>
 
+    @Query("SELECT * FROM transactions WHERE transactionID = :id LIMIT 1")
+    fun getTransactionById(id: Int): Flow<Transactions?>
+
 }

@@ -107,6 +107,7 @@ fun TransactionsScreen(
                                     categoryColor,
                                     CategoryIcon,
                                     "expense",
+                                    {navController.navigate("TransactionDetails/${t.transactionID}")}
                                 )
                             }
                         )
@@ -126,6 +127,7 @@ fun TransactionsScreen(
                                 categoryColor,
                                 CategoryIcon,
                                 "expense",
+                                {navController.navigate("TransactionDetails/${t.transactionID}")}
                             )
                         }
                     )
