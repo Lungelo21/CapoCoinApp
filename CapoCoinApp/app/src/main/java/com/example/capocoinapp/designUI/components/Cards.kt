@@ -821,11 +821,12 @@ fun UserProfileCard(
     nextLevelXP: Int,
     onClick: () -> Unit = {}
 ) {
-    // Formats the number to look nicer: 20000.0 -> R20 000,00
+    // variables to capture xpRemaining, progress bar total and progress bar percent
     val xpRemaining = nextLevelXP - currentXP
     val progressFloat = currentXP.toFloat() / nextLevelXP.toFloat()
     val progressPercent = (progressFloat * 100).toInt()
 
+    // Card for UserProfile Card
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -837,14 +838,14 @@ fun UserProfileCard(
         ),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
-
+        //Defining the top of the card
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Primary)
         ) {
 
-
+            // Row for the Icon, Users full name, level number and profile title
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -860,8 +861,10 @@ fun UserProfileCard(
                     tint = TextWhite
                 )
 
+                // Spacer between Icon and Details
                 Spacer(modifier = Modifier.width(12.dp))
 
+                // Column for User Details
                 Column {
 
                     // Text with users first and last name
@@ -880,7 +883,7 @@ fun UserProfileCard(
                 }
             }
         }
-
+        // Column for the xp needed to reach the next level
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -931,6 +934,7 @@ fun MilestoneAchievementCard(
     milestoneSubTitle: String,
     milestonesTimesEarned: String?
 ) {
+    // Card for Milestone achievements
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -950,29 +954,34 @@ fun MilestoneAchievementCard(
 
             Column(modifier = Modifier.fillMaxWidth()) {
 
+                // Milestone Title and Times Earned Row
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
+                    // Milestone Title Text
                     Text(
                         text = milestoneTitle,
                         style = CapoType.cardTitle
                     )
+                    // Milestone Times Earned Amount Text
+                    Text(
+                        text = "Times Earned: ${milestonesTimesEarned ?: "0"}",
+                        style = CapoType.cardSubTitle
+                    )
                 }
 
+                // Spacing out the two rows
                 Spacer(modifier = Modifier.height(6.dp))
 
+                // Milestone SubTitle Row
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
+                    // Mileston Subtitle Text
                     Text(
                         text = milestoneSubTitle,
-                        style = CapoType.cardSubTitle
-                    )
-
-                    Text(
-                        text = milestonesTimesEarned ?: "",
                         style = CapoType.cardSubTitle
                     )
 

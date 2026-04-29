@@ -1,8 +1,14 @@
 package com.example.capocoinapp
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.navigation.NavController
+import com.example.capocoinapp.data.ViewModels.UserViewModel
+import com.example.capocoinapp.data.entities.Category
+import com.example.capocoinapp.data.entities.User
 import com.example.capocoinapp.designUI.components.AppScaffold
 import com.example.capocoinapp.designUI.components.BottomNavBar
 import com.example.capocoinapp.designUI.components.CardBox
@@ -14,12 +20,14 @@ import com.example.capocoinapp.designUI.components.UserProfileCard
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 
 @Composable
-fun UserProfileScreen(navController: NavController) {
+fun UserProfileScreen(navController: NavController, userViewModel: UserViewModel) {
+
+
     CapoCoinAppTheme {
         AppScaffold(
             topBar = { TopNavBar(navController) },
             bottomBar = { BottomNavBar(navController) },
-            pageTitle = "Home"
+            pageTitle = "User Profile"
         ) { _ ->
 
             //val firstName by remember{ mutableStateOf() }
@@ -27,7 +35,14 @@ fun UserProfileScreen(navController: NavController) {
             CardBox(
                 cards = listOf(
                     {
-                        UserProfileCard("Harry", "Davis", 4, "Penny Pincher", 100, 1100)
+                        UserProfileCard(
+                            firstName = "Harry",
+                            lastName = "Davis",
+                            level = 4,
+                            profileTitle = "Penny Pincher",
+                            currentXP = 100,
+                            nextLevelXP = 1100
+                        )
                     },
 
                     {

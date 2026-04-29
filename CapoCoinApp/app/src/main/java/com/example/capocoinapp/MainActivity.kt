@@ -125,7 +125,9 @@ class MainActivity : ComponentActivity() {
                         TransactionsDetailsScreen(navController)
                     }
                     composable("UserProfile"){
-                        UserProfileScreen(navController)
+                        UserProfileScreen(navController = navController,
+                            userViewModel= userViewModel
+                        )
                     }
 
                     // composable route to Login Screen
