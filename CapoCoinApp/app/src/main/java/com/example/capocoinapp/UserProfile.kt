@@ -11,8 +11,6 @@ import com.example.capocoinapp.data.entities.Category
 import com.example.capocoinapp.data.entities.User
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.navigation.NavController
-import com.example.capocoinapp.data.ViewModels.UserViewModel
 import com.example.capocoinapp.designUI.components.AppScaffold
 import com.example.capocoinapp.designUI.components.BottomNavBar
 import com.example.capocoinapp.designUI.components.CardBox
