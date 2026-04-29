@@ -2,7 +2,7 @@ name: Generated APK AAB (Upload - Create Artifact To Github Action)
 
 env:
   # The name of the main module repository
-  main_project_module: Capo_Coin_Android
+  main_project_module: CapoCoinApp
 
   # The name of the Play Store
   playstore_name: IIECat
@@ -48,7 +48,7 @@ jobs:
 
       # Run Build Project
       - name: Build gradle project
-        run: ./gradlew build --info --stacktrace
+        run: ./gradlew build --info --stacktrace --debug
 
       # Create APK Debug
       - name: Build apk debug project (APK) - ${{ env.main_project_module }} module
