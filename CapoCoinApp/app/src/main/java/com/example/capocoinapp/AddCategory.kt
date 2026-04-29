@@ -250,6 +250,7 @@ fun AddCategory(viewModel: CategoryViewModel, service: CategoryService, navContr
                 expanded = iconColourExpanded,
                 onDismissRequest = { iconColourExpanded = false })
             {
+                //Looping through all service called base colours
                 service.selectableColours.forEach { (colourName, colourHex) ->
                     DropdownMenuItem(
                         text = { Text(colourName) },
@@ -312,12 +313,14 @@ fun AddCategory(viewModel: CategoryViewModel, service: CategoryService, navContr
                 onDismissRequest = { iconExpanded = false },
                 modifier = Modifier.heightIn(max = 280.dp) //Allows for scrolling if many icons are selectable
             ) {
+                //Looping through all service called base icons
                 service.baseIcons.forEach { (name, icon) ->
                     /*
                             * Author: Sumit Ohja
                             * Link: https://medium.com/@sumit-dev-07/foreach-loop-f7bcfb3032ab
                             * DateAccessed: 27/04/2026
                             * */
+                    //Populating the dropdown with the icon and name associated with the icon
                     DropdownMenuItem(
                         text = { Text(name) },
                         leadingIcon = { Icon(icon, contentDescription = null) },
@@ -349,6 +352,8 @@ fun AddCategory(viewModel: CategoryViewModel, service: CategoryService, navContr
                         selectedIcon.isNotBlank(),
                 onClick = {
                     Log.d("UI_Check", "PrimaryButton Clicked!") // See if the UI even registers the touch
+
+                    //Calling the view models add category model for validation
                     viewModel.addCategory(
                         type = transactionType,
                         categoryTitle = categoryTitle,
@@ -358,6 +363,7 @@ fun AddCategory(viewModel: CategoryViewModel, service: CategoryService, navContr
                         maxBudget = maxBudget
                     )
 
+                    //Navigate to the Categories screen
                     navController.navigate("Categories")
                 }
             )
