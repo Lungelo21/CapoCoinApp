@@ -107,6 +107,10 @@ fun CategoryTotalsScreen(service: TransactionService, navController: NavHostCont
             calendar.get(Calendar.MONTH),
             calendar.get(Calendar.DAY_OF_MONTH)
         ).show()
+
+        //https://kotlinlang.org/api/compose-multiplatform/material3/androidx.compose.material3/-date-picker-dialog.html
+        //https://www.geeksforgeeks.org/android/datepickerdialog-in-android/
+
     }
 
     //UI Formatting
@@ -124,12 +128,15 @@ fun CategoryTotalsScreen(service: TransactionService, navController: NavHostCont
                     horizontalArrangement = Arrangement.Start
                 )
                 {
+                    //Added an Icon to the Filter button for easier readability and usability
                     Icon(
                         imageVector = Icons.Default.CalendarMonth,
                         contentDescription = null,
                         modifier = Modifier.padding(end = 8.dp),
                         tint = TextWhite
                     )
+
+                    //Setting the text for the End Date Filter button and accounts when an end date is selected
                     Text(
                         text = if (startDate.isEmpty()) "Start Date" else "From: $startDate",
                         color = TextWhite,
@@ -145,6 +152,7 @@ fun CategoryTotalsScreen(service: TransactionService, navController: NavHostCont
                     horizontalArrangement = Arrangement.Start
                 )
                 {
+                    //Added an Icon to the Filter button for easier readability and usability
                     Icon(
                         imageVector = Icons.Default.CalendarMonth,
                         contentDescription = null,
@@ -152,6 +160,7 @@ fun CategoryTotalsScreen(service: TransactionService, navController: NavHostCont
                         tint = TextWhite
                     )
 
+                    //Setting the text for the End Date Filter button and accounts when an end date is selected
                     Text(
                         text = if (endDate.isEmpty()) "End Date" else "To: $endDate",
                         color = TextWhite
@@ -163,12 +172,15 @@ fun CategoryTotalsScreen(service: TransactionService, navController: NavHostCont
         //Check to ensure Clear Filters button wont appear if no filter has been made
         if(startDate.isNotEmpty() || endDate.isNotEmpty())
         {
+            //Instantiating the button for the Clear Filter with empty values (no filter - all days)
             OutlinedButton(onClick = {
                 startDate = ""
                 endDate = ""
             },
+                //Making the button take up the fill width of the screen
                 modifier = Modifier.fillMaxWidth()
             )
+            //Setting button's text
             {
                 Text("Clear All filters", color = TextWhite)
             }
@@ -188,12 +200,14 @@ fun CategoryTotalsScreen(service: TransactionService, navController: NavHostCont
                 .padding(horizontal = 8.dp, vertical = 4.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
+            //Setting text for Category Name/Title Header
             Text(
                 text = "Category",
                 style = MaterialTheme.typography.labelMedium,
                 color = Color.Gray,
                 fontWeight = FontWeight.Bold
             )
+            //Setting text for Category Total Amount Header
             Text(
                 text = "Total Amount",
                 style = MaterialTheme.typography.labelMedium,
@@ -202,6 +216,7 @@ fun CategoryTotalsScreen(service: TransactionService, navController: NavHostCont
             )
         }
 
+        //Using a Horizontal divider to space out Category and Total Amount values
         HorizontalDivider(
             modifier = Modifier.padding(horizontal = 8.dp),
             thickness = 1.dp,
@@ -214,8 +229,10 @@ fun CategoryTotalsScreen(service: TransactionService, navController: NavHostCont
                 .padding(top = 8.dp)
         )
         {
+            //Checking if the totals are not populated
             if(totals.isEmpty())
             {
+                //Setting text to inform user of no Transactions found within relevant categories
                 Text(
                     text = "No transactions found for this period.",
                     color = Color.Gray,
@@ -224,8 +241,10 @@ fun CategoryTotalsScreen(service: TransactionService, navController: NavHostCont
             }
             else
             {
+                //Going through the list of saved total amounts for categories
                 totals.forEach { item ->
 
+                    //Mapping all items with the unique ID to represent each individual category and its total
                     key(item.categoryTotalID)
                     {
                         CategoryTotalRow(item)
@@ -237,6 +256,7 @@ fun CategoryTotalsScreen(service: TransactionService, navController: NavHostCont
     }
 }
 
+//Method which dictates the Format and what goes in each Row
 @Composable
 fun CategoryTotalRow(item: CategoryTotal) {
     Row(
@@ -245,169 +265,18 @@ fun CategoryTotalRow(item: CategoryTotal) {
             .padding(horizontal = 8.dp, vertical = 12.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
+        //setting text for the specific Category identitifer
         Text(
             text = item.categoryTitle,
             style = MaterialTheme.typography.bodyLarge,
             color = TextWhite
         )
+        //Setting text to the total amount of each category
         Text(
             text = "R ${String.format("%.2f", item.totalAmount)}",
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.Bold,
             color = TextWhite
         )
-    }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewCategoryTotals()
-{
-    val mockItem = CategoryTotal(
-        categoryTotalID = 1,
-        categoryTitle = "Groceries",
-        totalAmount = 1250.50
-    )
-
-    // Wrap in a Column just to see it clearly in the preview pane
-    Column(modifier = Modifier.padding(16.dp)) {
-        CategoryTotalRow(item = mockItem)
-    }
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun PreviewCategoryTotalsScreen() {
-    // Create a list of dummy data
-    val mockTotals = listOf(
-        CategoryTotal(1, "Transport", 450.00),
-        CategoryTotal(2, "Food", 1200.00),
-        CategoryTotal(3, "Rent", 5000.00),
-        CategoryTotal(4, "Entertainment", 300.00)
-    )
-
-    CapoCoinAppTheme {
-        Scaffold(
-            topBar = {
-                // Using a simple header to match your app's style
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(BackgroundColor)
-                        .padding(16.dp),
-                    contentAlignment = Alignment.TopStart
-                ) {
-                    Text(
-                        text = "Category Totals",
-                        style = CapoType.cardTitle,
-                        fontSize = 24.sp,
-                        color = Accent
-                    )
-                }
-            },
-            bottomBar = {
-                // This mimics your navigation bar
-                NavigationBar(
-                    containerColor = CardBG
-                ) {
-                    NavigationBarItem(
-                        selected = true,
-                        onClick = {},
-                        icon = {
-                            Icon(
-                                Icons.Default.Payments,
-                                contentDescription = null,
-                                tint = TextWhite
-                            )
-                        },
-                        label = { Text("Totals", color = TextWhite) }
-                    )
-                    NavigationBarItem(
-                        selected = false,
-                        onClick = {},
-                        icon = {
-                            Icon(
-                                Icons.Default.History,
-                                contentDescription = null,
-                                tint = Color.Gray
-                            )
-                        },
-                        label = { Text("History", color = Color.Gray) }
-                    )
-                }
-            },
-            containerColor = BackgroundColor // Uses your theme's background
-        )
-        { innerPadding ->
-            Column(modifier = Modifier.fillMaxSize().padding(innerPadding).padding(16.dp),
-                verticalArrangement = Arrangement.Top,
-                horizontalAlignment = Alignment.Start)
-            {
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp))
-                {
-                    Box(
-                        modifier = Modifier.weight(1f),
-                        contentAlignment = Alignment.Center
-                    )
-                    {
-                        PrimaryButton (
-                            buttonText = "From: 2026-04-01", // Pass string directly
-                            onClick = {}
-                        )
-                    }
-                    
-                    Box(
-                        modifier = Modifier.weight(1f),
-                        contentAlignment = Alignment.Center
-                    )
-                    {
-                        PrimaryButton (
-                            buttonText = "To: 2026-04-27", // Pass string directly
-                            onClick = {}
-                        )
-                    }
-                }
-
-                //Spacer to space out page
-                Spacer(modifier = Modifier.height(24.dp))
-
-                //Added headers to identify category and total amount
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp, vertical = 4.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = "Category",
-                        style = MaterialTheme.typography.labelMedium,
-                        color = Color.Gray,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = "Total Amount",
-                        style = MaterialTheme.typography.labelMedium,
-                        color = Color.Gray,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-
-                HorizontalDivider(
-                    modifier = Modifier.padding(horizontal = 8.dp),
-                    thickness = 1.dp,
-                    color = Color.LightGray.copy(alpha = 0.3f)
-                )
-
-                //Column instantiating each increment (category) and its total amount
-                Column(modifier = Modifier.padding(top = 8.dp))
-                {
-                    mockTotals.forEach { item ->
-                        CategoryTotalRow(item)
-                    }
-                }
-
-            }
-        }
     }
 }
