@@ -53,8 +53,7 @@ fun TransactionsDetailsScreen(
                                     cardSubAmount = transaction?.transactionTime ?: "null",
                                     categoryColor = categoryColor,
                                     categoryIcon = categoryIcon,
-                                    cardTransactionType = transaction?.transactionType
-                                        ?: "null",
+                                    cardTransactionType = transaction?.transactionType ?: "null",
                                     imageUri = transaction?.uploadedPhotoPath
                                 )
                             })

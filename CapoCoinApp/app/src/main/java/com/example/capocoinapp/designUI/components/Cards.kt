@@ -89,6 +89,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
+import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import com.example.capocoinapp.data.ViewModels.CategoryViewModel
 import com.example.capocoinapp.data.entities.Category
@@ -114,7 +115,7 @@ fun CardComponent(
     cardSubAmount: String?,
     categoryColor: String,
     categoryIcon: ImageVector,
-    cardTransactionType: String?,
+    cardTransactionType: String,
     onClick: () -> Unit = {}
 ) {
     Card(
@@ -361,11 +362,19 @@ fun TransactionDetailsCard(
                 * Date Accessed: 29/04/2026
                 * */
 
-                Image(// shows preview for attached photo
+                Image(
                     painter = rememberAsyncImagePainter(imageUri),
                     contentDescription = null,
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .size(44.dp)
+                        .clip(RoundedCornerShape(8.dp)),
+                    contentScale = ContentScale.Crop
+                )
+                AsyncImage(
+                    model = imageUri,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(44.dp)
                         .clip(RoundedCornerShape(8.dp)),
                     contentScale = ContentScale.Crop
                 )
@@ -408,9 +417,9 @@ fun CardBox(cards: List<@Composable () -> Unit>) {
 
 // If the entry is a transaction, the amount will be formatted,
 // If not, the raw string will be displayed
-fun formatAmount(amount: String, type: String?): String {
+fun formatAmount(amount: String, type: String): String {
 
-    val prefix: String = when (type) {
+    val prefix: String = when (type.lowercase()) {
         "income" -> "+ R"
         "expense" -> "- R"
         else -> ""
@@ -420,8 +429,8 @@ fun formatAmount(amount: String, type: String?): String {
 }
 
 // Sets amount text to green or red depending on income or expense
-fun colorAmount(type: String?): Color {
-    val amountColor: Color = when (type) {
+fun colorAmount(type: String): Color {
+    val amountColor: Color = when (type.lowercase()) {
         "income" -> TextGreen
         "expense" -> TextRed
         else -> TextWhite
