@@ -337,7 +337,7 @@ fun inputCard(
                 /*
                 * Author: Siddharth Jaswal
                 * Link: https://stackoverflow.com/a/78464953
-                *
+                * Date Accessed: 28/04/2026
                 * Stack Overflow original thread: https://stackoverflow.com/questions/64542659/jetpack-compose-custom-textfield-design/78464953#78464953
                 * */
 
@@ -430,7 +430,7 @@ fun SelectCategoryDropDown(
                     /*
                     * Author: Siddharth Jaswal
                     * Link: https://stackoverflow.com/a/78464953
-                    *
+                    * Date Accessed: 28/04/2026
                     * Stack Overflow original thread: https://stackoverflow.com/questions/64542659/jetpack-compose-custom-textfield-design/78464953#78464953
                     * */
 
@@ -557,6 +557,7 @@ fun SelectTransactionTypeDropDown(
                     /*
                     * Author: Santosh Yadav
                     * Link: https://medium.com/@santosh_yadav321/dropdown-menu-with-icon-in-jetpack-compose-5ebebae75851
+                    * Date Accessed: 28/04/2026
                     * */
                     // this is to add the arrow to let the user know that the box is a dropdown
                     trailingIcon = {
@@ -566,7 +567,7 @@ fun SelectTransactionTypeDropDown(
                     /*
                     * Author: Siddharth Jaswal
                     * Link: https://stackoverflow.com/a/78464953
-                    *
+                    * Date Accessed: 28/04/2026
                     * Stack Overflow original thread: https://stackoverflow.com/questions/64542659/jetpack-compose-custom-textfield-design/78464953#78464953
                     * */
 
@@ -643,6 +644,7 @@ fun DatePickerCard(
                     /*
                     * Author: GeeksForGeeks
                     * Link: https://www.geeksforgeeks.org/kotlin/date-picker-in-android-using-jetpack-compose/
+                    * Date Accessed: 27/04/2026
                     * */
 
                     // Date Picker dialog
@@ -653,6 +655,7 @@ fun DatePickerCard(
                             /*
                             * Author: Deccon Tech
                             * Link: https://www.youtube.com/watch?v=BH8fqeIKQRo
+                            * Date Accessed: 27/04/2026
                             * */
 
                             // format by year month day of month
@@ -721,6 +724,7 @@ fun TimePickerCard(
                     /*
                     * Author: GeeksForGeeks
                     * Link: https://www.geeksforgeeks.org/kotlin/time-picker-in-android-using-jetpack-compose/
+                    * Date Accessed: 27/04/2026
                     * */
                     TimePickerDialog(
                         context,
@@ -818,6 +822,7 @@ fun AttachImageCard(
                 /*
                 * Author:Mun Bonecci
                 * Link: https://medium.com/@munbonecci/how-to-use-coil-with-rememberasyncimagepainter-in-jetpack-compose-to-load-svg-f4d39cb829fb
+                * Date Accessed: 29/04/2026
                 * */
 
                 Image(// shows preview for attached photo
