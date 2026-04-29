@@ -24,7 +24,7 @@ interface TransactionsDAO {
     @Query("SELECT c.categoryTitle AS categoryTotalID, c.CategoryTitle, SUM(t.transactionAmount) as totalAmount " +
             "FROM transactions t " +
             "INNER JOIN categories c ON  t.categoryID = c.categoryID " +
-            "WHERE t.transactionDate BETWEEN :startDate AND :endDate " +
+            "WHERE (:startDate = '' OR :endDate = '' OR t.transactionDate BETWEEN :startDate AND :endDate) " +
             "GROUP BY c.categoryID")
     fun getCategoryTotals(startDate: String, endDate: String): Flow<List<CategoryTotal>>
 
