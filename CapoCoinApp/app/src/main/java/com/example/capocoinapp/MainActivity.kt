@@ -76,7 +76,7 @@ class MainActivity : ComponentActivity() {
                         HomeScreen(navController, categoryViewModel, transactionViewModel)
                     }
                     composable("Transactions"){
-                        TransactionsScreen(navController)
+                        TransactionsScreen(navController, categoryViewModel, transactionViewModel)
                     }
                     composable("AddTransaction"){
                         AddTransaction(
