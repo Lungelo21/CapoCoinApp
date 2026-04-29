@@ -1,10 +1,6 @@
 package com.example.capocoinapp
 
 //Calling import call for composable annotation
-import android.graphics.drawable.Icon
-import android.util.Log
-import androidx.compose.foundation.background
-import androidx.compose.runtime.Composable
 
 //Import the Experimental Material API which is used to allow for experimental code
 
@@ -47,6 +43,7 @@ import androidx.compose.runtime.Composable
 //importing question mark icon for default fallback icon
 
 //Importing the Primary button from buttons.kt
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -71,6 +68,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable

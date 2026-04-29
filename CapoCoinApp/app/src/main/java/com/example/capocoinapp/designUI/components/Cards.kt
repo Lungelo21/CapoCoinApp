@@ -44,8 +44,7 @@ import androidx.compose.material.icons.filled.Fastfood
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.Flight
 import androidx.compose.material.icons.filled.Handshake
-import androidx.compose.material.icons.filled.Help
-import androidx.compose.material.icons.filled.Image
+import androidx.compose.material.icons.filled.ImageNotSupported
 import androidx.compose.material.icons.filled.MedicalServices
 import androidx.compose.material.icons.filled.Movie
 import androidx.compose.material.icons.filled.Museum
@@ -90,8 +89,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
+import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
-import com.example.capocoinapp.Services.CategoryService
 import com.example.capocoinapp.data.ViewModels.CategoryViewModel
 import com.example.capocoinapp.data.entities.Category
 import com.example.capocoinapp.ui.theme.BackgroundColor
@@ -116,7 +115,7 @@ fun CardComponent(
     cardSubAmount: String?,
     categoryColor: String,
     categoryIcon: ImageVector,
-    cardTransactionType: String?,
+    cardTransactionType: String,
     onClick: () -> Unit = {}
 ) {
     Card(
@@ -201,6 +200,192 @@ fun CardComponent(
 }
 
 @Composable
+fun TransactionDetailsCard(
+    cardTitle: String,
+    cardSubTitle: String,
+    cardAmount: String,
+    cardSubAmount: String,
+    categoryColor: String,
+    categoryIcon: ImageVector,
+    cardTransactionType: String,
+    imageUri: String?
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxSize()
+            .fillMaxWidth()
+            .wrapContentHeight(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = CardBG
+        ),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(16.dp)
+                .wrapContentHeight()
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .background(
+                        color = getColorFromString(categoryColor),
+                        shape = CircleShape
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = categoryIcon,
+                    contentDescription = null,
+                    tint = TextWhite,
+                )
+            }
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            Text(
+                text = cardTitle,
+                style = CapoType.heading
+            )
+        }
+
+        Row(
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .wrapContentHeight()
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "Amount:",
+                style = CapoType.cardTitle
+            )
+
+            Text(
+                text = formatAmount(cardAmount, cardTransactionType),
+                style = CapoType.cardTitle,
+                color = colorAmount(cardTransactionType)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .wrapContentHeight()
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "Date:",
+                style = CapoType.cardTitle
+            )
+
+            Text(
+                text = cardSubTitle,
+                style = CapoType.cardTitle,
+            )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .wrapContentHeight()
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "Time:",
+                style = CapoType.cardTitle
+            )
+
+            Text(
+                text = cardSubAmount,
+                style = CapoType.cardTitle,
+            )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .wrapContentHeight()
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "Transaction Type:",
+                style = CapoType.cardTitle
+            )
+
+            Text(
+                text = cardTransactionType,
+                style = CapoType.cardTitle,
+            )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .wrapContentHeight()
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            if (imageUri == null) {
+                // icon
+                Icon(
+                    imageVector = Icons.Default.ImageNotSupported,
+                    tint = TextWhite,
+                    contentDescription = null,
+                    modifier = Modifier.size(100.dp)
+                )
+            } else {
+                // img
+
+                /*
+                * Author:Mun Bonecci
+                * Link: https://medium.com/@munbonecci/how-to-use-coil-with-rememberasyncimagepainter-in-jetpack-compose-to-load-svg-f4d39cb829fb
+                * Date Accessed: 29/04/2026
+                * */
+
+                Image(
+                    painter = rememberAsyncImagePainter(imageUri),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(44.dp)
+                        .clip(RoundedCornerShape(8.dp)),
+                    contentScale = ContentScale.Crop
+                )
+                AsyncImage(
+                    model = imageUri,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(44.dp)
+                        .clip(RoundedCornerShape(8.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+    }
+}
+
+@Composable
 fun rememberCategoryUI(
     categoryId: Int,
     categoryViewModel: CategoryViewModel
@@ -232,9 +417,9 @@ fun CardBox(cards: List<@Composable () -> Unit>) {
 
 // If the entry is a transaction, the amount will be formatted,
 // If not, the raw string will be displayed
-fun formatAmount(amount: String, type: String?): String {
+fun formatAmount(amount: String, type: String): String {
 
-    val prefix: String = when (type) {
+    val prefix: String = when (type.lowercase()) {
         "income" -> "+ R"
         "expense" -> "- R"
         else -> ""
@@ -244,8 +429,8 @@ fun formatAmount(amount: String, type: String?): String {
 }
 
 // Sets amount text to green or red depending on income or expense
-fun colorAmount(type: String?): Color {
-    val amountColor: Color = when (type) {
+fun colorAmount(type: String): Color {
+    val amountColor: Color = when (type.lowercase()) {
         "income" -> TextGreen
         "expense" -> TextRed
         else -> TextWhite
@@ -431,15 +616,21 @@ fun SelectCategoryDropDown(
                     onValueChange = {},
                     readOnly = true,
                     enabled = enabled,
-                    placeholder = { Text(placeholderText, style = CapoType.cardTitle, color = TextWhite) },
+                    placeholder = {
+                        Text(
+                            placeholderText,
+                            style = CapoType.cardTitle,
+                            color = TextWhite
+                        )
+                    },
 
                     textStyle = CapoType.cardTitle.copy(
-                        color =  TextWhite
+                        color = TextWhite
                     ),
                     // this is to add the arrow to let the user know that the box is a dropdown
                     trailingIcon = {
                         ExposedDropdownMenuDefaults.TrailingIcon(expanded = dropdownExpand)
-                                   },
+                    },
 
                     /*
                     * Author: Siddharth Jaswal
@@ -777,7 +968,7 @@ fun TimePickerCard(
             Text(   // If the entered time hasnt been shown yet, show the placeholderText otherwise show the selectedTime for the Transaction
                 text = if (selectedTransactionTime.isEmpty()) placeholderText else selectedTransactionTime,
                 style = CapoType.cardTitle,
-                color =  TextWhite // sets chosen time to TextWhite
+                color = TextWhite // sets chosen time to TextWhite
             )
         }
     }
@@ -821,7 +1012,7 @@ fun AttachImageCard(
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-             //checks if img is null
+            //checks if img is null
             if (imageUri == null) {
                 // icon
                 Icon(
@@ -1445,14 +1636,15 @@ fun CardPreview() {
 //                    HomeCard(1300.0, 2000.0, 15)
 //                }
                 {
-                    CardComponent(
+                    TransactionDetailsCard(
                         "Dinner Night",
-                        "Empire Steak",
+                        "2026-04-2",
                         "200",
                         "5:00 PM",
                         "Teal",
-                        Icons.Default.Help,
-                        "expense"
+                        Icons.Default.Fastfood,
+                        "expense",
+                        null
                     )
                 },
 //                {
