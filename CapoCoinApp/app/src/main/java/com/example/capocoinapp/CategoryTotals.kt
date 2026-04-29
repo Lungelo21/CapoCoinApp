@@ -55,6 +55,7 @@ import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 
 import androidx.compose.foundation.background
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Payments
 import androidx.compose.material3.Icon
@@ -117,12 +118,45 @@ fun CategoryTotalsScreen(service: TransactionService, navController: NavHostCont
             // Start Date Button
             OutlinedButton(onClick = { showDatePicker(true) }, modifier = Modifier.weight(1f))
             {
-                Text(text = if (startDate.isEmpty()) "Start Date" else "From: $startDate", color = TextWhite)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Start
+                )
+                {
+                    Icon(
+                        imageVector = Icons.Default.CalendarMonth,
+                        contentDescription = null,
+                        modifier = Modifier.padding(end = 8.dp),
+                        tint = TextWhite
+                    )
+                    Text(
+                        text = if (startDate.isEmpty()) "Start Date" else "From: $startDate",
+                        color = TextWhite,
+                    )
+                }
             }
             // End Date Button
             OutlinedButton(onClick = { showDatePicker(false) }, modifier = Modifier.weight(1f))
             {
-                Text(text = if (endDate.isEmpty()) "End Date" else "To: $endDate", color = TextWhite)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Start
+                )
+                {
+                    Icon(
+                        imageVector = Icons.Default.CalendarMonth,
+                        contentDescription = null,
+                        modifier = Modifier.padding(end = 8.dp),
+                        tint = TextWhite
+                    )
+
+                    Text(
+                        text = if (endDate.isEmpty()) "End Date" else "To: $endDate",
+                        color = TextWhite
+                    )
+                }
             }
         }
 
@@ -140,6 +174,7 @@ fun CategoryTotalsScreen(service: TransactionService, navController: NavHostCont
             }
         }
 
+        //Adding a Spacer between the Category Totals and Date Filtering functionality
         Spacer(modifier = Modifier.height(24.dp))
 
 
