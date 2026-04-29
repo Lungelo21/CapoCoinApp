@@ -111,12 +111,26 @@ fun CategoryTotalsScreen(service: TransactionService, navController: NavHostCont
             // Start Date Button
             OutlinedButton(onClick = { showDatePicker(true) }, modifier = Modifier.weight(1f))
             {
-                Text(text = if (startDate.isEmpty()) "Start Date" else "From: $startDate")
+                Text(text = if (startDate.isEmpty()) "Start Date" else "From: $startDate", color = TextWhite)
             }
             // End Date Button
             OutlinedButton(onClick = { showDatePicker(false) }, modifier = Modifier.weight(1f))
             {
-                Text(text = if (endDate.isEmpty()) "End Date" else "To: $endDate")
+                Text(text = if (endDate.isEmpty()) "End Date" else "To: $endDate", color = TextWhite)
+            }
+        }
+
+        //
+        if(startDate.isNotEmpty() || endDate.isNotEmpty())
+        {
+            OutlinedButton(onClick = {
+                startDate = ""
+                endDate = ""
+            },
+                modifier = Modifier.fillMaxWidth()
+            )
+            {
+                Text("Clear All filters", color = TextWhite)
             }
         }
 
