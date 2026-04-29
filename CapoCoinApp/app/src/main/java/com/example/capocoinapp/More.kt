@@ -23,37 +23,50 @@ fun MoreScreen(navController: NavController) {
     CapoCoinAppTheme {
         AppScaffold(
             topBar = { TopNavBar(navController) },
-            bottomBar = { BottomNavBar(navController,4) },
+            bottomBar = { BottomNavBar(navController, 4) },
             pageTitle = "More"
         ) { _ ->
 
             CardBox(
 
                 cards = listOf(
-                    { MoreCard(
+                    {
+                        MoreCard(
                             "Settings",
                             "Coming soon in Part 3",
-                            Icons.Default.Settings)},
-                    { MoreCard(
-                        "User's Budget",
-                        "View budgets for each category",
-                        Icons.Default.ContentPaste,
-                        {navController.navigate("UserBudget")})},
-                    { MoreCard(
-                        "Categories",
-                        "View and add transaction categories",
-                        Icons.Default.Category,
-                        {navController.navigate("Categories")})},
-                    { MoreCard(
-                        "Import",
-                        "Coming soon in Part 3",
-                        Icons.Default.FileDownload)},
-                    { MoreCard(
-                        "Export",
-                        "Coming soon in Part 3",
-                        Icons.Default.FileUpload)},
+                            Icons.Default.Settings,
+                            { navController.navigate("Settings") })
+                    },
+                    {
+                        MoreCard(
+                            "User's Budget",
+                            "View budgets for each category",
+                            Icons.Default.ContentPaste,
+                            { navController.navigate("UserBudget") })
+                    },
+                    {
+                        MoreCard(
+                            "Categories",
+                            "View and add transaction categories",
+                            Icons.Default.Category,
+                            { navController.navigate("Categories") })
+                    },
+                    {
+                        MoreCard(
+                            "Import",
+                            "Coming soon in Part 3",
+                            Icons.Default.FileDownload
+                        )
+                    },
+                    {
+                        MoreCard(
+                            "Export",
+                            "Coming soon in Part 3",
+                            Icons.Default.FileUpload
+                        )
+                    },
 
-                )
+                    )
             )
         }
     }
