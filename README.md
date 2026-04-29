@@ -1,5 +1,7 @@
 # CapoCoin App
 
+## Overview
+
 CapoCoin is an Android application built using Jetpack Compose, Room Database, and MVVM architecture.  
 The app allows users to register, log in, and manage financial data such as transactions and categories.
 
@@ -36,7 +38,7 @@ UI ->ViewModel -> DAO -> Room Database local storage
 ## Prerequisite
 
 - Android Studio
-- Emulator (min SDK 24)
+- Emulator or android device (min SDK 24)
 
 ---
 
@@ -71,6 +73,8 @@ Components used:
 
 - Menus different
 - App customization features dropped
-
-
+- Calculator screen layout
+- User variable First and Last Name Combined into Name
+- Category screen layout
+- Welcome screen dropped
 
