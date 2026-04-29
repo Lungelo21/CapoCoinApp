@@ -85,18 +85,21 @@ fun UserBudgetScreen(
                 */
 
                 categories.forEach { category ->
-                    BudgetCard(
-                        cardTitle = category.categoryTitle,
-                        cardMin = category.minBudget,
-                        cardMax = category.maxBudget,//Changed from hard coded colour to take from DB
-                        cardColor = categoryService.getColour(category.categoryColour),//using service called method
-                        cardIcon = category.categoryIcon,
-                        onClick = {
-                            selectedCategory = category
-                            minBudgetInput = category.minBudget.toString()
-                            maxBudgetInput = category.maxBudget.toString()
-                        }
-                    )
+                    if(category.transactionType == "Expense")
+                    {
+                        BudgetCard(
+                            cardTitle = category.categoryTitle,
+                            cardMin = category.minBudget,
+                            cardMax = category.maxBudget,//Changed from hard coded colour to take from DB
+                            cardColor = categoryService.getColour(category.categoryColour),//using service called method
+                            cardIcon = category.categoryIcon,
+                            onClick = {
+                                selectedCategory = category
+                                minBudgetInput = category.minBudget.toString()
+                                maxBudgetInput = category.maxBudget.toString()
+                            }
+                        )
+                    }
                 }
 
                 /*
