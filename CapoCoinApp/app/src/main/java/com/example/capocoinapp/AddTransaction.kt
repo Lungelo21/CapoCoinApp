@@ -3,12 +3,8 @@ package com.example.capocoinapp
 import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,12 +12,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccessTime
-import androidx.compose.material.icons.filled.AttachFile
 import androidx.compose.material.icons.filled.Calculate
-import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.LibraryAdd
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -30,31 +22,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.capocoinapp.Calculator.CalculatorViewModel
 import com.example.capocoinapp.data.ViewModels.CategoryViewModel
 import com.example.capocoinapp.data.ViewModels.TransactionViewModel
-import com.example.capocoinapp.data.dao.CategoryDAO
-import com.example.capocoinapp.data.dao.TransactionsDAO
 import com.example.capocoinapp.data.entities.Category
-import com.example.capocoinapp.designUI.components.CalculatorSection
-import com.example.capocoinapp.ui.theme.Accent
-import com.example.capocoinapp.ui.theme.BackgroundColor
-import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
-import com.example.capocoinapp.ui.theme.CardBG
-import com.example.capocoinapp.ui.theme.NavBarBG
-import com.example.capocoinapp.ui.theme.Primary
-import com.example.capocoinapp.ui.theme.RobotoSlab
 import com.example.capocoinapp.designUI.components.AppScaffold
 import com.example.capocoinapp.designUI.components.AttachImageCard
 import com.example.capocoinapp.designUI.components.BottomNavBar
-import com.example.capocoinapp.designUI.components.CalculatorButtonDesign
-import com.example.capocoinapp.designUI.components.CardBox
-import com.example.capocoinapp.designUI.components.CardComponent
+import com.example.capocoinapp.designUI.components.CalculatorSection
 import com.example.capocoinapp.designUI.components.DatePickerCard
 import com.example.capocoinapp.designUI.components.FinalAmountCard
 import com.example.capocoinapp.designUI.components.LogTransactionButton
@@ -64,6 +42,7 @@ import com.example.capocoinapp.designUI.components.TimePickerCard
 import com.example.capocoinapp.designUI.components.TopNavBar
 import com.example.capocoinapp.designUI.components.inputCard
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
+import com.example.capocoinapp.ui.theme.Primary
 import com.example.capocoinapp.ui.theme.TextRed
 
 
@@ -114,22 +93,22 @@ fun AddTransaction(navController: NavController, categoryViewModel: CategoryView
 
         AppScaffold(
             topBar = { TopNavBar(navController) },
-            bottomBar = { BottomNavBar(navController) },
+            bottomBar = { BottomNavBar(navController, 2) },
             pageTitle = "Add Transaction"
-        ){ _ ->
+        ) { _ ->
             Column(modifier = Modifier.fillMaxSize())
             {
                 // Adding validation to ensure that users cannot log a transaction unless all required fields are entered
-                if(validationMessage.isNotBlank()){
+                if (validationMessage.isNotBlank()) {
                     Text(
                         text = validationMessage,
-                        color = if(validationMessage == "Transaction Saved!") Primary else TextRed,
+                        color = TextRed,
                         modifier = Modifier.padding(8.dp)
                     )
                 }
 
                 // if the confirm amount in calculator hasnt been clicked yet (remains in calculator view)
-                if(!isAmountConfirmed){
+                if (!isAmountConfirmed) {
 
                     CalculatorSection(
                         state = state,
@@ -138,11 +117,12 @@ fun AddTransaction(navController: NavController, categoryViewModel: CategoryView
                             .fillMaxWidth()
                             .weight(0.3f)
                     )
-                }
-                else // otherwise show rest of screen (without calculator)
+                } else // otherwise show rest of screen (without calculator)
                 {
+                    // adding a scroll state so that when user can scroll when needed
                     val scrollState = rememberScrollState()
 
+                    // Column for the input fields
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
@@ -163,7 +143,7 @@ fun AddTransaction(navController: NavController, categoryViewModel: CategoryView
                         // input for Transaction Title
                         inputCard(
                             value = title,
-                            onValueChange = { title = it},
+                            onValueChange = { title = it },
                             placeholder = "Add a title",
                             icon = Icons.Default.Edit,
                             enabled = true
@@ -181,7 +161,7 @@ fun AddTransaction(navController: NavController, categoryViewModel: CategoryView
                         // Add date of transaction
                         DatePickerCard(
                             selectedTransactionDate = selectedDate,
-                            onTransactionDateSelected = { selectedDate = it},
+                            onTransactionDateSelected = { selectedDate = it },
                             placeholderText = "Select the date of Transaction",
                             enabled = true
                         )
@@ -189,7 +169,7 @@ fun AddTransaction(navController: NavController, categoryViewModel: CategoryView
                         // Add Time to transaction
                         TimePickerCard(
                             selectedTransactionTime = selectedTime,
-                            onTransactionTimeSelected = { selectedTime = it},
+                            onTransactionTimeSelected = { selectedTime = it },
                             placeholderText = "Select time of Transaction",
                             enabled = true
                         )
@@ -197,7 +177,7 @@ fun AddTransaction(navController: NavController, categoryViewModel: CategoryView
                         // Attach image button
                         AttachImageCard(
                             imageUri = selectedImageUri,
-                            onImageSelected = { selectedImageUri = it},
+                            onImageSelected = { selectedImageUri = it },
                             placeholderText = "Attach Receipt or Salary Image",
                             enabled = true
                         )
@@ -214,6 +194,7 @@ fun AddTransaction(navController: NavController, categoryViewModel: CategoryView
                             }
                         )
 
+                        // Adding spacer between the final amount card and log transaction button
                         Spacer(modifier = Modifier.height(12.dp))
 
                         // log Transaction button
@@ -226,12 +207,12 @@ fun AddTransaction(navController: NavController, categoryViewModel: CategoryView
 
                             // when Log Transaction is clicked passes the values to be entered into Transactions table
                             onClick = {
-
+                                // runs query to add the transaction
                                 transactionViewModel.addTransaction(
                                     type = chosenTransactionType,
                                     name = title,
                                     amount = state.number1,
-                                    categoryID = selectedCategory?.categoryID?: 0,
+                                    categoryID = selectedCategory?.categoryID ?: 0,
                                     date = selectedDate,
                                     time = selectedTime,
                                     photoPath = selectedImageUri?.toString()
@@ -243,12 +224,10 @@ fun AddTransaction(navController: NavController, categoryViewModel: CategoryView
                             }
                         )
                     }
-
-
                 }
             }
         }
-
+    }
 
 }
 

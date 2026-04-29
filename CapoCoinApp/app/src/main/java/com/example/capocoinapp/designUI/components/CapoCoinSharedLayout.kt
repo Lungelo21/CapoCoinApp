@@ -202,7 +202,7 @@ fun AppScaffold(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            if (pageTitle != null){
+            if (pageTitle != null) {
                 PageTitleText(pageTitle)
             }
             content(paddingValues)
@@ -265,16 +265,16 @@ fun TopNavBar(navController: NavController) {
                 modifier = Modifier
                     .size(iconSize)
                     .clickable {
-                        //ToDo: Add path to settings screen
+                        navController.navigate("Settings")
                     }
             )
         }
     }
 }
 
-//Placeholder bottom bar
+// Pass 1,2,3,4 to select which icon is selected
 @Composable
-fun BottomNavBar(navController: NavController) {
+fun BottomNavBar(navController: NavController, selection: Int?) {
     val iconSize = 50.dp
     Box(
         modifier = Modifier
@@ -300,14 +300,15 @@ fun BottomNavBar(navController: NavController) {
             BottomIcon(
                 icon = Icons.Default.Home,
                 label = "Home",
-                selected = true,
-                onClick = {navController.navigate("Home")}
+                selected = isSelected(1, selection),
+            onClick = { navController.navigate("Home") }
             )
 
             BottomIcon(
                 icon = Icons.Default.LocalOffer,
                 label = "Transactions",
-                onClick = {navController.navigate("Transactions")}
+                selected = isSelected(2, selection),
+                onClick = { navController.navigate("Transactions") }
             )
 
             Spacer(modifier = Modifier.width(55.dp)) // space for center FAB
@@ -315,13 +316,15 @@ fun BottomNavBar(navController: NavController) {
             BottomIcon(
                 icon = Icons.Default.PieChart,
                 label = "Analytics",
-                onClick = {navController.navigate("Analytics")}
+                selected = isSelected(3, selection),
+                onClick = { navController.navigate("Analytics") }
             )
 
             BottomIcon(
                 icon = Icons.Default.MoreHoriz,
                 label = "More",
-                onClick = {navController.navigate("More")}
+                selected = isSelected(4, selection),
+                onClick = { navController.navigate("More") }
             )
         }
 
@@ -332,19 +335,27 @@ fun BottomNavBar(navController: NavController) {
                 .align(Alignment.Center)
                 .clip(CircleShape)
                 .background(Color(0xFFE9B44C))
-                .clickable { }
+                .clickable { navController.navigate("AddTransaction")}
         ) {
             Icon(
                 imageVector = Icons.Default.Add,
                 contentDescription = "AddTransaction",
 
-                tint = Color.Black,
+                tint = BackgroundColor,
                 modifier = Modifier
                     .size(40.dp)
                     .align(Alignment.Center)
             )
         }
     }
+}
+
+// Returns true if the current icon is the one that needs to be selected
+fun isSelected(screen: Int, selection: Int?): Boolean {
+    if (selection != null) {
+        return screen == selection
+    }
+    return false
 }
 
 @Composable
@@ -357,14 +368,13 @@ fun BottomIcon(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(6.dp),
-        modifier = Modifier.clickable{ onClick()}
+        modifier = Modifier.clickable { onClick() }
     ) {
         Icon(
             imageVector = icon,
             contentDescription = label,
             tint = if (selected) Color(0xFFE9B44C) else Color.Gray,
-            modifier = Modifier
-                .size(28.dp)
+            modifier = Modifier.size(28.dp)
         )
 
         Text(
@@ -404,7 +414,7 @@ fun GreetingPreview() {
             val navController = rememberNavController()
             AppScaffold(
                 topBar = { TopNavBar(navController) },
-                bottomBar = { BottomNavBar(navController) },
+                bottomBar = { BottomNavBar(navController, 1) },
                 pageTitle = "Preview"
             ) { paddingValues ->
 

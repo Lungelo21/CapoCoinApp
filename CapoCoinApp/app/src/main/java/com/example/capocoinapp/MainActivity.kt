@@ -20,11 +20,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.capocoinapp.Services.CategoryService
+import com.example.capocoinapp.Services.TransactionService
 import com.example.capocoinapp.data.DB.AppDatabase
 import com.example.capocoinapp.data.ViewModels.CategoryViewModel
 import com.example.capocoinapp.data.ViewModels.CategoryViewModelFactory
@@ -37,13 +37,6 @@ import com.example.capocoinapp.designUI.components.BottomNavBar
 import com.example.capocoinapp.designUI.components.CapoCoinAuthenticationLayout
 import com.example.capocoinapp.designUI.components.TopNavBar
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
-import androidx.room.Room
-import androidx.lifecycle.lifecycleScope
-import com.example.capocoinapp.Services.TransactionService
-import kotlinx.coroutines.launch
-
-import com.example.capocoinapp.data.entities.User
-import com.example.capocoinapp.designUI.components.AppScaffold
 
 //
 
@@ -80,10 +73,10 @@ class MainActivity : ComponentActivity() {
                     navController = navController, startDestination = "AddTransaction"
                 ){
                     composable("Home") {
-                        HomeScreen(navController)
+                        HomeScreen(navController, categoryViewModel, transactionViewModel)
                     }
                     composable("Transactions"){
-                        TransactionsScreen(navController)
+                        TransactionsScreen(navController, categoryViewModel, transactionViewModel)
                     }
                     composable("AddTransaction"){
                         AddTransaction(
@@ -104,7 +97,7 @@ class MainActivity : ComponentActivity() {
                             (applicationContext).categoryDao()))
                     }
                     composable("BottomNavBar"){
-                        BottomNavBar(navController)
+                        BottomNavBar(navController,1)
                     }
                     composable("TopNavBar"){
                         TopNavBar(navController)
@@ -119,7 +112,10 @@ class MainActivity : ComponentActivity() {
                         TransactionsDetailsScreen(navController)
                     }
                     composable("UserProfile"){
-                        UserProfileScreen(navController)
+                        UserProfileScreen(navController, userViewModel)
+                    }
+                    composable("Settings"){
+                        SettingsScreen(navController)
                     }
 
                     // composable route to Login Screen
@@ -186,7 +182,7 @@ class MainActivity : ComponentActivity() {
                         // Ensures the Global UI layout is applied to the Add Categories Screen
                         AppScaffold(
                             topBar = { TopNavBar(navController) },
-                            bottomBar = { BottomNavBar(navController) },
+                            bottomBar = { BottomNavBar(navController,4) },
                             pageTitle = "Add Category"
                         ){ padding ->
                             Box(modifier = Modifier.padding(padding))
@@ -205,7 +201,7 @@ class MainActivity : ComponentActivity() {
                         // Ensures the Global UI layout is applied to the Categories Totals Screen
                         AppScaffold(
                             topBar = { TopNavBar(navController) },
-                            bottomBar = { BottomNavBar(navController) },
+                            bottomBar = { BottomNavBar(navController, 4) },
                             pageTitle = "Category Totals"
                         ){ padding ->
                             Box(modifier = Modifier.padding(padding))

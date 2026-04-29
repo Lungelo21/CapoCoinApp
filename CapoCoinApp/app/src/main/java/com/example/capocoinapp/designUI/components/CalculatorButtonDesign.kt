@@ -13,12 +13,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+/*
+    * Author: Phillip Lackner
+    * Link: https://www.youtube.com/watch?v=-aTcFJWxEQA
+    * DateAccessed: 14/04/2026
+    * */
 @Composable
 fun CalculatorButtonDesign(
     symbol: String,
     modifier: Modifier,
     onClick: () -> Unit
 ){
+    // Calculator button design
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
@@ -26,7 +32,7 @@ fun CalculatorButtonDesign(
             .clickable{ onClick() }
             .then(modifier)
     ){
-
+        // Text for button
         Text(
             text = symbol,
             fontSize = 22.sp,

@@ -15,7 +15,7 @@ fun AnalyticsScreen(navController: NavController) {
     CapoCoinAppTheme {
         AppScaffold(
             topBar = { TopNavBar(navController) },
-            bottomBar = { BottomNavBar(navController) },
+            bottomBar = { BottomNavBar(navController,3) },
             pageTitle = "Analytics"
         ) { _ ->
 
