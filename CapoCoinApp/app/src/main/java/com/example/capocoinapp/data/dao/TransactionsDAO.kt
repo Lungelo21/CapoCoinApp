@@ -1,11 +1,9 @@
 package com.example.capocoinapp.data.dao
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Update
 import com.example.capocoinapp.data.dto.CategoryTotal
 import com.example.capocoinapp.data.entities.Transactions
 import kotlinx.coroutines.flow.Flow
@@ -27,5 +25,13 @@ interface TransactionsDAO {
             "WHERE (:startDate = '' OR :endDate = '' OR t.transactionDate BETWEEN :startDate AND :endDate) " +
             "GROUP BY c.categoryID")
     fun getCategoryTotals(startDate: String, endDate: String): Flow<List<CategoryTotal>>
+
+    @Query("SELECT * FROM transactions " +
+            "WHERE (:startDate = '' OR :endDate = '' OR transactionDate BETWEEN :startDate AND :endDate)" +
+            "ORDER BY transactionID DESC")
+    fun getFilterTransactions(startDate: String, endDate: String): Flow<List<Transactions>>
+
+    @Query("SELECT * FROM transactions WHERE transactionID = :id LIMIT 1")
+    fun getTransactionById(id: Int): Flow<Transactions?>
 
 }

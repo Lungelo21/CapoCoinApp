@@ -35,9 +35,7 @@ import com.example.capocoinapp.designUI.components.TopNavBar
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.example.capocoinapp.Services.CategoryService
 import com.example.capocoinapp.ui.theme.Accent
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme

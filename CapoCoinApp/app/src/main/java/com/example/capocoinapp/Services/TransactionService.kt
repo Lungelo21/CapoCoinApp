@@ -1,12 +1,12 @@
 package com.example.capocoinapp.Services
 
 //Import to call the Transactions entity
-import com.example.capocoinapp.data.entities.Transactions
 
 //Import to call coroutine
-import kotlinx.coroutines.flow.Flow
 import com.example.capocoinapp.data.dao.TransactionsDAO
 import com.example.capocoinapp.data.dto.CategoryTotal
+import com.example.capocoinapp.data.entities.Transactions
+import kotlinx.coroutines.flow.Flow
 
 
 public class TransactionService(private val transactionsDAO: TransactionsDAO) {
@@ -23,5 +23,9 @@ public class TransactionService(private val transactionsDAO: TransactionsDAO) {
     fun getCategoryTotals(startDate: String, endDate: String): Flow<List<CategoryTotal>>
     {
         return transactionsDAO.getCategoryTotals(startDate, endDate)
+    }
+
+    fun getFilterTransactions(startDate: String, endDate: String): Flow<List<Transactions>>{
+        return transactionsDAO.getFilterTransactions(startDate, endDate)
     }
 }

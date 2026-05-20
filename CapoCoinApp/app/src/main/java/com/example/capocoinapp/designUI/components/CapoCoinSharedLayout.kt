@@ -265,7 +265,7 @@ fun TopNavBar(navController: NavController) {
                 modifier = Modifier
                     .size(iconSize)
                     .clickable {
-                        //ToDo: Add path to settings screen
+                        navController.navigate("Settings")
                     }
             )
         }
