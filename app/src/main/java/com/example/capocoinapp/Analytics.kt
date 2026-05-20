@@ -1,47 +1,38 @@
 package com.example.capocoinapp
 
-import android.R.attr.category
-import android.R.attr.onClick
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.capocoinapp.Services.CategoryService
 import com.example.capocoinapp.Services.TransactionService
 import com.example.capocoinapp.data.ViewModels.CategoryViewModel
 import com.example.capocoinapp.designUI.components.AppScaffold
 import com.example.capocoinapp.designUI.components.BottomNavBar
-import com.example.capocoinapp.designUI.components.BudgetCard
 import com.example.capocoinapp.designUI.components.CardBox
-import com.example.capocoinapp.designUI.components.CardComponent
 import com.example.capocoinapp.designUI.components.CategoryAnalyticsCard
-import com.example.capocoinapp.designUI.components.CategoryCard
-import com.example.capocoinapp.designUI.components.PageTitleText
+import com.example.capocoinapp.designUI.components.ChartCard
 import com.example.capocoinapp.designUI.components.PieChartView
 import com.example.capocoinapp.designUI.components.TopNavBar
-import com.example.capocoinapp.designUI.components.rememberCategoryUI
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
-import com.github.mikephil.charting.data.PieEntry
 import kotlin.math.roundToInt
 
 @Composable
-fun AnalyticsScreen(service: TransactionService,
-                    categoryService: CategoryService,
-                    categoryViewModel: CategoryViewModel,
-                    navController: NavHostController) {
+fun AnalyticsScreen(
+    service: TransactionService,
+    categoryService: CategoryService,
+    categoryViewModel: CategoryViewModel,
+    navController: NavHostController
+) {
     CapoCoinAppTheme {
         AppScaffold(
             topBar = { TopNavBar(navController) },
-            bottomBar = { BottomNavBar(navController,3) },
+            bottomBar = { BottomNavBar(navController, 3) },
             pageTitle = "Analytics"
         ) { _ ->
 
@@ -86,11 +77,15 @@ fun AnalyticsScreen(service: TransactionService,
             }
 
             // Render pie chart
-            PieChartView(data = chartData, chartColours)
+            CardBox(
+                cards = listOf(
+                    { ChartCard({ PieChartView(data = chartData, chartColours) }) }
+                )
+            )
 
             // Render categories with the totals and percentages
             CardBox(
-                cards = listOf(){
+                cards = listOf() {
                     totals.forEach { total ->
 
                         // Instantiating variable to get category colour and icon
