@@ -7,6 +7,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
@@ -24,9 +25,11 @@ import com.example.capocoinapp.designUI.components.CardBox
 import com.example.capocoinapp.designUI.components.CardComponent
 import com.example.capocoinapp.designUI.components.CategoryCard
 import com.example.capocoinapp.designUI.components.PageTitleText
+import com.example.capocoinapp.designUI.components.PieChartView
 import com.example.capocoinapp.designUI.components.TopNavBar
 import com.example.capocoinapp.designUI.components.rememberCategoryUI
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
+import com.github.mikephil.charting.data.PieEntry
 
 @Composable
 fun AnalyticsScreen(service: TransactionService,
@@ -47,7 +50,7 @@ fun AnalyticsScreen(service: TransactionService,
             var startDate by rememberSaveable { mutableStateOf("") }
             var endDate by rememberSaveable { mutableStateOf("") }
 
-
+            // Instantiating variables to hold category data
             val totals by service.getCategoryTotals(startDate, endDate)
                 .collectAsState(initial = emptyList())
 
@@ -55,14 +58,32 @@ fun AnalyticsScreen(service: TransactionService,
                 .getAllCategories()
                 .collectAsState(initial = emptyList())
 
-            //graph
+            // Total amount among all categories for calculating percentage
+            val grandTotal = totals.sumOf { it.totalAmount }
 
+            // Convert data from list to dataset that can be used in the pie chart
+            val sampleData = totals.associate { item ->
+
+                // Calculate percentage
+                val percentage = if (grandTotal == 0.0) {
+                    0f
+                } else {
+                    ((item.totalAmount / grandTotal) * 100).toFloat()
+                }
+
+                item.categoryTitle to percentage
+            }
+
+            // Render pie chart
+            PieChartView(data = sampleData)
+
+            // Render categories with the totals and percentages
             CardBox(
                 cards = listOf(){
                     totals.forEach { t ->
 
                         // Instantiating variable to get category colour and icon
-                        val category = categories.find { it.categoryID == t.categoryTotalID }
+                        val category = categories.find { it.categoryTitle == t.categoryTitle }
 
                         //Populating the card with all data for each incremented category
                         BudgetCard(
