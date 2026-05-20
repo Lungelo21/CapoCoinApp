@@ -1387,6 +1387,97 @@ fun BudgetCard(
 }
 
 @Composable
+fun CategoryAnalyticsCard(
+    cardTitle: String,
+    cardAmount: Double?,
+    cardPercent: Int?,
+    cardColor: String,
+    cardIcon: String,
+    onClick: () -> Unit = {}
+) {
+    // Formats the number to look nicer: 20000.0 -> R20 000,00
+    val amountString = NumberFormat.getCurrencyInstance().format(cardAmount)
+    
+    val percentString = "$cardPercent%"
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxSize()
+            .wrapContentHeight()
+            .clickable { onClick() },
+        shape = RoundedCornerShape(50.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = CardBG
+        ),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .wrapContentHeight()
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            //Icon format is a placeholder, will be replaced with logic
+            // to automatically change according to category
+            Box(
+                modifier = Modifier
+                    .size(35.dp)
+                    .background(
+                        color = getColorFromString(cardColor),
+                        shape = CircleShape
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = getIconFromString(cardIcon),
+                    contentDescription = null,
+                    tint = TextWhite,
+                )
+            }
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            Row(
+                modifier = Modifier.wrapContentWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = cardTitle,
+                    style = CapoType.cardTitle
+
+                )
+            }
+
+            Row(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .wrapContentHeight()
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.End
+            ) {
+                Text(
+                    modifier = Modifier.width(90.dp),
+                    text = amountString,
+                    style = CapoType.cardTitle,
+                )
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                Text(
+                    modifier = Modifier.width(40.dp),
+                    text = percentString,
+                    style = CapoType.cardTitle,
+                )
+            }
+        }
+    }
+}
+
+@Composable
 fun BudgetHeader() {
     Row(
         modifier = Modifier
@@ -1627,18 +1718,18 @@ fun CardPreview() {
 //                {
 //                    HomeCard(1300.0, 2000.0, 15)
 //                }
-                {
-                    TransactionDetailsCard(
-                        "Dinner Night",
-                        "2026-04-2",
-                        "200",
-                        "5:00 PM",
-                        "Teal",
-                        Icons.Default.Fastfood,
-                        "expense",
-                        null
-                    )
-                },
+//                {
+//                    TransactionDetailsCard(
+//                        "Dinner Night",
+//                        "2026-04-2",
+//                        "200",
+//                        "5:00 PM",
+//                        "Teal",
+//                        Icons.Default.Fastfood,
+//                        "expense",
+//                        null
+//                    )
+//                },
 //                {
 //                    CardComponent(
 //                        "Salary",
@@ -1650,15 +1741,15 @@ fun CardPreview() {
 //                    )
 //                },
 //                { BudgetHeader() },
-//                {
-//                    BudgetCard(
-//                        "Gym",
-//                        200.0,
-//                        400.0,
-//                        "Gym",
-//                        "Teal"
-//                    )
-//                },
+                {
+                    CategoryAnalyticsCard(
+                        "Gym",
+                        200.0,
+                        40,
+                        "Gym",
+                        "Teal"
+                    )
+                },
 //                {
 //                    CategoryCard(
 //                        "Food",

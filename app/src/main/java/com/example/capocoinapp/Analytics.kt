@@ -23,6 +23,7 @@ import com.example.capocoinapp.designUI.components.BottomNavBar
 import com.example.capocoinapp.designUI.components.BudgetCard
 import com.example.capocoinapp.designUI.components.CardBox
 import com.example.capocoinapp.designUI.components.CardComponent
+import com.example.capocoinapp.designUI.components.CategoryAnalyticsCard
 import com.example.capocoinapp.designUI.components.CategoryCard
 import com.example.capocoinapp.designUI.components.PageTitleText
 import com.example.capocoinapp.designUI.components.PieChartView
@@ -30,6 +31,7 @@ import com.example.capocoinapp.designUI.components.TopNavBar
 import com.example.capocoinapp.designUI.components.rememberCategoryUI
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 import com.github.mikephil.charting.data.PieEntry
+import kotlin.math.roundToInt
 
 @Composable
 fun AnalyticsScreen(service: TransactionService,
@@ -62,7 +64,7 @@ fun AnalyticsScreen(service: TransactionService,
             val grandTotal = totals.sumOf { it.totalAmount }
 
             // Convert data from list to dataset that can be used in the pie chart
-            val sampleData = totals.associate { item ->
+            val chartData = totals.associate { item ->
 
                 // Calculate percentage
                 val percentage = if (grandTotal == 0.0) {
@@ -74,24 +76,40 @@ fun AnalyticsScreen(service: TransactionService,
                 item.categoryTitle to percentage
             }
 
+            // Get categoryColours to be used in the pie chart
+            val chartColours = totals.map { t ->
+                val category = categories.find { it.categoryTitle == t.categoryTitle }
+
+                categoryService.getColour(
+                    category?.categoryColour ?: "Grey"
+                )
+            }
+
             // Render pie chart
-            PieChartView(data = sampleData)
+            PieChartView(data = chartData, chartColours)
 
             // Render categories with the totals and percentages
             CardBox(
                 cards = listOf(){
-                    totals.forEach { t ->
+                    totals.forEach { total ->
 
                         // Instantiating variable to get category colour and icon
-                        val category = categories.find { it.categoryTitle == t.categoryTitle }
+                        val category = categories.find { it.categoryTitle == total.categoryTitle }
+
+                        // Convert amount to percentage
+                        val percentString = if (grandTotal == 0.0) {
+                            0
+                        } else {
+                            (((total.totalAmount ?: 0.0) / grandTotal) * 100).roundToInt()
+                        }
 
                         //Populating the card with all data for each incremented category
-                        BudgetCard(
-                            cardTitle = t.categoryTitle,
-                            cardMin = t.totalAmount,
-                            cardMax = t.totalAmount,
-                            cardColor = categoryService.getColour(category?.categoryColour ?: "Grey"),
-                            cardIcon = category?.categoryIcon ?: "Salary",
+                        CategoryAnalyticsCard(
+                            total.categoryTitle,
+                            total.totalAmount,
+                            percentString,
+                            categoryService.getColour(category?.categoryColour ?: "Grey"),
+                            category?.categoryIcon ?: "Salary",
                             onClick = {}
                         )
                     }
