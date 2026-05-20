@@ -33,6 +33,7 @@ fun HomeScreen(
             bottomBar = { BottomNavBar(navController, 1) },
             pageTitle = "Home"
         ) { _ ->
+
             CardBox(
                 cards = listOf(
                     { HomeCard(1300.0, 2000.0, 15) },
@@ -40,25 +41,29 @@ fun HomeScreen(
                 )
             )
 
-            transactions.forEach { t ->
-                CardBox(
-                    cards = listOf(
-                        {
-                            val (categoryColor, CategoryIcon) = rememberCategoryUI(t.categoryID, categoryViewModel)
-                            CardComponent(
-                                t.transactionName,
-                                t.transactionDate,
-                                t.transactionAmount.toString(),
-                                t.transactionTime,
-                                categoryColor,
-                                CategoryIcon,
-                                "expense",
-                                {navController.navigate("TransactionDetails/${t.transactionID}")}
-                            )
-                        }
-                    )
-                )
-            }
+            CardBox(
+                cards = transactions.map { t ->
+                    {
+                        val (categoryColor, CategoryIcon) =
+                            rememberCategoryUI(t.categoryID, categoryViewModel)
+
+                        CardComponent(
+                            t.transactionName,
+                            t.transactionDate,
+                            t.transactionAmount.toString(),
+                            t.transactionTime,
+                            categoryColor,
+                            CategoryIcon,
+                            "expense",
+                            {
+                                navController.navigate(
+                                    "TransactionDetails/${t.transactionID}"
+                                )
+                            }
+                        )
+                    }
+                }
+            )
         }
     }
 }

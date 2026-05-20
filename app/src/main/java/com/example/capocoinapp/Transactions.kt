@@ -114,11 +114,12 @@ fun TransactionsScreen(
                     )
                 }
             }else{
-            transactions.forEach { t ->
                 CardBox(
-                    cards = listOf(
+                    cards = transactions.map { t ->
                         {
-                            val (categoryColor, CategoryIcon) = rememberCategoryUI(t.categoryID, categoryViewModel)
+                            val (categoryColor, CategoryIcon) =
+                                rememberCategoryUI(t.categoryID, categoryViewModel)
+
                             CardComponent(
                                 t.transactionName,
                                 t.transactionDate,
@@ -127,12 +128,15 @@ fun TransactionsScreen(
                                 categoryColor,
                                 CategoryIcon,
                                 "expense",
-                                {navController.navigate("TransactionDetails/${t.transactionID}")}
+                                {
+                                    navController.navigate(
+                                        "TransactionDetails/${t.transactionID}"
+                                    )
+                                }
                             )
                         }
-                    )
+                    }
                 )
-            }
             }
 
         }

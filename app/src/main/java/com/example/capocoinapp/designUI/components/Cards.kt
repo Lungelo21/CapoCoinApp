@@ -396,11 +396,10 @@ fun CardBox(cards: List<@Composable () -> Unit>) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .wrapContentHeight()
             .background(BackgroundColor)
             .padding(16.dp)
             .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         cards.forEach { card ->
             card()
