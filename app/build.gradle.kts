@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.capocoinapp"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
@@ -66,4 +66,6 @@ dependencies {
     implementation("androidx.room:room-runtime:2.8.4")
     ksp("androidx.room:room-compiler:2.8.4")
     implementation("io.coil-kt:coil-compose:2.6.0")
+
+    implementation("co.yml:ycharts:2.1.0")
 }
