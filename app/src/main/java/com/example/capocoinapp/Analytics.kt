@@ -1,14 +1,21 @@
 package com.example.capocoinapp
 
+import android.R.attr.label
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.core.graphics.toColorInt
 import androidx.navigation.NavHostController
+import co.yml.charts.common.model.PlotType
+import co.yml.charts.ui.piechart.models.PieChartData
 import com.example.capocoinapp.Services.CategoryService
 import com.example.capocoinapp.Services.TransactionService
 import com.example.capocoinapp.data.ViewModels.CategoryViewModel
@@ -16,8 +23,8 @@ import com.example.capocoinapp.designUI.components.AppScaffold
 import com.example.capocoinapp.designUI.components.BottomNavBar
 import com.example.capocoinapp.designUI.components.CardBox
 import com.example.capocoinapp.designUI.components.CategoryAnalyticsCard
+import com.example.capocoinapp.designUI.components.CategoryPieChart
 import com.example.capocoinapp.designUI.components.ChartCard
-import com.example.capocoinapp.designUI.components.PieChartView
 import com.example.capocoinapp.designUI.components.TopNavBar
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 import kotlin.math.roundToInt
@@ -76,16 +83,47 @@ fun AnalyticsScreen(
                 )
             }
 
-            // Render pie chart
-            CardBox(
-                cards = listOf(
-                    { ChartCard({ PieChartView(data = chartData, chartColours) }) }
+//            // Render pie chart
+//            CardBox(
+//                cards = listOf(
+//                    { ChartCard({ PieChartView(data = chartData, chartColours) }) }
+//                )
+//            )
+
+            val slices = totals.map { t ->
+
+                val percentage = if (grandTotal == 0.0) {
+                    0f
+                } else {
+                    ((t.totalAmount / grandTotal) * 100).toFloat()
+                }
+
+                val category = categories.find {
+                    it.categoryTitle == t.categoryTitle
+                }
+
+                // Get category colour value from category service
+                val categoryColourHex = categoryService.getColour(category?.categoryColour ?: "Grey")
+
+                PieChartData.Slice(
+                    label = t.categoryTitle,
+                    value = percentage,
+                    color = Color(categoryColourHex.toColorInt())
                 )
-            )
+            }
+
+
 
             // Render categories with the totals and percentages
             CardBox(
                 cards = listOf() {
+
+                    if (slices.isNotEmpty()) {
+                        ChartCard({ CategoryPieChart(slices)})
+                    } else {
+                        Text("No data available")
+                    }
+
                     totals.forEach { total ->
 
                         // Instantiating variable to get category colour and icon
