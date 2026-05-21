@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.capocoinapp.data.dao.TransactionsDAO
 import com.example.capocoinapp.data.entities.Transactions
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -105,6 +106,14 @@ class TransactionViewModel(
 
     fun getFilterTransactions(startDate: String, endDate: String): Flow<List<Transactions>>{
         return dao.getFilterTransactions(startDate, endDate)
+    }
+
+    fun getTransactionById(id: Int?): Flow<Transactions?> {
+        return if (id != null) {
+            dao.getTransactionById(id)
+        } else {
+            flowOf(null)
+        }
     }
 }
 

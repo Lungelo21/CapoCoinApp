@@ -59,7 +59,7 @@ class UserViewModel (
 
                 !validatePassword.matches(password) ->
                 {
-                    "Password needs at least one capital, one digit and at least 6 character length"
+                    "Password needs at least one capital,one special character, one digit and at least 6 character length"
                 }
 
                 password != confirmPassword ->
