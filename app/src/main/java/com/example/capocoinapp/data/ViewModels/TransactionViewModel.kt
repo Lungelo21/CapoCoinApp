@@ -8,7 +8,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.capocoinapp.Supabase.SupabaseClient
 import com.example.capocoinapp.data.dao.TransactionsDAO
+import com.example.capocoinapp.data.dto.TransactionsDTO
+import com.example.capocoinapp.data.dto.toEntity
 import com.example.capocoinapp.data.entities.Transactions
+import com.example.capocoinapp.data.entities.toDTO
 import io.github.jan.supabase.postgrest.postgrest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -45,14 +48,14 @@ class TransactionViewModel(
 
             try{
                 // gets the transactions stored in supabase
-                val supabaseTransactions = SupabaseClient.client.postgrest["transactions"].select().decodeList<Transactions>()
+                val supabaseTransactions = SupabaseClient.client.postgrest["transactions"].select().decodeList<TransactionsDTO>()
 
                 // checks to see if there are any transactions
                 if(supabaseTransactions.isNotEmpty())
                 {
                     // loads transaction for each iteration
-                    supabaseTransactions.forEach {
-                        dao.insertTransactions(it)
+                    supabaseTransactions.forEach { dto ->
+                        dao.insertTransactions(dto.toEntity())
                     }
                 }
             } // catches any exceptions
@@ -128,7 +131,7 @@ class TransactionViewModel(
             dao.insertTransactions(transaction)
 
             // insert transaction into supabase client
-            SupabaseClient.client.postgrest["transactions"].insert(transaction)
+            SupabaseClient.client.postgrest["transactions"].insert(transaction.toDTO())
 
             //message = "Transaction saved!"
         }

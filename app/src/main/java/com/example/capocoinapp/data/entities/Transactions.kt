@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.example.capocoinapp.data.dto.TransactionsDTO
 
 @Entity(
     tableName = "transactions",
@@ -37,3 +38,19 @@ data class Transactions(
 
     val uploadedPhotoPath: String?
 )
+
+// maps the entities from Transactions to the TransactionsDTO
+fun Transactions.toDTO(): TransactionsDTO {
+    return TransactionsDTO(
+        transactionID = transactionID,
+        transactionType = transactionType,
+        transactionName = transactionName,
+        transactionAmount = transactionAmount,
+        categoryID = categoryID,
+        transactionDate = transactionDate,
+        transactionTime = transactionTime,
+        dateLogged = dateLogged,
+        timeLogged = timeLogged,
+        uploadedPhotoPath = uploadedPhotoPath
+    )
+}
