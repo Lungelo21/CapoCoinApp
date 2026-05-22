@@ -1,6 +1,5 @@
 package com.example.capocoinapp
 
-import android.R.attr.label
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -11,22 +10,24 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.core.graphics.toColorInt
 import androidx.navigation.NavHostController
-import co.yml.charts.common.model.PlotType
 import co.yml.charts.ui.piechart.models.PieChartData
 import com.example.capocoinapp.Services.CategoryService
 import com.example.capocoinapp.Services.TransactionService
 import com.example.capocoinapp.data.ViewModels.CategoryViewModel
+import com.example.capocoinapp.designUI.components.AnalyticsChartToggle
 import com.example.capocoinapp.designUI.components.AppScaffold
 import com.example.capocoinapp.designUI.components.BottomNavBar
 import com.example.capocoinapp.designUI.components.CardBox
 import com.example.capocoinapp.designUI.components.CategoryAnalyticsCard
+import com.example.capocoinapp.designUI.components.CategoryBarData
 import com.example.capocoinapp.designUI.components.CategoryPieChart
 import com.example.capocoinapp.designUI.components.ChartCard
-import com.example.capocoinapp.designUI.components.ChartTypeToggle
+import com.example.capocoinapp.designUI.components.ExpenseBarChart
+import com.example.capocoinapp.designUI.components.PieChartTypeToggle
 import com.example.capocoinapp.designUI.components.TopNavBar
+import com.example.capocoinapp.ui.theme.Accent
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 import kotlin.math.roundToInt
 
@@ -59,8 +60,11 @@ fun AnalyticsScreen(
                 .getAllCategories()
                 .collectAsState(initial = emptyList())
 
-            // Toggle state for chart type
+            // Toggle state for transaction type
             var selectedType by rememberSaveable { mutableStateOf("Expense") }
+
+            // Toggle state for chart type
+            var selectedChart by rememberSaveable { mutableStateOf("Totals") }
 
             // Filter totals based on selected category type
             val filteredTotals = totals.filter { total ->
@@ -99,19 +103,47 @@ fun AnalyticsScreen(
                 )
             }
 
+            val expenseBarChartData: List<CategoryBarData> =
+                totals.mapNotNull { total ->
+
+                    val category = categories.find {
+                        it.categoryTitle == total.categoryTitle
+                    }
+
+                    if (category?.transactionType.equals("Expense", ignoreCase = true)) {
+
+                        val categoryColourHex =
+                            categoryService.getColour(category?.categoryColour ?: "Grey")
+
+                        CategoryBarData(
+                            title = total.categoryTitle,
+                            amount = total.totalAmount,
+                            color = Accent
+                        )
+                    } else {
+                        null
+                    }
+                }
+
             CardBox(
                 cards = listOf() {
 
-
-                    ChartTypeToggle(
-                        selectedType = selectedType,
-                        onTypeSelected = {selectedType = it })
+                    AnalyticsChartToggle(
+                        selectedChart = selectedChart,
+                        onChartSelected = { selectedChart = it }
+                    )
 
                     if (slices.isNotEmpty()) {
                         ChartCard({ CategoryPieChart(slices) })
                     } else {
                         Text("No data available")
                     }
+
+                    ChartCard({ ExpenseBarChart(expenseBarChartData) })
+
+                    PieChartTypeToggle(
+                        selectedType = selectedType,
+                        onTypeSelected = {selectedType = it })
 
                     // Category cards
                     filteredTotals.forEach { total ->
