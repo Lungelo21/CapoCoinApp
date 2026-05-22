@@ -69,4 +69,7 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.6.0")
 
     implementation("co.yml:ycharts:2.1.0")
+    implementation("com.patrykandpatrick.vico:compose-m3:3.1.0")
+    implementation("com.patrykandpatrick.vico:compose-m2:1.15.0")
+    implementation("com.patrykandpatrick.vico:core:1.15.0")
 }

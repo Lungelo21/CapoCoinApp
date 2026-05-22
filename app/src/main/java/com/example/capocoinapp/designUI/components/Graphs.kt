@@ -4,13 +4,16 @@ import android.R.attr.data
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,8 +23,11 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import co.yml.charts.axis.AxisData
@@ -45,6 +51,15 @@ import kotlin.collections.getOrNull
 import kotlin.collections.mapIndexed
 import co.yml.charts.common.model.Point
 import com.example.capocoinapp.ui.theme.Accent
+import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
+import com.patrykandpatrick.vico.compose.cartesian.axis.HorizontalAxis
+import com.patrykandpatrick.vico.compose.cartesian.axis.VerticalAxis
+import com.patrykandpatrick.vico.compose.cartesian.data.CartesianChartModelProducer
+import com.patrykandpatrick.vico.compose.cartesian.data.columnSeries
+import com.patrykandpatrick.vico.compose.cartesian.layer.rememberColumnCartesianLayer
+import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
+import com.patrykandpatrick.vico.core.chart.column.ColumnChart
+import kotlinx.coroutines.runBlocking
 
 
 @Composable
@@ -70,71 +85,33 @@ fun CategoryPieChart(slices: List<PieChartData.Slice>) {
     )
 }
 
-data class CategoryBarData(
-    val title: String,
-    val amount: Double,
-    val color: androidx.compose.ui.graphics.Color
-)
-
 @Composable
-fun ExpenseBarChart(
-    expenseBarChartData: List<CategoryBarData>
-) {
+fun ComposeBarChart(data: List<Double>,xLabels: List<String>,) {
 
-    val dataCategoryOptions = DataCategoryOptions()
+    val modelProducer = remember { CartesianChartModelProducer() }
 
-    // Prevent crash on empty dataset
-    if (expenseBarChartData.isEmpty()) return
-
-    // Convert data into official YCharts BarData
-    val barDataList = expenseBarChartData.mapIndexed { index, item ->
-
-        val point = Point(
-            index.toFloat(),
-            item.amount.toFloat()
-        )
-
-        BarData(
-            point = point,
-            color = item.color,
-            dataCategoryOptions = dataCategoryOptions,
-            label = item.title
-        )
-    }
-
-    // X Axis
-    val xAxisData = AxisData.Builder()
-        .axisStepSize(60.dp)
-        .steps(barDataList.size - 1)
-        .labelData { index ->
-            barDataList[index].label
+    LaunchedEffect(data) {
+        modelProducer.runTransaction {
+            columnSeries {
+                series(data)
+            }
         }
-        .build()
-
-    // Y Axis
-    val yAxisData = AxisData.Builder()
-        .steps(5)
-        .build()
-
-    // Chart Data
-    val chartData = BarChartData(
-        chartData = barDataList,
-        xAxisData = xAxisData,
-        yAxisData = yAxisData,
-        barChartType = BarChartType.VERTICAL,
-        horizontalExtraSpace = 20.dp
-    )
-
-    // Render chart
-    BarChart(
-        modifier = Modifier
-            .width(300.dp)
-            .height(300.dp),
-        barChartData = chartData
+    }
+    CartesianChartHost(
+        chart =
+            rememberCartesianChart(
+                rememberColumnCartesianLayer(),
+                startAxis = VerticalAxis.rememberStart(),
+                bottomAxis = HorizontalAxis.rememberBottom(
+                    valueFormatter = { _, value, _ ->
+                        val index = value.toInt()
+                        xLabels.getOrNull(index) ?: ""
+                    }
+                )
+            ),
+        modelProducer = modelProducer
     )
 }
-
-
 
 @Composable
 fun PieChartTypeToggle(
@@ -249,7 +226,8 @@ fun ChartCard(chart: @Composable () -> Unit) {
     ) {
         Box(
             modifier = Modifier
-                .fillMaxSize(),
+                .fillMaxHeight()
+                .fillMaxWidth(),
             contentAlignment = Alignment.Center
         ) {
             chart()
@@ -265,30 +243,23 @@ fun CategoryChartPreview() {
         PieChartData.Slice(
             label = "Food",
             value = 40f,
-            color = androidx.compose.ui.graphics.Color.Red
+            color = Color.Red
         ),
         PieChartData.Slice(
             label = "Transport",
             value = 25f,
-            color = androidx.compose.ui.graphics.Color.Blue
+            color = Color.Blue
         ),
         PieChartData.Slice(
             label = "Entertainment",
             value = 20f,
-            color = androidx.compose.ui.graphics.Color.Green
+            color = Color.Green
         ),
         PieChartData.Slice(
             label = "Savings",
             value = 15f,
-            color = androidx.compose.ui.graphics.Color.Magenta
+            color = Color.Magenta
         )
-    )
-
-    val sampleBarData = listOf(
-        CategoryBarData("Food", 120.0, Accent),
-        CategoryBarData("Transport", 80.0, Accent),
-        CategoryBarData("Rent", 300.0, Accent),
-        CategoryBarData("Utilities", 60.0, Accent)
     )
 
     CardBox(
@@ -296,7 +267,10 @@ fun CategoryChartPreview() {
 //            { PieChartTypeToggle("Expense", {}) },
 //            { AnalyticsChartToggle("Budget", {}) },
 //            { ChartCard({ CategoryPieChart(sampleSlices) }) },
-            { ChartCard({ ExpenseBarChart(sampleBarData) }) }
+//            { ChartCard({ ExpenseBarChart(sampleBarData) }) }
+            { ComposeBarChart(
+                data = listOf(5.2, 6.1, 3.0, 8.4, 2.5),
+                xLabels = listOf("Mon", "Tue", "Wed", "Thu", "Fri"),) }
         )
     )
 }

@@ -1,5 +1,6 @@
 package com.example.capocoinapp
 
+import android.R.attr.data
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -21,10 +22,9 @@ import com.example.capocoinapp.designUI.components.AppScaffold
 import com.example.capocoinapp.designUI.components.BottomNavBar
 import com.example.capocoinapp.designUI.components.CardBox
 import com.example.capocoinapp.designUI.components.CategoryAnalyticsCard
-import com.example.capocoinapp.designUI.components.CategoryBarData
 import com.example.capocoinapp.designUI.components.CategoryPieChart
 import com.example.capocoinapp.designUI.components.ChartCard
-import com.example.capocoinapp.designUI.components.ExpenseBarChart
+import com.example.capocoinapp.designUI.components.ComposeBarChart
 import com.example.capocoinapp.designUI.components.PieChartTypeToggle
 import com.example.capocoinapp.designUI.components.TopNavBar
 import com.example.capocoinapp.ui.theme.Accent
@@ -103,27 +103,23 @@ fun AnalyticsScreen(
                 )
             }
 
-            val expenseBarChartData: List<CategoryBarData> =
-                totals.mapNotNull { total ->
+            // Map entries to bar graph data set
+            val expenseBarChartData = totals.mapNotNull { total ->
 
-                    val category = categories.find {
-                        it.categoryTitle == total.categoryTitle
-                    }
-
-                    if (category?.transactionType.equals("Expense", ignoreCase = true)) {
-
-                        val categoryColourHex =
-                            categoryService.getColour(category?.categoryColour ?: "Grey")
-
-                        CategoryBarData(
-                            title = total.categoryTitle,
-                            amount = total.totalAmount,
-                            color = Accent
-                        )
-                    } else {
-                        null
-                    }
+                val category = categories.find {
+                    it.categoryTitle == total.categoryTitle
                 }
+
+                if (category?.transactionType?.equals("Expense", ignoreCase = true) == true) {
+                    total.categoryTitle to total.totalAmount
+                } else {
+                    null
+                }
+            }
+
+
+            val labels = expenseBarChartData.map { it.first }
+            val data = expenseBarChartData.map { it.second }
 
             CardBox(
                 cards = listOf() {
@@ -139,11 +135,15 @@ fun AnalyticsScreen(
                         Text("No data available")
                     }
 
-                    ChartCard({ ExpenseBarChart(expenseBarChartData) })
+                    if (data.isNotEmpty()) {
+                        ComposeBarChart(data, labels)
+                    } else {
+                        Text("No data available")
+                    }
 
                     PieChartTypeToggle(
                         selectedType = selectedType,
-                        onTypeSelected = {selectedType = it })
+                        onTypeSelected = { selectedType = it })
 
                     // Category cards
                     filteredTotals.forEach { total ->
