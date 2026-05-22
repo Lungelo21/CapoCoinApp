@@ -1,13 +1,17 @@
 package com.example.capocoinapp.data.ViewModels
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.capocoinapp.Supabase.SupabaseClient
 import com.example.capocoinapp.data.dao.TransactionsDAO
 import com.example.capocoinapp.data.entities.Transactions
+import io.github.jan.supabase.postgrest.postgrest
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -28,6 +32,35 @@ class TransactionViewModel(
         message = ""
     }
 
+    //Using init to make sure this will be actioned as the code is first run
+    /*
+     * Author: Ranjeet
+     * Link: https://medium.com/@ranjeet123/init-block-in-kotlin-518b050cada1
+     * DateAccessed: 22/05/2026
+     * */
+
+    init
+    {
+        viewModelScope.launch {
+
+            try{
+                // gets the transactions stored in supabase
+                val supabaseTransactions = SupabaseClient.client.postgrest["transactions"].select().decodeList<Transactions>()
+
+                // checks to see if there are any transactions
+                if(supabaseTransactions.isNotEmpty())
+                {
+                    // loads transaction for each iteration
+                    supabaseTransactions.forEach {
+                        dao.insertTransactions(it)
+                    }
+                }
+            } // catches any exceptions
+            catch (e: Exception){
+                Log.e("ViewModelCheck", "Sync failed: ${e.message}")
+            }
+        }
+    }
     fun addTransaction(
         type: String,
         name: String,
@@ -74,30 +107,33 @@ class TransactionViewModel(
                 return@launch
             }
 
-                    //Storing the current date and time
-                    val calendar = Calendar.getInstance()
+            //Storing the current date and time
+            val calendar = Calendar.getInstance()
 
-                    val dateLogged = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(calendar.time)
-                    val timeLogged = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(calendar.time)
+            val dateLogged = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(calendar.time)
+            val timeLogged = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(calendar.time)
 
-                    val transaction = Transactions(
-                        transactionType = type,
-                        transactionName = name,
-                        transactionAmount = amountDouble!!,
-                        categoryID = categoryID,
-                        transactionDate = date,
-                        transactionTime = time,
-                        dateLogged = dateLogged,
-                        timeLogged = timeLogged,
-                        uploadedPhotoPath = photoPath
-                    )
+            val transaction = Transactions(
+                transactionType = type,
+                transactionName = name,
+                transactionAmount = amountDouble!!,
+                categoryID = categoryID,
+                transactionDate = date,
+                transactionTime = time,
+                dateLogged = dateLogged,
+                timeLogged = timeLogged,
+                uploadedPhotoPath = photoPath
+            )
 
-                    dao.insertTransactions(transaction)
+            dao.insertTransactions(transaction)
 
-                    //message = "Transaction saved!"
-                }
+            // insert transaction into supabase client
+            SupabaseClient.client.postgrest["transactions"].insert(transaction)
 
+            //message = "Transaction saved!"
         }
+
+    }
 
     // Get all transactions for your view transactions screen
     fun getAllTransactions(): Flow<List<Transactions>> {
