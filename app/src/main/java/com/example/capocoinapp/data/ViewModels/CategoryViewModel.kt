@@ -9,7 +9,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.capocoinapp.Services.CategoryService
+import com.example.capocoinapp.Supabase.SupabaseClient
 import com.example.capocoinapp.data.entities.Category
+import io.github.jan.supabase.postgrest.postgrest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -42,10 +44,35 @@ class CategoryViewModel(
             if(currentCategories.isEmpty())
             {
                 //Log for checking when default categories are being populated into the db
-                Log.d("ViewModelCheck", "Database is empty. Populating default categories for the user to use")
+                Log.d("ViewModelCheck", "Database is empty. Checking Supabase for existing cloud stored categories")
 
-                //Calling the service method to populate defaults
-                service.populateDefaultCategories()
+                try{
+                    val supabaseCategories = SupabaseClient.client.postgrest["categories"].select()
+                        .decodeList<Category>()
+
+                    if(supabaseCategories.isNotEmpty())
+                    {
+                        Log.d("ViewModelCheck", "Found ${supabaseCategories.size} categories. Syncing Room to Supabase DB.")
+
+                        // Loop through and insert remotely stored category into Room DB via service call
+                        supabaseCategories.forEach {
+                            service.createCategory(it)
+                        }
+                    }
+                    else
+                    {
+                        Log.d("ViewModelCheck", "No remote categories found. Populating default local categories.")
+                        // Calling the service method to populate defaults if cloud is also empty
+                        service.populateDefaultCategories()
+                    }
+                }
+                catch (e: Exception){
+                    Log.e("ViewModelCheck", "Error while syncing to Supabase: ${e.message}. Populating defaults categories.")
+
+                    //Calling the service method to populate defaults
+                    service.populateDefaultCategories()
+                }
+
             }
             else
             {
@@ -84,6 +111,9 @@ class CategoryViewModel(
 
                             //service calling createCategory method from dao
                             service.createCategory(newCategory)
+
+                            //Inserting category to Supabase
+                            SupabaseClient.client.postgrest["categories"].insert(newCategory)
 
                             //logging successful db entry
                             android.util.Log.d("ViewModelCheck", "Database Insert Successful:")
