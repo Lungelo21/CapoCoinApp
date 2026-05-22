@@ -48,6 +48,23 @@ class CategoryViewModel(
 
                 //Calling the service method to populate defaults
                 service.populateDefaultCategories()
+
+                // Fetch default populated categories to load to Supabase
+                val localDefaultCategories = service.getAllCategories().first()
+
+                try
+                {
+                    Log.d("ViewModelCheck", "Syncing locally populated categories to Supabase")
+
+                    // Send populated list to Supabase
+                    SupabaseClient.client.postgrest["categories"].insert(localDefaultCategories)
+
+                    Log.d("ViewModelCheck", "Supabase successfully synced with all default categories!")
+                }
+                catch (e: Exception)
+                {
+                    Log.e("ViewModelCheck", "Error while syncing locally populated default categories: ${e.message}")
+                }
             }
             else
             {
