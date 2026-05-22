@@ -75,9 +75,6 @@ dependencies {
     implementation("io.github.jan-tennert.supabase:postgrest-kt")
     implementation("io.github.jan-tennert.supabase:storage-kt")
 
-    //Used for Serialization
-    implementation("io.github.jan-tennert.supabase:serializer-kotlinx")
-
     //Supabase Client implementation
     implementation("io.ktor:ktor-client-android:3.4.3")
 
