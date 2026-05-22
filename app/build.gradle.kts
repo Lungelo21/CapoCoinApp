@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     id("com.google.devtools.ksp") version "2.3.4"
-    kotlin("plugin.serialization") version "2.3.20"
+    kotlin("plugin.serialization") version "2.0.21"
 }
 
 android {
@@ -74,6 +74,9 @@ dependencies {
     //Database and Storage Implementations
     implementation("io.github.jan-tennert.supabase:postgrest-kt")
     implementation("io.github.jan-tennert.supabase:storage-kt")
+
+    //Used for Serialization
+    implementation("io.github.jan-tennert.supabase:serializer-kotlinx")
 
     //Supabase Client implementation
     implementation("io.ktor:ktor-client-android:3.4.3")
