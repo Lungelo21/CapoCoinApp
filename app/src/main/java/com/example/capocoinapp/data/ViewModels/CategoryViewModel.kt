@@ -44,41 +44,40 @@ class CategoryViewModel(
             if(currentCategories.isEmpty())
             {
                 //Log for checking when default categories are being populated into the db
-                Log.d("ViewModelCheck", "Database is empty. Checking Supabase for existing cloud stored categories")
+                Log.d("ViewModelCheck", "Database is empty. Populating default categories for the user to use")
 
-                try{
-                    val supabaseCategories = SupabaseClient.client.postgrest["categories"].select()
-                        .decodeList<Category>()
-
-                    if(supabaseCategories.isNotEmpty())
-                    {
-                        Log.d("ViewModelCheck", "Found ${supabaseCategories.size} categories. Syncing Room to Supabase DB.")
-
-                        // Loop through and insert remotely stored category into Room DB via service call
-                        supabaseCategories.forEach {
-                            service.createCategory(it)
-                        }
-                    }
-                    else
-                    {
-                        Log.d("ViewModelCheck", "No remote categories found. Populating default local categories.")
-                        // Calling the service method to populate defaults if cloud is also empty
-                        service.populateDefaultCategories()
-                    }
-                }
-                catch (e: Exception){
-                    Log.e("ViewModelCheck", "Error while syncing to Supabase: ${e.message}. Populating defaults categories.")
-
-                    //Calling the service method to populate defaults
-                    service.populateDefaultCategories()
-                }
-
+                //Calling the service method to populate defaults
+                service.populateDefaultCategories()
             }
             else
             {
                 //Else if the current categories isn't empty, prompt the log that there is
                 //no need to populate the database with default categories
                 Log.d("ViewModelCheck", "Categories already exist. No population of categories will occur")
+            }
+
+            Log.d("ViewModelCheck", "Syncing RoomDB to Supabase DB")
+
+            try {
+                val supabaseCategories = SupabaseClient.client.postgrest["categories"].select()
+                    .decodeList<Category>()
+
+                if (supabaseCategories.isNotEmpty())
+                {
+                    Log.d("ViewModelCheck", "Found ${supabaseCategories.size} categories. Syncing Room to Supabase")
+
+                    // Updates existing records and inserts new ones seamlessly
+                    supabaseCategories.forEach {
+                        service.createCategory(it)
+                    }
+
+                    Log.d("ViewModelCheck", "Successfully synced to remote!")
+                }
+            }
+            catch (e: Exception)
+            {
+                // Fails silently if user is offline, allowing them to use existing local data
+                Log.e("ViewModelCheck", "Sync failed: ${e.message}")
             }
         }
     }
