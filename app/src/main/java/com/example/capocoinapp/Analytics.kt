@@ -25,6 +25,7 @@ import com.example.capocoinapp.designUI.components.CardBox
 import com.example.capocoinapp.designUI.components.CategoryAnalyticsCard
 import com.example.capocoinapp.designUI.components.CategoryPieChart
 import com.example.capocoinapp.designUI.components.ChartCard
+import com.example.capocoinapp.designUI.components.ChartTypeToggle
 import com.example.capocoinapp.designUI.components.TopNavBar
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 import kotlin.math.roundToInt
@@ -58,39 +59,24 @@ fun AnalyticsScreen(
                 .getAllCategories()
                 .collectAsState(initial = emptyList())
 
-            // Total amount among all categories for calculating percentage
-            val grandTotal = totals.sumOf { it.totalAmount }
+            // Toggle state for chart type
+            var selectedType by rememberSaveable { mutableStateOf("Expense") }
 
-            // Convert data from list to dataset that can be used in the pie chart
-            val chartData = totals.associate { item ->
+            // Filter totals based on selected category type
+            val filteredTotals = totals.filter { total ->
 
-                // Calculate percentage
-                val percentage = if (grandTotal == 0.0) {
-                    0f
-                } else {
-                    ((item.totalAmount / grandTotal) * 100).toFloat()
+                val matchingCategory = categories.find {
+                    it.categoryTitle == total.categoryTitle
                 }
 
-                item.categoryTitle to percentage
+                matchingCategory?.transactionType.equals(selectedType, ignoreCase = true)
             }
 
-            // Get categoryColours to be used in the pie chart
-            val chartColours = totals.map { t ->
-                val category = categories.find { it.categoryTitle == t.categoryTitle }
+            // Total amount among filtered categories for calculating percentage
+            val grandTotal = filteredTotals.sumOf { it.totalAmount }
 
-                categoryService.getColour(
-                    category?.categoryColour ?: "Grey"
-                )
-            }
-
-//            // Render pie chart
-//            CardBox(
-//                cards = listOf(
-//                    { ChartCard({ PieChartView(data = chartData, chartColours) }) }
-//                )
-//            )
-
-            val slices = totals.map { t ->
+            // Map entries to pie chart data set
+            val slices = filteredTotals.map { t ->
 
                 val percentage = if (grandTotal == 0.0) {
                     0f
@@ -103,7 +89,8 @@ fun AnalyticsScreen(
                 }
 
                 // Get category colour value from category service
-                val categoryColourHex = categoryService.getColour(category?.categoryColour ?: "Grey")
+                val categoryColourHex =
+                    categoryService.getColour(category?.categoryColour ?: "Grey")
 
                 PieChartData.Slice(
                     label = t.categoryTitle,
@@ -112,22 +99,27 @@ fun AnalyticsScreen(
                 )
             }
 
-
-
-            // Render categories with the totals and percentages
             CardBox(
                 cards = listOf() {
 
+
+                    ChartTypeToggle(
+                        selectedType = selectedType,
+                        onTypeSelected = {selectedType = it })
+
                     if (slices.isNotEmpty()) {
-                        ChartCard({ CategoryPieChart(slices)})
+                        ChartCard({ CategoryPieChart(slices) })
                     } else {
                         Text("No data available")
                     }
 
-                    totals.forEach { total ->
+                    // Category cards
+                    filteredTotals.forEach { total ->
 
                         // Instantiating variable to get category colour and icon
-                        val category = categories.find { it.categoryTitle == total.categoryTitle }
+                        val category = categories.find {
+                            it.categoryTitle == total.categoryTitle
+                        }
 
                         // Convert amount to percentage
                         val percentString = if (grandTotal == 0.0) {
@@ -148,7 +140,6 @@ fun AnalyticsScreen(
                     }
                 }
             )
-
         }
     }
 }

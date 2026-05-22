@@ -4,19 +4,29 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.viewinterop.AndroidView
 import android.graphics.Color
 import android.view.ViewGroup
+import androidx.benchmark.traceprocessor.Row
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
@@ -30,6 +40,7 @@ import co.yml.charts.ui.piechart.models.PieChartData
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 import com.example.capocoinapp.ui.theme.CapoType
 import com.example.capocoinapp.ui.theme.CardBG
+import com.example.capocoinapp.ui.theme.Primary
 import com.example.capocoinapp.ui.theme.RobotoSlab
 
 @Composable
@@ -53,6 +64,57 @@ fun CategoryPieChart(slices: List<PieChartData.Slice>) {
         pieChartData = pieChartData,
         pieChartConfig = pieChartConfig
     )
+}
+
+@Composable
+fun ChartTypeToggle(
+    selectedType: String,
+    onTypeSelected: (String) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center
+    ) {
+
+        Button(
+            onClick = {
+                onTypeSelected("Expense")
+            },
+            colors = ButtonDefaults.buttonColors(
+                containerColor =
+                    if (selectedType == "Expense")
+                        Primary
+                    else
+                        CardBG
+            )
+        ) {
+            Text(
+                text = "Expenses",
+                style = CapoType.cardTitle
+            )
+        }
+
+        Spacer(modifier = Modifier.width(12.dp))
+
+        Button(
+            onClick = {
+                onTypeSelected("Income")
+            },
+            colors = ButtonDefaults.buttonColors(
+                containerColor =
+                    if (selectedType == "Income")
+                        Primary
+                    else
+                        CardBG
+            )
+        ) {
+            Text(
+                text = "Income",
+                style = CapoType.cardTitle
+            )
+        }
+    }
 }
 
 @Composable
@@ -105,6 +167,9 @@ fun CategoryPieChartPreview() {
     )
 
     CardBox(
-        cards = listOf({ ChartCard({ CategoryPieChart(sampleSlices) }) })
+        cards = listOf(
+            { ChartTypeToggle("Expense", {}) },
+            { ChartCard({ CategoryPieChart(sampleSlices) }) }
+        )
     )
 }
