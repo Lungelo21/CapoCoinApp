@@ -143,6 +143,7 @@ class CategoryViewModel(
                                     {
                                         try
                                         {
+                                            //Inserting category to Supabase
                                             SupabaseClient.client.postgrest["categories"].insert(newCategory)
 
                                             Log.d("SyncCheck", "Successfully synced custom category to Supabase.")
@@ -158,38 +159,30 @@ class CategoryViewModel(
                                                                     // successfully insert to Supabase
                                         }
 
-                                    } else {
-                                        Log.d(
-                                            "SyncCheck",
-                                            "Offline mode. Retrying category connection check in 5s..."
-                                        )
-                                        delay(5000)
+                                    }
+                                    else
+                                    {
+                                        Log.d("SyncCheck", "Offline mode. Retrying category connection check in 5 seconds...")
+
+                                        delay(5000)//Delaying check by 5 seconds
                                     }
                                 }
                             }
 
-                            //Inserting category to Supabase
-                            SupabaseClient.client.postgrest["categories"].insert(newCategory)
-
-                            //logging successful db entry
-                            android.util.Log.d("ViewModelCheck", "Database Insert Successful:")
-
                             //Prompting user of successful category entry into db
                             "Category: '$categoryTitle' was added!"
-                        } catch (e: Exception) {
+                        }
+                        catch (e: Exception)
+                        {
                             //Logging failed insertion into db
-                            android.util.Log.d(
-                                "ViewModelCheck",
-                                "Database Insert Failed: ${e.message}"
-                            )
+                            android.util.Log.d("ViewModelCheck", "Database Insert Failed: ${e.message}")
 
                             //Prompting error message
-                            "Category: '$categoryTitle' failed to be added!" // Returns error message
+                            "Error while adding Category: '$categoryTitle'" // Returns error message
                         }
                     }
                 }
             }
-
     }
 
     // Get all categories to populate your dropdown/selection menus
