@@ -1,6 +1,8 @@
 package com.example.capocoinapp.designUI.components
 
 import android.R.attr.data
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,13 +16,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.LaunchedEffect
@@ -28,8 +33,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.min
 import co.yml.charts.axis.AxisData
 import co.yml.charts.axis.DataCategoryOptions
 import co.yml.charts.common.model.PlotType
@@ -51,6 +58,8 @@ import kotlin.collections.getOrNull
 import kotlin.collections.mapIndexed
 import co.yml.charts.common.model.Point
 import com.example.capocoinapp.ui.theme.Accent
+import com.example.capocoinapp.ui.theme.CapoType.cardSubTitle
+import com.example.capocoinapp.ui.theme.TextWhite
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.axis.HorizontalAxis
 import com.patrykandpatrick.vico.compose.cartesian.axis.VerticalAxis
@@ -63,6 +72,7 @@ import com.patrykandpatrick.vico.compose.common.Fill
 import com.patrykandpatrick.vico.compose.common.component.rememberLineComponent
 import com.patrykandpatrick.vico.core.chart.column.ColumnChart
 import kotlinx.coroutines.runBlocking
+import java.text.NumberFormat
 
 
 @Composable
@@ -221,6 +231,102 @@ fun AnalyticsChartToggle(
                 text = "Budgets",
                 style = CapoType.cardTitle
             )
+        }
+    }
+}
+
+@Composable
+fun BudgetAnalyticsCard(
+    cardTitle: String,
+    cardMin: Double?,
+    cardAmount: Double?,
+    cardMax: Double?,
+    categoryColor: String,
+    categoryIcon: ImageVector,
+    onClick: () -> Unit = {}
+) {
+    // Formats the number to look nicer: 20000.0 -> R20 000,00
+    val amountString = NumberFormat.getCurrencyInstance().format(cardAmount)
+    val minString = NumberFormat.getCurrencyInstance().format(cardMin)
+    val maxString = NumberFormat.getCurrencyInstance().format(cardMax)
+
+
+    Card(
+        modifier = Modifier
+            .fillMaxSize()
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .clickable { onClick() },
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = CardBG
+        ),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(16.dp)
+                .wrapContentHeight(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .background(
+                        color = getColorFromString(categoryColor),
+                        shape = CircleShape
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = categoryIcon,
+                    contentDescription = null,
+                    tint = TextWhite,
+                )
+            }
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            Column(modifier = Modifier.fillMaxWidth()) {
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = cardTitle,
+                        style = CapoType.cardTitle
+                    )
+
+                    if (cardAmount != null) {
+                        Text(
+                            text = amountString,
+                            style = CapoType.cardTitle,
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(6.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    if (cardMin != null) {
+                        Text(
+                            text = minString,
+                            style = CapoType.cardSubTitle
+                        )
+                    }
+
+                    if (cardMax != null) {
+                        Text(
+                            text = maxString,
+                            style = CapoType.cardSubTitle
+                        )
+                    }
+                }
+            }
         }
     }
 }

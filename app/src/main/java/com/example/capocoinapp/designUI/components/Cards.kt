@@ -1476,7 +1476,7 @@ fun CategoryAnalyticsCard(
 }
 
 @Composable
-fun BudgetHeader(min: String, max: String) {
+fun BudgetHeader() {
     Row(
         modifier = Modifier
             .padding(horizontal = 32.dp)
@@ -1487,7 +1487,7 @@ fun BudgetHeader(min: String, max: String) {
     ) {
         Text(
             modifier = Modifier.width(70.dp),
-            text = min,
+            text = "Min",
             style = CapoType.cardTitle,
         )
 
@@ -1495,7 +1495,7 @@ fun BudgetHeader(min: String, max: String) {
 
         Text(
             modifier = Modifier.width(70.dp),
-            text = max,
+            text = "Max",
             style = CapoType.cardTitle,
         )
     }
@@ -1738,16 +1738,16 @@ fun CardPreview() {
 //                        "income"
 //                    )
 //                },
-//                { BudgetHeader() },
-                {
-                    CategoryAnalyticsCard(
-                        "Gym",
-                        200.0,
-                        40,
-                        "Gym",
-                        "Teal"
-                    )
-                },
+                { BudgetHeader() },
+//                {
+//                    CategoryAnalyticsCard(
+//                        "Gym",
+//                        200.0,
+//                        40,
+//                        "Gym",
+//                        "Teal"
+//                    )
+//                },
 //                {
 //                    CategoryCard(
 //                        "Food",

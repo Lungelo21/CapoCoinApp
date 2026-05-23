@@ -21,17 +21,21 @@ import com.example.capocoinapp.data.ViewModels.CategoryViewModel
 import com.example.capocoinapp.designUI.components.AnalyticsChartToggle
 import com.example.capocoinapp.designUI.components.AppScaffold
 import com.example.capocoinapp.designUI.components.BottomNavBar
+import com.example.capocoinapp.designUI.components.BudgetAnalyticsCard
 import com.example.capocoinapp.designUI.components.BudgetCard
 import com.example.capocoinapp.designUI.components.BudgetHeader
 import com.example.capocoinapp.designUI.components.CardBox
+import com.example.capocoinapp.designUI.components.CardComponent
 import com.example.capocoinapp.designUI.components.CategoryAnalyticsCard
 import com.example.capocoinapp.designUI.components.CategoryPieChart
 import com.example.capocoinapp.designUI.components.ChartCard
 import com.example.capocoinapp.designUI.components.ComposeBarChart
 import com.example.capocoinapp.designUI.components.PieChartTypeToggle
 import com.example.capocoinapp.designUI.components.TopNavBar
+import com.example.capocoinapp.designUI.components.rememberCategoryUI
 import com.example.capocoinapp.ui.theme.Accent
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
+import java.util.Locale
 import kotlin.math.roundToInt
 
 @Composable
@@ -195,8 +199,6 @@ fun AnalyticsScreen(
                     } else if (selectedChart == "Budget") {
 
                         // Render bar graph data
-                        BudgetHeader("Spent", "Max")
-
                         if (data.isNotEmpty()) {
                             // Category cards
                             filteredTotals.forEach { total ->
@@ -205,15 +207,18 @@ fun AnalyticsScreen(
                                 val category = categories.find {
                                     it.categoryTitle == total.categoryTitle
                                 }
-                                BudgetCard(
-                                    total.categoryTitle,
-                                    total.totalAmount,
-                                    category?.maxBudget,
-                                    category?.categoryIcon ?: "Salary",
-                                    categoryService.getColour(
-                                        category?.categoryColour ?: "Grey"
-                                    ),
-                                    onClick = {}
+
+                                val (CategoryColor, CategoryIcon) =
+                                    rememberCategoryUI(category?.categoryID ?: 0, categoryViewModel)
+
+                                // Render cards
+                                BudgetAnalyticsCard(
+                                    cardTitle = total.categoryTitle,
+                                    cardMin = category?.minBudget,
+                                    cardAmount = total.totalAmount,
+                                    cardMax = category?.maxBudget,
+                                    categoryColor = CategoryColor,
+                                    categoryIcon = CategoryIcon,
                                 )
                             }
                             selectedType = "Expense"
