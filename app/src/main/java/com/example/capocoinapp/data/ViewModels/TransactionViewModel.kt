@@ -1,4 +1,5 @@
 package com.example.capocoinapp.data.ViewModels
+import android.app.Application
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -6,7 +7,9 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.capocoinapp.Supabase.SupabaseClient
+import com.example.capocoinapp.Utils.isInternetAvailable
 import com.example.capocoinapp.data.dao.TransactionsDAO
 import com.example.capocoinapp.data.dto.TransactionsDTO
 import com.example.capocoinapp.data.dto.toEntity
@@ -22,7 +25,8 @@ import java.util.Calendar
 import java.util.Locale
 
 class TransactionViewModel(
-    private val dao: TransactionsDAO
+    private val dao: TransactionsDAO,
+    private val application: Application // Injected via factory extras bundle cleanly
 ) : ViewModel() {
 
     //Validation
@@ -130,11 +134,31 @@ class TransactionViewModel(
 
             dao.insertTransactions(transaction)
 
-            // insert transaction into supabase client
-            SupabaseClient.client.postgrest["transactions"].insert(transaction.toDTO())
+            viewModelScope.launch {
 
-            //message = "Transaction saved!"
+                var uploaded = false // set upload to false
+                val app = application // application context
+
+                while (!uploaded) { // continuously run while upload is true (continuously syncs roomdb to supabase)
+                    if (app.isInternetAvailable()) {
+                        try {
+                            SupabaseClient.client.postgrest["transactions"].insert(transaction.toDTO())
+                            Log.d("SyncCheck", "Successfully synced offline transaction to Supabase.")
+                            uploaded = true // Breaks the loop
+                        } catch (e: Exception) {
+                            Log.e("SyncCheck", "Server error, retrying in 10 seconds: ${e.message}")
+                            kotlinx.coroutines.delay(10000) // Wait 10 seconds before retrying server errors
+                        }
+                    } else { // if app has no internet connection
+                        Log.d("SyncCheck", "Device's internet connection offline. Retrying connection check in 5 seconds...")
+                        kotlinx.coroutines.delay(5000) // Check connection again in 5 seconds
+                    }
+                }
+                // insert transaction into supabase client
+                SupabaseClient.client.postgrest["transactions"].insert(transaction.toDTO())
+            }
         }
+
 
     }
 
@@ -158,10 +182,13 @@ class TransactionViewModel(
 
 // Factory to inject the DAO
 class TransactionViewModelFactory(private val dao: TransactionsDAO) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
         if (modelClass.isAssignableFrom(TransactionViewModel::class.java)) {
+
+            val application = checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY])
+
             @Suppress("UNCHECKED_CAST")
-            return TransactionViewModel(dao) as T
+            return TransactionViewModel(dao, application) as T
         }
         throw IllegalArgumentException("Error Occurred")
     }
