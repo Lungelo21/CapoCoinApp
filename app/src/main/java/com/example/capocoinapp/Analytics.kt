@@ -21,6 +21,8 @@ import com.example.capocoinapp.data.ViewModels.CategoryViewModel
 import com.example.capocoinapp.designUI.components.AnalyticsChartToggle
 import com.example.capocoinapp.designUI.components.AppScaffold
 import com.example.capocoinapp.designUI.components.BottomNavBar
+import com.example.capocoinapp.designUI.components.BudgetCard
+import com.example.capocoinapp.designUI.components.BudgetHeader
 import com.example.capocoinapp.designUI.components.CardBox
 import com.example.capocoinapp.designUI.components.CategoryAnalyticsCard
 import com.example.capocoinapp.designUI.components.CategoryPieChart
@@ -148,37 +150,76 @@ fun AnalyticsScreen(
 
                         // Render bar graph
                         if (data.isNotEmpty()) {
-                            ComposeBarChart(data, labels)
+                            ChartCard({ ComposeBarChart(data, labels) })
                             selectedType = "Expense"
                         } else {
                             Text("No data available")
                         }
                     }
 
-                    // Category cards
-                    filteredTotals.forEach { total ->
+                    // Render cards
+                    if (selectedChart == "Totals") {
 
-                        // Instantiating variable to get category colour and icon
-                        val category = categories.find {
-                            it.categoryTitle == total.categoryTitle
-                        }
+                        // Render pie chart data
+                        if (slices.isNotEmpty()) {
+                            // Category cards
+                            filteredTotals.forEach { total ->
 
-                        // Convert amount to percentage
-                        val percentString = if (grandTotal == 0.0) {
-                            0
+                                // Instantiating variable to get category colour and icon
+                                val category = categories.find {
+                                    it.categoryTitle == total.categoryTitle
+                                }
+
+                                // Convert amount to percentage
+                                val percentString = if (grandTotal == 0.0) {
+                                    0
+                                } else {
+                                    (((total.totalAmount
+                                        ?: 0.0) / grandTotal) * 100).roundToInt()
+                                }
+                                CategoryAnalyticsCard(
+                                    total.categoryTitle,
+                                    total.totalAmount,
+                                    percentString,
+                                    categoryService.getColour(
+                                        category?.categoryColour ?: "Grey"
+                                    ),
+                                    category?.categoryIcon ?: "Salary",
+                                    onClick = {}
+                                )
+                            }
                         } else {
-                            (((total.totalAmount ?: 0.0) / grandTotal) * 100).roundToInt()
+                            Text("No data available")
                         }
 
-                        //Populating the card with all data for each incremented category
-                        CategoryAnalyticsCard(
-                            total.categoryTitle,
-                            total.totalAmount,
-                            percentString,
-                            categoryService.getColour(category?.categoryColour ?: "Grey"),
-                            category?.categoryIcon ?: "Salary",
-                            onClick = {}
-                        )
+                    } else if (selectedChart == "Budget") {
+
+                        // Render bar graph data
+                        BudgetHeader("Spent", "Max")
+
+                        if (data.isNotEmpty()) {
+                            // Category cards
+                            filteredTotals.forEach { total ->
+
+                                // Instantiating variable to get category colour and icon
+                                val category = categories.find {
+                                    it.categoryTitle == total.categoryTitle
+                                }
+                                BudgetCard(
+                                    total.categoryTitle,
+                                    total.totalAmount,
+                                    category?.maxBudget,
+                                    category?.categoryIcon ?: "Salary",
+                                    categoryService.getColour(
+                                        category?.categoryColour ?: "Grey"
+                                    ),
+                                    onClick = {}
+                                )
+                            }
+                            selectedType = "Expense"
+                        } else {
+                            Text("No data available")
+                        }
                     }
                 }
             )

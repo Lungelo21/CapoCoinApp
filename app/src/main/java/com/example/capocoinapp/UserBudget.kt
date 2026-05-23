@@ -102,7 +102,7 @@ fun UserBudgetScreen(
                 * Link: https://www.youtube.com/watch?v=VE7mCMK5djM
                 * Date Accessed: 27/04/2026
                 */
-                BudgetHeader()
+                BudgetHeader("Min", "Max")
 
                 categories.forEach { category ->
                     if(category.transactionType == "Expense")

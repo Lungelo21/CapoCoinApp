@@ -56,8 +56,11 @@ import com.patrykandpatrick.vico.compose.cartesian.axis.HorizontalAxis
 import com.patrykandpatrick.vico.compose.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.compose.cartesian.data.columnSeries
+import com.patrykandpatrick.vico.compose.cartesian.layer.ColumnCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberColumnCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
+import com.patrykandpatrick.vico.compose.common.Fill
+import com.patrykandpatrick.vico.compose.common.component.rememberLineComponent
 import com.patrykandpatrick.vico.core.chart.column.ColumnChart
 import kotlinx.coroutines.runBlocking
 
@@ -86,10 +89,22 @@ fun CategoryPieChart(slices: List<PieChartData.Slice>) {
 }
 
 @Composable
-fun ComposeBarChart(data: List<Double>,xLabels: List<String>,) {
+fun ComposeBarChart(data: List<Double>, xLabels: List<String>) {
 
+    // Instantiate modelProducer
     val modelProducer = remember { CartesianChartModelProducer() }
 
+    // Bar styling
+    val columnLayer = rememberColumnCartesianLayer(
+        columnProvider = ColumnCartesianLayer.ColumnProvider.series(
+            rememberLineComponent(
+                fill = Fill(Accent),
+                thickness = 16.dp
+            )
+        )
+    )
+
+    // Render bars
     LaunchedEffect(data) {
         modelProducer.runTransaction {
             columnSeries {
@@ -98,17 +113,15 @@ fun ComposeBarChart(data: List<Double>,xLabels: List<String>,) {
         }
     }
     CartesianChartHost(
-        chart =
-            rememberCartesianChart(
-                rememberColumnCartesianLayer(),
-                startAxis = VerticalAxis.rememberStart(),
-                bottomAxis = HorizontalAxis.rememberBottom(
-                    valueFormatter = { _, value, _ ->
-                        val index = value.toInt()
-                        xLabels.getOrNull(index) ?: ""
-                    }
-                )
-            ),
+        chart = rememberCartesianChart(
+            columnLayer,
+            startAxis = VerticalAxis.rememberStart(),
+            bottomAxis = HorizontalAxis.rememberBottom(
+                valueFormatter = { _, value, _ ->
+                    xLabels.getOrNull(value.toInt()) ?: ""
+                }
+            )
+        ),
         modelProducer = modelProducer
     )
 }
@@ -227,7 +240,8 @@ fun ChartCard(chart: @Composable () -> Unit) {
         Box(
             modifier = Modifier
                 .fillMaxHeight()
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .padding(8.dp),
             contentAlignment = Alignment.Center
         ) {
             chart()
@@ -268,9 +282,12 @@ fun CategoryChartPreview() {
 //            { AnalyticsChartToggle("Budget", {}) },
 //            { ChartCard({ CategoryPieChart(sampleSlices) }) },
 //            { ChartCard({ ExpenseBarChart(sampleBarData) }) }
-            { ComposeBarChart(
-                data = listOf(5.2, 6.1, 3.0, 8.4, 2.5),
-                xLabels = listOf("Mon", "Tue", "Wed", "Thu", "Fri"),) }
+            {
+                ComposeBarChart(
+                    data = listOf(5.2, 6.1, 3.0, 8.4, 2.5),
+                    xLabels = listOf("Mon", "Tue", "Wed", "Thu", "Fri"),
+                )
+            }
         )
     )
 }
