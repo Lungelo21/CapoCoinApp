@@ -1,5 +1,6 @@
 package com.example.capocoinapp
 
+import android.R
 import android.R.attr.data
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -117,33 +118,42 @@ fun AnalyticsScreen(
                 }
             }
 
-
             val labels = expenseBarChartData.map { it.first }
             val data = expenseBarChartData.map { it.second }
 
             CardBox(
                 cards = listOf() {
 
+                    // Toggle for selecting between pie chart and bar graph
                     AnalyticsChartToggle(
                         selectedChart = selectedChart,
                         onChartSelected = { selectedChart = it }
                     )
 
-                    if (slices.isNotEmpty()) {
-                        ChartCard({ CategoryPieChart(slices) })
-                    } else {
-                        Text("No data available")
-                    }
+                    if (selectedChart == "Totals") {
 
-                    if (data.isNotEmpty()) {
-                        ComposeBarChart(data, labels)
-                    } else {
-                        Text("No data available")
-                    }
+                        // Render pie chart
+                        if (slices.isNotEmpty()) {
+                            ChartCard({ CategoryPieChart(slices) })
+                        } else {
+                            Text("No data available")
+                        }
 
-                    PieChartTypeToggle(
-                        selectedType = selectedType,
-                        onTypeSelected = { selectedType = it })
+                        // Toggle for switching between expenses or income on pie chart
+                        PieChartTypeToggle(
+                            selectedType = selectedType,
+                            onTypeSelected = { selectedType = it })
+
+                    } else if (selectedChart == "Budget") {
+
+                        // Render bar graph
+                        if (data.isNotEmpty()) {
+                            ComposeBarChart(data, labels)
+                            selectedType = "Expense"
+                        } else {
+                            Text("No data available")
+                        }
+                    }
 
                     // Category cards
                     filteredTotals.forEach { total ->
