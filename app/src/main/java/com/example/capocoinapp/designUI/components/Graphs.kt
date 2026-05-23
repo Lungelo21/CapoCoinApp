@@ -33,6 +33,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -65,8 +66,11 @@ import com.patrykandpatrick.vico.compose.cartesian.axis.HorizontalAxis
 import com.patrykandpatrick.vico.compose.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.compose.cartesian.data.columnSeries
+import com.patrykandpatrick.vico.compose.cartesian.data.lineSeries
 import com.patrykandpatrick.vico.compose.cartesian.layer.ColumnCartesianLayer
+import com.patrykandpatrick.vico.compose.cartesian.layer.LineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberColumnCartesianLayer
+import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
 import com.patrykandpatrick.vico.compose.common.Fill
 import com.patrykandpatrick.vico.compose.common.component.rememberLineComponent
@@ -99,26 +103,97 @@ fun CategoryPieChart(slices: List<PieChartData.Slice>) {
 }
 
 @Composable
-fun ComposeBarChart(data: List<Double>, xLabels: List<String>) {
+fun ComposeBarChart(
+    data: List<Double>,
+    minBudget: List<Double>,
+    maxBudget: List<Double>,
+    xLabels: List<String>
+) {
 
     // Instantiate modelProducer
     val modelProducer = remember { CartesianChartModelProducer() }
 
     // Bar styling
-    val columnLayer = rememberColumnCartesianLayer(
-        columnProvider = ColumnCartesianLayer.ColumnProvider.series(
-            rememberLineComponent(
-                fill = Fill(Accent),
-                thickness = 16.dp
-            )
-        )
+    val spentComponent = rememberLineComponent(
+        fill = Fill(Accent),
+        thickness = 16.dp
     )
 
+    val minBudgetComponent = rememberLineComponent(
+        fill = Fill(SolidColor(Color(0x834CAF50))),
+        thickness = 16.dp
+    )
+
+    val maxBudgetComponent = rememberLineComponent(
+        fill = Fill(SolidColor(Color(0xFFEF3131))),
+        thickness = 16.dp
+    )
+
+    val columnLayer = rememberColumnCartesianLayer(
+        columnProvider = ColumnCartesianLayer.ColumnProvider.series(
+            spentComponent,
+            minBudgetComponent,
+            maxBudgetComponent
+        ),
+        mergeMode = { _ -> ColumnCartesianLayer.MergeMode.Stacked }
+    )
+
+    // Adjust values to show amount over or underspent
+    val adjustedSpent = data.indices.map { i ->
+        val spent = data[i]
+        val min = minBudget[i]
+        val max = maxBudget[i]
+
+        // Over budget
+        if (spent > max) {
+            max
+            // Under Min
+        } else if (spent <= min) {
+            spent
+        } else {
+            spent
+        }
+    }
+
+    val adjustedMax = maxBudget.indices.map { i ->
+        val spent = data[i]
+        val min = minBudget[i]
+        val max = maxBudget[i]
+
+        // Over budget
+        if (spent > max) {
+            (spent - max)
+            // Under Max
+        } else if (spent <= max) {
+            0.0
+        } else {
+            0.0
+        }
+    }
+
+    val adjustedMin = minBudget.indices.map { i ->
+        val spent = data[i]
+        val min = minBudget[i]
+        val max = maxBudget[i]
+
+        // Over budget
+        if (spent > max) {
+            0.0
+            // Under Max
+        } else if (spent <= max) {
+            (max - spent)
+        } else {
+            0.0
+        }
+    }
+
     // Render bars
-    LaunchedEffect(data) {
+    LaunchedEffect(adjustedSpent, adjustedMin, adjustedMax) {
         modelProducer.runTransaction {
             columnSeries {
-                series(data)
+                series(adjustedSpent)
+                series(adjustedMin)
+                series(adjustedMax)
             }
         }
     }
@@ -314,14 +389,14 @@ fun BudgetAnalyticsCard(
                 ) {
                     if (cardMin != null) {
                         Text(
-                            text = minString,
+                            text = "Min: $minString",
                             style = CapoType.cardSubTitle
                         )
                     }
 
                     if (cardMax != null) {
                         Text(
-                            text = maxString,
+                            text = "Max: $maxString",
                             style = CapoType.cardSubTitle
                         )
                     }
@@ -391,6 +466,8 @@ fun CategoryChartPreview() {
             {
                 ComposeBarChart(
                     data = listOf(5.2, 6.1, 3.0, 8.4, 2.5),
+                    minBudget = listOf(3.0, 4.0, 4.0, 3.0, 2.0),
+                    maxBudget = listOf(6.0, 5.0, 7.0, 6.0, 4.0),
                     xLabels = listOf("Mon", "Tue", "Wed", "Thu", "Fri"),
                 )
             }

@@ -110,22 +110,39 @@ fun AnalyticsScreen(
                 )
             }
 
+            // Instantiate data set to use with bar graph
+            data class BudgetChartItem(
+                val label: String,
+                val actual: Double,
+                val min: Double,
+                val max: Double
+            )
+
             // Map entries to bar graph data set
-            val expenseBarChartData = totals.mapNotNull { total ->
+            val expenseChartData = totals.mapNotNull { total ->
 
                 val category = categories.find {
                     it.categoryTitle == total.categoryTitle
-                }
+                } ?: return@mapNotNull null
 
-                if (category?.transactionType?.equals("Expense", ignoreCase = true) == true) {
-                    total.categoryTitle to total.totalAmount
-                } else {
-                    null
-                }
+                val isExpense = category.transactionType
+                    .equals("Expense", ignoreCase = true)
+
+                if (!isExpense) return@mapNotNull null
+
+                BudgetChartItem(
+                    label = total.categoryTitle,
+                    actual = total.totalAmount,
+                    min = category.minBudget,
+                    max = category.maxBudget
+                )
             }
 
-            val labels = expenseBarChartData.map { it.first }
-            val data = expenseBarChartData.map { it.second }
+            // Extract lists from data set
+            val labels = expenseChartData.map { it.label }
+            val data = expenseChartData.map { it.actual }
+            val minBudget = expenseChartData.map { it.min }
+            val maxBudget = expenseChartData.map { it.max }
 
             CardBox(
                 cards = listOf() {
@@ -154,7 +171,7 @@ fun AnalyticsScreen(
 
                         // Render bar graph
                         if (data.isNotEmpty()) {
-                            ChartCard({ ComposeBarChart(data, labels) })
+                            ChartCard({ ComposeBarChart(data, minBudget, maxBudget, labels) })
                             selectedType = "Expense"
                         } else {
                             Text("No data available")
