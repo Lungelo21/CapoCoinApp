@@ -1,5 +1,6 @@
 package com.example.capocoinapp.data.ViewModels
 
+import android.app.Application
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -8,16 +9,20 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.capocoinapp.Services.CategoryService
 import com.example.capocoinapp.Supabase.SupabaseClient
+import com.example.capocoinapp.Utils.isInternetAvailable
 import com.example.capocoinapp.data.entities.Category
 import io.github.jan.supabase.postgrest.postgrest
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class CategoryViewModel(
-    private val service: CategoryService
+    private val service: CategoryService,
+    private val application: Application
 ) : ViewModel() {
 
     // UI Feedback message
@@ -128,6 +133,41 @@ class CategoryViewModel(
                             //service calling createCategory method from dao
                             service.createCategory(newCategory)
 
+                            viewModelScope.launch {
+
+                                var uploaded = false
+
+                                while (!uploaded)
+                                {
+                                    if (application.isInternetAvailable())
+                                    {
+                                        try
+                                        {
+                                            SupabaseClient.client.postgrest["categories"].insert(newCategory)
+
+                                            Log.d("SyncCheck", "Successfully synced custom category to Supabase.")
+
+                                            uploaded = true //Ending loop
+                                        }
+                                        catch (e: Exception)
+                                        {
+                                            Log.e("SyncCheck", "Supabase category insert failed, retrying in 10s: ${e.message}")
+
+                                            delay(10000) //Delaying insert by 10 seconds to
+                                                                    // see if Internet connection can be found to
+                                                                    // successfully insert to Supabase
+                                        }
+
+                                    } else {
+                                        Log.d(
+                                            "SyncCheck",
+                                            "Offline mode. Retrying category connection check in 5s..."
+                                        )
+                                        delay(5000)
+                                    }
+                                }
+                            }
+
                             //Inserting category to Supabase
                             SupabaseClient.client.postgrest["categories"].insert(newCategory)
 
@@ -187,9 +227,51 @@ class CategoryViewModel(
                 minBudget = minBudget,
                 maxBudget = maxBudget
             )
-            service.updateCategory(updatedCategory)
-            message = "Budget updated"
+            try
+            {
+                service.updateCategory(updatedCategory)
+                message = "Budget updated"
 
+                Log.d("ViewModelCheck", "Local budget updated successfully for: ${category.categoryTitle}")
+
+                //Co routine to sync after updating budget
+                viewModelScope.launch {
+                    var updatedRemote = false
+
+                    while (!updatedRemote)
+                    {
+                        if (application.isInternetAvailable())
+                        {
+                            try
+                            {
+                                //Updating/Inserting Category after changing budget
+                                SupabaseClient.client.postgrest["categories"].upsert(updatedCategory)
+
+                                Log.d("SyncCheck", "Successfully synced updated budget for '${category.categoryTitle}' to Supabase.")
+
+                                updatedRemote = true //Ending loop
+                            }
+                            catch (e: Exception)
+                            {
+                                Log.e("SyncCheck", "Update Failed, retrying in 10 seconds: ${e.message}")
+                                delay(10000) //Delaying upsert by 10 seconds to
+                                                        // see if Internet connection can be found to
+                                                        // successfully upsert to Supabase
+                            }
+                        }
+                        else
+                        {
+                            Log.d("SyncCheck", "Offline. Waiting for internet connection to sync budget updates for '${category.categoryTitle}'...")
+                            delay(5000) // Testing after 5 seconds if an Internet Connection is found
+                        }
+                    }
+                }
+            }
+            catch (e: Exception)
+            {
+                Log.e("ViewModelCheck", "Failed to update budget locally: ${e.message}")
+                message = "Failed to update budget locally."
+            }
         }
     }
 }
@@ -197,10 +279,14 @@ class CategoryViewModel(
 
 // Factory to inject the CategoryDAO
 class CategoryViewModelFactory(private val service: CategoryService) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
         if (modelClass.isAssignableFrom(CategoryViewModel::class.java)) {
+
+            // Extract the Application context via the APPLICATION_KEY
+            val application = checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY])
+
             @Suppress("UNCHECKED_CAST")
-            return CategoryViewModel(service) as T
+            return CategoryViewModel(service, application) as T
         }
         throw IllegalArgumentException("Error Occurred")
     }
