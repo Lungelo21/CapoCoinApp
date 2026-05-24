@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TransactionsDAO {
-    @Insert(onConflict = OnConflictStrategy.ABORT)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTransactions(transactions: Transactions)
 
     @Query("SELECT * FROM transactions ORDER BY transactionID DESC")
@@ -19,7 +19,7 @@ interface TransactionsDAO {
     //@Query("SELECT * FROM transactions WHERE transactionName = :transactionNameInput LIMIT 1")
     //fun getTransactions(transactionNameInput: String): Transactions
 
-    @Query("SELECT c.categoryTitle AS categoryTotalID, c.CategoryTitle, SUM(t.transactionAmount) as totalAmount " +
+    @Query("SELECT c.categoryTitle AS categoryTotalID, c.CategoryTitle, c.categoryColour, c.categoryIcon, SUM(t.transactionAmount) as totalAmount " +
             "FROM transactions t " +
             "INNER JOIN categories c ON  t.categoryID = c.categoryID " +
             "WHERE (:startDate = '' OR :endDate = '' OR t.transactionDate BETWEEN :startDate AND :endDate) " +
