@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TransactionsDAO {
-    @Insert(onConflict = OnConflictStrategy.ABORT)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTransactions(transactions: Transactions)
 
     @Query("SELECT * FROM transactions ORDER BY transactionID DESC")

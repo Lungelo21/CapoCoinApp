@@ -70,7 +70,10 @@ class TransactionViewModel(
                                 Log.d("SyncCheck", "Startup Transaction Sync: Pushing local ledger to Supabase...")
 
                                 // .upsert() inserts records written offline and leaves existing ones untouched
-                                SupabaseClient.client.postgrest["transactions"].upsert(currentTransactions)
+                                //SupabaseClient.client.postgrest["transactions"].upsert(currentTransactions)
+
+                                val dtoPayload = currentTransactions.map { it.toDTO() }
+                                SupabaseClient.client.postgrest["transactions"].upsert(dtoPayload)
 
                                 Log.d("SyncCheck", "Startup Transaction Sync: Remote ledger successfully updated!")
                                 synced = true // Safely exit loop
@@ -90,14 +93,14 @@ class TransactionViewModel(
             // Pulls any supabase records to roomdb
             try {
                 if (application.isInternetAvailable()) {
-                    val supabaseTransactions = SupabaseClient.client.postgrest["transactions"].select()
-                        .decodeList<Transactions>()
+                    val supabaseTransactionsDTOs = SupabaseClient.client.postgrest["transactions"].select()
+                        .decodeList<TransactionsDTO>()
 
-                    if (supabaseTransactions.isNotEmpty()) {
-                        Log.d("TransactionVMCheck", "Found ${supabaseTransactions.size} transactions on remote. Syncing to Room...")
+                    if (supabaseTransactionsDTOs.isNotEmpty()) {
+                        Log.d("TransactionVMCheck", "Found ${supabaseTransactionsDTOs.size} transactions on remote. Syncing to Room...")
 
-                        supabaseTransactions.forEach { transaction ->
-                            dao.insertTransactions(transaction)
+                        supabaseTransactionsDTOs.forEach { dto ->
+                            dao.insertTransactions(dto.toEntity())
                         }
                         Log.d("TransactionVMCheck", "Successfully pulled remote transaction records!")
                     }
@@ -198,7 +201,7 @@ class TransactionViewModel(
                     }
                 }
                 // insert transaction into supabase client
-                SupabaseClient.client.postgrest["transactions"].insert(transaction.toDTO())
+                //SupabaseClient.client.postgrest["transactions"].insert(transaction.toDTO())
             }
         }
 
