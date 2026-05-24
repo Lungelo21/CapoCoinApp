@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
+import com.example.capocoinapp.Services.TransactionService
 import com.example.capocoinapp.Supabase.SupabaseClient
 import com.example.capocoinapp.Utils.isInternetAvailable
 import com.example.capocoinapp.data.dao.TransactionsDAO
@@ -16,6 +17,7 @@ import com.example.capocoinapp.data.dto.toEntity
 import com.example.capocoinapp.data.entities.Transactions
 import com.example.capocoinapp.data.entities.toDTO
 import io.github.jan.supabase.postgrest.postgrest
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
@@ -46,28 +48,69 @@ class TransactionViewModel(
      * DateAccessed: 22/05/2026
      * */
 
-    init
-    {
+    init {
+
         viewModelScope.launch {
 
-            try{
-                // gets the transactions stored in supabase
-                val supabaseTransactions = SupabaseClient.client.postgrest["transactions"].select().decodeList<TransactionsDTO>()
+            // Fetch transactions stored in room
+            val currentTransactions = dao.getAllTransactions().first()
 
-                // checks to see if there are any transactions
-                if(supabaseTransactions.isNotEmpty())
-                {
-                    // loads transaction for each iteration
-                    supabaseTransactions.forEach { dto ->
-                        dao.insertTransactions(dto.toEntity())
+            if (currentTransactions.isEmpty()) {
+                Log.d("TransactionVMCheck", "No local transactions found. Waiting for user input.")
+
+            } else {
+                Log.d("TransactionVMCheck", "Transactions exist locally. Ensuring remote Supabase DB is caught up...")
+
+                // syncs roomdb to remote supabase
+                viewModelScope.launch {
+                    var synced = false
+                    while (!synced) {
+                        if (application.isInternetAvailable()) {
+                            try {
+                                Log.d("SyncCheck", "Startup Transaction Sync: Pushing local ledger to Supabase...")
+
+                                // .upsert() inserts records written offline and leaves existing ones untouched
+                                SupabaseClient.client.postgrest["transactions"].upsert(currentTransactions)
+
+                                Log.d("SyncCheck", "Startup Transaction Sync: Remote ledger successfully updated!")
+                                synced = true // Safely exit loop
+                            } catch (e: Exception) {
+                                Log.e("SyncCheck", "Startup Transaction Sync failed, retrying in 10s: ${e.message}")
+                                delay(10000) // Wait 10 seconds before trying again
+                            }
+                        }
+                        else {
+                            Log.d("SyncCheck", "Startup Transaction Sync: Offline. Waiting for internet connection...")
+                            delay(5000) // Test connection again in 5 seconds
+                        }
                     }
                 }
-            } // catches any exceptions
-            catch (e: Exception){
-                Log.e("ViewModelCheck", "Sync failed: ${e.message}")
+            }
+
+            // Pulls any supabase records to roomdb
+            try {
+                if (application.isInternetAvailable()) {
+                    val supabaseTransactions = SupabaseClient.client.postgrest["transactions"].select()
+                        .decodeList<Transactions>()
+
+                    if (supabaseTransactions.isNotEmpty()) {
+                        Log.d("TransactionVMCheck", "Found ${supabaseTransactions.size} transactions on remote. Syncing to Room...")
+
+                        supabaseTransactions.forEach { transaction ->
+                            dao.insertTransactions(transaction)
+                        }
+                        Log.d("TransactionVMCheck", "Successfully pulled remote transaction records!")
+                    }
+                }
+            } catch (e: Exception) {
+                // Fails silently if device is offline on first remote pull
+                Log.e("TransactionVMCheck", "Initial remote transaction pull failed: ${e.message}")
             }
         }
     }
+
+
+
     fun addTransaction(
         type: String,
         name: String,
