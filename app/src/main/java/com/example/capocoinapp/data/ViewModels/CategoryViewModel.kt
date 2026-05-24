@@ -57,18 +57,41 @@ class CategoryViewModel(
                 // Fetch default populated categories to load to Supabase
                 val localDefaultCategories = service.getAllCategories().first()
 
-                try
-                {
-                    Log.d("ViewModelCheck", "Syncing locally populated categories to Supabase")
+                viewModelScope.launch {
 
-                    // Send populated list to Supabase
-                    SupabaseClient.client.postgrest["categories"].insert(localDefaultCategories)
+                    var isSynced = false
 
-                    Log.d("ViewModelCheck", "Supabase successfully synced with all default categories!")
-                }
-                catch (e: Exception)
-                {
-                    Log.e("ViewModelCheck", "Error while syncing locally populated default categories: ${e.message}")
+                    while(!isSynced)
+                    {
+                        if(application.isInternetAvailable())
+                        {
+                            try {
+                                Log.d(
+                                    "ViewModelCheck",
+                                    "Syncing locally populated categories to Supabase"
+                                )
+
+                                // Send populated list to Supabase
+                                SupabaseClient.client.postgrest["categories"].upsert(localDefaultCategories)
+
+                                //Prompting user via log cat for successful sync
+                                Log.d("ViewModelCheck", "Supabase successfully synced with all default categories!")
+
+                                //Ending loop after sync is completed
+                                isSynced = true
+                            } catch (e: Exception) {
+                                Log.e("ViewModelCheck", "Error while syncing locally populated default categories: ${e.message}. Retrying after 10 seconds.")
+
+                                delay(10000)//Delay by 10 seconds
+                            }
+                        }
+                        else
+                        {
+                            Log.d("SyncCheck", "Currently Offline. Waiting for Internet connection to sync defaults categories")
+
+                            delay(5000) //Delay for 5 seconds while checking for Internet Connection
+                        }
+                    }
                 }
             }
             else
@@ -79,6 +102,43 @@ class CategoryViewModel(
             }
 
             Log.d("ViewModelCheck", "Syncing RoomDB to Supabase DB")
+
+            //Launch co routine to sync remote with room db (assuming users made entries while offline)
+            viewModelScope.launch{
+                var isSynced = false
+
+                while(!isSynced)
+                {
+                    if(application.isInternetAvailable())
+                    {
+                        try {
+                            Log.d("SyncCheck", "Syncing local (Offline) data to Supabase")
+
+                            //Upserting Category entries
+                            SupabaseClient.client.postgrest["categories"].upsert(currentCategories)
+
+                            Log.d("SyncCheck", "Successfully synced Supabase with Local data")
+
+                            //Setting to true to end loop because of successful sync
+                            isSynced = true
+                        }
+                        catch (e: Exception)
+                        {
+                            Log.e("SyncCheck", "Error while syncing, attempting again after 10 seconds. ${e.message}.")
+
+                            //Attempting sync after 10 second delay
+                            delay(10000)
+                        }
+                    }
+                    else
+                    {
+                        Log.d("SyncCheck", "Currently offline. Waiting for Internet connection before attempting to sync...")
+
+                        //5 second delay for securing Internet Connection to sync
+                        delay(5000)
+                    }
+                }
+            }
 
             try {
                 val supabaseCategories = SupabaseClient.client.postgrest["categories"].select()
@@ -93,7 +153,7 @@ class CategoryViewModel(
                         service.createCategory(it)
                     }
 
-                    Log.d("ViewModelCheck", "Successfully synced to remote!")
+                    Log.d("ViewModelCheck", "Successfully synced from remote to local!")
                 }
             }
             catch (e: Exception)
