@@ -72,8 +72,8 @@ class TransactionViewModel(
                                 // .upsert() inserts records written offline and leaves existing ones untouched
                                 //SupabaseClient.client.postgrest["transactions"].upsert(currentTransactions)
 
-                                val dtoPayload = currentTransactions.map { it.toDTO() }
-                                SupabaseClient.client.postgrest["transactions"].upsert(dtoPayload)
+                                val mapDTO = currentTransactions.map { it.toDTO() }
+                                SupabaseClient.client.postgrest["transactions"].upsert(mapDTO)
 
                                 Log.d("SyncCheck", "Startup Transaction Sync: Remote ledger successfully updated!")
                                 synced = true // Safely exit loop
