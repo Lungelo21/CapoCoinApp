@@ -32,8 +32,8 @@ import com.example.capocoinapp.data.ViewModels.CategoryViewModel
 import com.example.capocoinapp.data.ViewModels.CategoryViewModelFactory
 import com.example.capocoinapp.data.ViewModels.TransactionViewModel
 import com.example.capocoinapp.data.ViewModels.TransactionViewModelFactory
+
 import com.example.capocoinapp.data.ViewModels.UserViewModel
-import com.example.capocoinapp.data.ViewModels.ViewModelFactory
 import com.example.capocoinapp.designUI.components.AppScaffold
 import com.example.capocoinapp.designUI.components.BottomNavBar
 import com.example.capocoinapp.designUI.components.CapoCoinAuthenticationLayout
@@ -47,7 +47,7 @@ class MainActivity : ComponentActivity() {
 
     private val userViewModel: UserViewModel by viewModels {
         val db = AppDatabase.getDatabase(applicationContext)
-        ViewModelFactory(db.userDao())
+        UserViewModel.ViewModelFactory(db.userDao())
     }
     private val categoryViewModel: CategoryViewModel by viewModels {
         val db = AppDatabase.getDatabase(applicationContext)
@@ -161,6 +161,7 @@ class MainActivity : ComponentActivity() {
                             }
                             Login(
                                 modifier = Modifier.padding(padding),
+                                message = userViewModel.message,
                                 onLoginClick = { email, password ->
                                     userViewModel.loginUser(email, password)
                                 },
