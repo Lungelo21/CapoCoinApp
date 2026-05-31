@@ -14,6 +14,7 @@ import com.example.capocoinapp.Services.CategoryService
 import com.example.capocoinapp.Supabase.SupabaseClient
 import com.example.capocoinapp.Utils.isInternetAvailable
 import com.example.capocoinapp.data.entities.Category
+import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.postgrest
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -141,19 +142,36 @@ class CategoryViewModel(
             }
 
             try {
-                val supabaseCategories = SupabaseClient.client.postgrest["categories"].select()
-                    .decodeList<Category>()
+                if(application.isInternetAvailable()) {
+                    val currentUserID = SupabaseClient.client.auth.currentUserOrNull()?.id
 
-                if (supabaseCategories.isNotEmpty())
-                {
-                    Log.d("ViewModelCheck", "Found ${supabaseCategories.size} categories. Syncing Room to Supabase")
+                    if(currentUserID != null){
 
-                    // Updates existing records and inserts new ones seamlessly
-                    supabaseCategories.forEach {
-                        service.createCategory(it)
+                        val supabaseCategories = SupabaseClient.client.postgrest["categories"]
+                            .select{
+                                filter{
+                                    eq("userID", currentUserID)
+                            }
+                        }.decodeList<Category>()
+
+                        if (supabaseCategories.isNotEmpty()) {
+                            Log.d(
+                                "ViewModelCheck",
+                                "Found ${supabaseCategories.size} categories. Syncing Room to Supabase"
+                            )
+
+                            // Updates existing records and inserts new ones seamlessly
+                            supabaseCategories.forEach {
+                                service.createCategory(it)
+                            }
+
+                            Log.d("ViewModelCheck", "Successfully synced from remote to local!")
+                        }
                     }
-
-                    Log.d("ViewModelCheck", "Successfully synced from remote to local!")
+                    else
+                    {
+                        Log.w("ViewModelCheck", "No current users found.")
+                    }
                 }
             }
             catch (e: Exception)
@@ -165,7 +183,7 @@ class CategoryViewModel(
     }
 
     // Function to add a new category (e.g., "Salary" or "Groceries")
-    fun addCategory(type: String, categoryTitle: String, categoryColour: String, categoryIcon: String, minBudget: Double, maxBudget: Double) {
+    fun addCategory(type: String, categoryTitle: String, categoryColour: String, categoryIcon: String, minBudget: Double, maxBudget: Double, userID: String) {
             viewModelScope.launch {
                 message = when {
                     type.isBlank() -> "Please select a transaction type for category"
@@ -182,7 +200,9 @@ class CategoryViewModel(
 
                                 // Added to change in More User Budget
                                 minBudget = minBudget,
-                                maxBudget = maxBudget
+                                maxBudget = maxBudget,
+
+                                userID = userID
                             )
                             //Log service calling dao method
                             android.util.Log.d(

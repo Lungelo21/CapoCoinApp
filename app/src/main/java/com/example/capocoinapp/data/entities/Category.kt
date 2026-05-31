@@ -26,6 +26,9 @@ data class Category(
     val minBudget: Double,
 
     //Store the maximum budget for the Category
-    val maxBudget: Double
+    val maxBudget: Double,
+
+    //Store the UserID for personalised Categories
+    val userID: String
 
 )

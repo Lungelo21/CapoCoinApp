@@ -15,7 +15,8 @@ data class TransactionsDTO(
     val transactionTime: String,
     val dateLogged: String,
     val timeLogged: String,
-    val uploadedPhotoPath: String?
+    val uploadedPhotoPath: String?,
+    val userID: String
 )
 // maps the entities from the TransactionsDTO to the Transactions
 fun TransactionsDTO.toEntity(): Transactions {
@@ -29,6 +30,7 @@ fun TransactionsDTO.toEntity(): Transactions {
         transactionTime = transactionTime,
         dateLogged = dateLogged,
         timeLogged = timeLogged,
-        uploadedPhotoPath = uploadedPhotoPath
+        uploadedPhotoPath = uploadedPhotoPath,
+        userID = userID
     )
 }
