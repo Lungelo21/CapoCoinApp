@@ -16,6 +16,7 @@ import com.example.capocoinapp.data.dto.TransactionsDTO
 import com.example.capocoinapp.data.dto.toEntity
 import com.example.capocoinapp.data.entities.Transactions
 import com.example.capocoinapp.data.entities.toDTO
+import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.postgrest
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -93,17 +94,31 @@ class TransactionViewModel(
             // Pulls any supabase records to roomdb
             try {
                 if (application.isInternetAvailable()) {
-                    val supabaseTransactionsDTOs = SupabaseClient.client.postgrest["transactions"].select()
-                        .decodeList<TransactionsDTO>()
 
-                    if (supabaseTransactionsDTOs.isNotEmpty()) {
-                        Log.d("TransactionVMCheck", "Found ${supabaseTransactionsDTOs.size} transactions on remote. Syncing to Room...")
+                    val currentUserID = SupabaseClient.client.auth.currentUserOrNull()?.id
 
-                        supabaseTransactionsDTOs.forEach { dto ->
-                            dao.insertTransactions(dto.toEntity())
+                    if(currentUserID != null){
+                        val supabaseTransactionsDTOs = SupabaseClient.client.postgrest["transactions"].select{
+                            filter {
+                                eq("userID", currentUserID)
+                            }
                         }
-                        Log.d("TransactionVMCheck", "Successfully pulled remote transaction records!")
+                            .decodeList<TransactionsDTO>()
+
+                        if (supabaseTransactionsDTOs.isNotEmpty()) {
+                            Log.d("TransactionVMCheck", "Found ${supabaseTransactionsDTOs.size} transactions on remote for user $currentUserID. Syncing to Room...")
+
+                            supabaseTransactionsDTOs.forEach { dto ->
+                                dao.insertTransactions(dto.toEntity())
+                            }
+                            Log.d("TransactionVMCheck", "Successfully pulled remote transaction records!")
+                        }
+                        else
+                        {
+                            Log.w("TransactionVMCheck", "No active user session has been found. Skipping remote pull.")
+                        }
                     }
+
                 }
             } catch (e: Exception) {
                 // Fails silently if device is offline on first remote pull
@@ -121,7 +136,8 @@ class TransactionViewModel(
         categoryID: Int,
         date: String,
         time: String,
-        photoPath: String?
+        photoPath: String?,
+        userID: String
     ) {
         viewModelScope.launch {
             val amountDouble = amount.toDoubleOrNull()
@@ -175,7 +191,8 @@ class TransactionViewModel(
                 transactionTime = time,
                 dateLogged = dateLogged,
                 timeLogged = timeLogged,
-                uploadedPhotoPath = photoPath
+                uploadedPhotoPath = photoPath,
+                userID = userID
             )
 
             dao.insertTransactions(transaction)
