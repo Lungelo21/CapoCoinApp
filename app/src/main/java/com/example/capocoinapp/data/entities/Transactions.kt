@@ -36,7 +36,10 @@ data class Transactions(
     val dateLogged: String, //Should be set to current date
     val timeLogged: String, //Should be set to current time
 
-    val uploadedPhotoPath: String?
+    val uploadedPhotoPath: String?,
+
+    //Store the UserID for personalised Transactions
+    val userID: String
 )
 
 // maps the entities from Transactions to the TransactionsDTO
@@ -51,6 +54,7 @@ fun Transactions.toDTO(): TransactionsDTO {
         transactionTime = transactionTime,
         dateLogged = dateLogged,
         timeLogged = timeLogged,
-        uploadedPhotoPath = uploadedPhotoPath
+        uploadedPhotoPath = uploadedPhotoPath,
+        userID = userID
     )
 }
