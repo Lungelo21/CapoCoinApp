@@ -197,6 +197,10 @@ class TransactionViewModel(
 
             dao.insertTransactions(transaction)
 
+            //Check for Achievement 1: Breaking the Ice
+
+            //Check for Achievement 2: Night
+
             viewModelScope.launch {
 
                 var uploaded = false // set upload to false
