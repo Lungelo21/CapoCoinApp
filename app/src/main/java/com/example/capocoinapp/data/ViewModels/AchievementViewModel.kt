@@ -44,7 +44,7 @@ class AchievementViewModel(
         Pair("Baby Steps", "Create your first 5 categories"),
         Pair("Night Shift", "Log a transaction between 10PM and 4AM"),
         Pair("Saver's Streak", "Log 10 individual income Transactions"),
-        Pair("The Century Club", "Log 100 total transactions in your ledger"),
+        Pair("The Century Club", "Log 100 total transactions"),
         Pair("Big Spender", "Log a single transaction worth over R500")
 
     )

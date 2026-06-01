@@ -11,10 +11,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class AchievementService(
-    private val achievementsDAO: AchievementsDAO,
-    private val transactionsDAO: TransactionsDAO,
-    private val categoryDAO: CategoryDAO,
-    private val application: Application
+    private val achievementsDAO: AchievementsDAO
 )
 {
     // function to get all achievements from the DAO for a specific user
