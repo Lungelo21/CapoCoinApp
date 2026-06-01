@@ -89,6 +89,8 @@ fun AddTransaction(navController: NavController, categoryViewModel: CategoryView
 
     var showCalculator by remember { mutableStateOf(true) }
 
+    var userID by remember{ mutableStateOf("")}
+
     CapoCoinAppTheme {
 
         AppScaffold(

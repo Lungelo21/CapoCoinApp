@@ -7,7 +7,7 @@ data class AchievementsDTO(
     val achievementID: Int = 0,
     val achievementTitle: String,
     val description: String,
-    val isUnlocked: Boolean = false,
+    val isUnlocked: Int = 0,
     val dateUnlocked: String?,
     val userID: String
 )

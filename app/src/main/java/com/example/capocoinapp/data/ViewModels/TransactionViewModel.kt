@@ -136,10 +136,17 @@ class TransactionViewModel(
         categoryID: Int,
         date: String,
         time: String,
-        photoPath: String?,
-        userID: String
+        photoPath: String?
     ) {
         viewModelScope.launch {
+
+            val currentUserID = SupabaseClient.client.auth.currentUserOrNull()?.id
+
+            if(currentUserID == null){
+                message = "Session expired. Please log in again, to add transaction"
+                return@launch
+            }
+
             val amountDouble = amount.toDoubleOrNull()
 
             // list of error messages
@@ -192,10 +199,14 @@ class TransactionViewModel(
                 dateLogged = dateLogged,
                 timeLogged = timeLogged,
                 uploadedPhotoPath = photoPath,
-                userID = userID
+                userID = currentUserID
             )
 
             dao.insertTransactions(transaction)
+
+            //Check for Achievement 1: Breaking the Ice
+
+            //Check for Achievement 2: Night
 
             viewModelScope.launch {
 
