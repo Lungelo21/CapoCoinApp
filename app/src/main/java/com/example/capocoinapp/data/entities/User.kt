@@ -3,6 +3,7 @@ package com.example.capocoinapp.data.entities
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.example.capocoinapp.data.dto.UserDTO
 
 @Entity(
     tableName = "users",
@@ -16,3 +17,13 @@ data class User(
     val email : String,
 
 )
+
+// maps the entities from User to the UserDTO
+fun User.toDTO(): UserDTO {
+    return UserDTO(
+        id = id,
+        name = name,
+        username = username,
+        email = email
+    )
+}
