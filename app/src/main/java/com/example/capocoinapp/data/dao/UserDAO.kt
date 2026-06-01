@@ -20,6 +20,9 @@ interface UserDAO {
     @Update
     suspend fun updateUser(user: User)
 
+    @Query("SELECT * FROM users WHERE id = :userId")
+    fun getUser(userId: String): Flow<User?>
+
     @Query("SELECT * FROM users ORDER BY id DESC")
     fun getAllUsers(): Flow<List<User>>
 
