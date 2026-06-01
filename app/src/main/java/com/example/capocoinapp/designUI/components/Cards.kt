@@ -1122,8 +1122,8 @@ fun LogTransactionButton(
 
 @Composable
 fun UserProfileCard(
-    firstName: String,
-    lastName: String,
+    name: String,
+    username: String,
     level: Int,
     profileTitle: String,
     currentXP: Int,
@@ -1178,7 +1178,13 @@ fun UserProfileCard(
 
                     // Text with users first and last name
                     Text(
-                        text = "$firstName $lastName",
+                        text = "$name",
+                        style = CapoType.cardTitle
+                    )
+
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Text(
+                        text = "$username",
                         style = CapoType.cardTitle
                     )
 
