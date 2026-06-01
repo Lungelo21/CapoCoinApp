@@ -23,7 +23,8 @@ import kotlinx.coroutines.launch
 
 class CategoryViewModel(
     private val service: CategoryService,
-    private val application: Application
+    private val application: Application,
+    private val achievementViewModel: AchievementViewModel
 ) : ViewModel() {
 
     // UI Feedback message
@@ -215,6 +216,16 @@ class CategoryViewModel(
 
                             //Check for Achievement 3: Baby Steps
 
+                            //Sourcing all categories
+                            val allCategories = service.getAllCategories().first()
+
+                            //Checking if the number of categories is 5
+                            if (allCategories.size == 5)
+                            {
+                                //Calling the method through the AchievementViewModel with the parsed Achievement title
+                                achievementViewModel.unlockAchievement("Baby Steps")
+                            }
+
                             viewModelScope.launch {
 
                                 var uploaded = false
@@ -353,7 +364,7 @@ class CategoryViewModel(
 
 
 // Factory to inject the CategoryDAO
-class CategoryViewModelFactory(private val service: CategoryService) : ViewModelProvider.Factory {
+class CategoryViewModelFactory(private val service: CategoryService, private val achievementViewModel: AchievementViewModel) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
         if (modelClass.isAssignableFrom(CategoryViewModel::class.java)) {
 
@@ -361,7 +372,7 @@ class CategoryViewModelFactory(private val service: CategoryService) : ViewModel
             val application = checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY])
 
             @Suppress("UNCHECKED_CAST")
-            return CategoryViewModel(service, application) as T
+            return CategoryViewModel(service, application, achievementViewModel) as T
         }
         throw IllegalArgumentException("Error Occurred")
     }

@@ -29,7 +29,8 @@ import java.util.Locale
 
 class TransactionViewModel(
     private val dao: TransactionsDAO,
-    private val application: Application // Injected via factory extras bundle cleanly
+    private val application: Application, // Injected via factory extras bundle cleanly
+    private val achievementViewModel: AchievementViewModel
 ) : ViewModel() {
 
     //Validation
@@ -136,17 +137,10 @@ class TransactionViewModel(
         categoryID: Int,
         date: String,
         time: String,
-        photoPath: String?
+        photoPath: String?,
+        userID: String
     ) {
         viewModelScope.launch {
-
-            val currentUserID = SupabaseClient.client.auth.currentUserOrNull()?.id
-
-            if(currentUserID == null){
-                message = "Session expired. Please log in again, to add transaction"
-                return@launch
-            }
-
             val amountDouble = amount.toDoubleOrNull()
 
             // list of error messages
@@ -199,14 +193,64 @@ class TransactionViewModel(
                 dateLogged = dateLogged,
                 timeLogged = timeLogged,
                 uploadedPhotoPath = photoPath,
-                userID = currentUserID
+                userID = userID
             )
 
             dao.insertTransactions(transaction)
 
             //Check for Achievement 1: Breaking the Ice
+            val allTransactions = dao.getAllTransactions().first()
 
-            //Check for Achievement 2: Night
+            //Checking if the size of Transactions is 1 so that the first achievement can be earned
+            if(allTransactions.size == 1)
+            {
+                //Calling the method through the AchievementViewModel with the parsed Achievement title
+                achievementViewModel.unlockAchievement("Breaking the Ice")
+            }
+
+            //Check for Achievement 3: Night Shift
+            val hour = time.substringBefore(":").toIntOrNull()
+
+            //Checking if the hour is NOT NULL AND between 10PM or 4AM
+            if(hour != null && (hour >= 22 || hour < 4))
+            {
+                //Calling the method through the AchievementViewModel with the parsed Achievement title
+                achievementViewModel.unlockAchievement("Night Shift")
+            }
+
+            //Check for Achievement 4: Saver's Streak
+
+            //Checking if the transaction type is income
+            if(type.lowercase() == "income")
+            {
+                //Sourcing the number of all income transactions
+                val incomeTransactions = allTransactions.count { it.transactionType.lowercase() == "income"}
+
+                //Checking if the number of income transactions is 10
+                if(incomeTransactions == 10)
+                {
+                    //Calling the method through the AchievementViewModel with the parsed Achievement title
+                    achievementViewModel.unlockAchievement("Saver's Streak")
+                }
+            }
+
+            //Check for Achievement 5: Big Spender
+
+            //Checking if the amount is greater than 500
+            if(amountDouble > 500)
+            {
+                //Calling the method through the AchievementViewModel with the parsed Achievement title
+                achievementViewModel.unlockAchievement("Big Spender")
+            }
+
+            //Check for Achievement 6: The Century Club
+
+            //Checking if the number of transaction is 100
+            if(allTransactions.size == 100)
+            {
+                //Calling the method through the AchievementViewModel with the parsed Achievement title
+                achievementViewModel.unlockAchievement("The Century Club")
+            }
 
             viewModelScope.launch {
 
@@ -255,14 +299,14 @@ class TransactionViewModel(
 }
 
 // Factory to inject the DAO
-class TransactionViewModelFactory(private val dao: TransactionsDAO) : ViewModelProvider.Factory {
+class TransactionViewModelFactory(private val dao: TransactionsDAO, private val achievementViewModel: AchievementViewModel) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
         if (modelClass.isAssignableFrom(TransactionViewModel::class.java)) {
 
             val application = checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY])
 
             @Suppress("UNCHECKED_CAST")
-            return TransactionViewModel(dao, application) as T
+            return TransactionViewModel(dao, application, achievementViewModel) as T
         }
         throw IllegalArgumentException("Error Occurred")
     }
