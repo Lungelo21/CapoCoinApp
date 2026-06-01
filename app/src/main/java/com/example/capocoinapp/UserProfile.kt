@@ -19,31 +19,34 @@ import com.example.capocoinapp.designUI.components.PageSubTitleText
 import com.example.capocoinapp.designUI.components.TopNavBar
 import com.example.capocoinapp.designUI.components.UserProfileCard
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
-
+import kotlin.collections.emptyList
 @Composable
 fun UserProfileScreen(
     navController: NavController,
     userViewModel: UserViewModel) {
 
-    val users by userViewModel
+    val users: List<User> by userViewModel
         .getAllUsers()
         .collectAsState(initial = emptyList())
+
+    val currentUser:User? = users.firstOrNull()
 
     CapoCoinAppTheme {
         AppScaffold(
             topBar = { TopNavBar(navController) },
             bottomBar = { BottomNavBar(navController,4) },
-            pageTitle = "Home"
+            pageTitle = "Profile"
         ) { _ ->
 
-            //ToDo: add remaining values for user levels
-            users.forEach { user ->
+            if (currentUser != null) {
+
                 CardBox(
                     cards = listOf(
+
                         {
                             UserProfileCard(
-                                user.name,
-                                "Davis",
+                                name = currentUser.name,
+                                username=currentUser.username,
                                 4,
                                 "Penny Pincher",
                                 100,
@@ -64,7 +67,21 @@ fun UserProfileScreen(
                         }
                     )
                 )
+
+            } else {
+
+                CardBox(
+                    cards = listOf(
+                        {
+                            PageSubTitleText(
+                                "No user profile found. Please login first."
+                            )
+                        }
+                    )
+                )
+
             }
+
         }
     }
 }
