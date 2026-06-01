@@ -1249,7 +1249,7 @@ fun UserProfileCard(
 }
 @Composable
 fun PhotoSection(
-    name: String?,
+    name: String,
     username: String?
 ){
     Column(
