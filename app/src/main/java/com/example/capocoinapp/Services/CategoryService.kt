@@ -154,7 +154,8 @@ public class CategoryService(private val categoryDao: CategoryDAO) {
                 categoryIcon = "Salary",
                 categoryColour = "Dark Navy",
                 minBudget = 0.0,
-                maxBudget = 0.0
+                maxBudget = 0.0,
+                userID = "1"
             ),
             Category(
                 transactionType = "Expense",
@@ -162,7 +163,8 @@ public class CategoryService(private val categoryDao: CategoryDAO) {
                 categoryIcon = "Food",
                 categoryColour = "Grey",
                 minBudget = 0.0,
-                maxBudget = 0.0
+                maxBudget = 0.0,
+                userID = "1"
             ),
             Category(
                 transactionType = "Expense",
@@ -170,7 +172,8 @@ public class CategoryService(private val categoryDao: CategoryDAO) {
                 categoryIcon = "Groceries",
                 categoryColour = "Vibrant Green",
                 minBudget = 0.0,
-                maxBudget = 0.0
+                maxBudget = 0.0,
+                userID = "1"
             ),
             Category(
                 transactionType = "Expense",
@@ -178,7 +181,8 @@ public class CategoryService(private val categoryDao: CategoryDAO) {
                 categoryIcon = "Transport",
                 categoryColour = "Slate",
                 minBudget = 0.0,
-                maxBudget = 0.0
+                maxBudget = 0.0,
+                userID = "1"
             )
         )
 
