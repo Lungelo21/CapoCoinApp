@@ -213,6 +213,8 @@ class CategoryViewModel(
                             //service calling createCategory method from dao
                             service.createCategory(newCategory)
 
+                            //Check for Achievement 3: Baby Steps
+
                             viewModelScope.launch {
 
                                 var uploaded = false
