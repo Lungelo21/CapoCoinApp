@@ -26,7 +26,8 @@ class UserDetailsViewModel(
     private val application: Application
 ) : ViewModel() {
     private val _userDetails = MutableStateFlow<User?>(null)
-    
+    val userDetails: StateFlow<User?> = _userDetails
+
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error
 
