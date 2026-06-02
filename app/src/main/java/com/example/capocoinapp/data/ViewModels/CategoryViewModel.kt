@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
 class CategoryViewModel(
     private val service: CategoryService,
     private val application: Application,
-    private val achievementViewModel: AchievementViewModel
+    val achievementViewModel: AchievementViewModel
 ) : ViewModel() {
 
     // UI Feedback message

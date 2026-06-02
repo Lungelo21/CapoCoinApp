@@ -2,7 +2,9 @@ package com.example.capocoinapp.data.dto
 
 import com.example.capocoinapp.data.entities.Achievements
 import com.example.capocoinapp.data.entities.Transactions
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class AchievementsDTO(
     val achievementID: Int = 0,
     val achievementTitle: String,
