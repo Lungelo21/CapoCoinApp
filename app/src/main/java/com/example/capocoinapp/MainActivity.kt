@@ -262,25 +262,14 @@ class MainActivity : ComponentActivity() {
 
                     composable("Achievements")
                     {
-                        AppScaffold(
-                            topBar = { TopNavBar(navController) },
-                            bottomBar = { BottomNavBar(navController, 4) },
-                            pageTitle = "Achievements"
-                        ) { padding ->
-                            Box(modifier = Modifier.padding(padding))
-                            {
-                                AchievementsScreen(
-                                    navController = navController,
-                                    achievementViewModel = achievementViewModel
-                                )
-                            }
-                        }
+                        AchievementsScreen(
+                            navController = navController,
+                            achievementViewModel = achievementViewModel
+                        )
+
                     }
-
                 }
-
             }
-
         }
     }
 }
