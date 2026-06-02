@@ -1,9 +1,14 @@
 package com.example.capocoinapp
 
+import android.R
 import android.R.attr.data
+import android.R.attr.end
 import android.app.DatePickerDialog
 import android.icu.util.Calendar
+import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -16,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -41,13 +47,20 @@ import com.example.capocoinapp.designUI.components.CategoryAnalyticsCard
 import com.example.capocoinapp.designUI.components.CategoryPieChart
 import com.example.capocoinapp.designUI.components.ChartCard
 import com.example.capocoinapp.designUI.components.ComposeBarChart
+import com.example.capocoinapp.designUI.components.ComposeLineGraph
 import com.example.capocoinapp.designUI.components.TransactionTypeToggle
 import com.example.capocoinapp.designUI.components.TopNavBar
 import com.example.capocoinapp.designUI.components.TransactionTypeToggle
 import com.example.capocoinapp.designUI.components.rememberCategoryUI
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
+import com.example.capocoinapp.ui.theme.CapoType
 import com.example.capocoinapp.ui.theme.TextWhite
+import java.time.LocalDate
+import java.time.MonthDay
+import java.time.YearMonth
+import java.time.temporal.ChronoUnit
 import kotlin.math.roundToInt
+import kotlin.toString
 
 @Composable
 fun AnalyticsScreen(
@@ -67,9 +80,14 @@ fun AnalyticsScreen(
             //Instantiating a variable to hold the users current
             val context = LocalContext.current
 
-            //Instantiating variables for the user selected start and end dates for filtering
-            var startDate by rememberSaveable { mutableStateOf("") }
-            var endDate by rememberSaveable { mutableStateOf("") }
+            // Instantiating variables for the user selected start and end dates for filtering
+            // (defaults to the current month)
+            var startDate by rememberSaveable {
+                mutableStateOf(
+                    YearMonth.now().atDay(1).toString()
+                )
+            }
+            var endDate by rememberSaveable { mutableStateOf(LocalDate.now().toString()) }
 
             //Instantiating a variable to hold the user's current scroll state
             val scrollState = androidx.compose.foundation.rememberScrollState()
@@ -174,6 +192,32 @@ fun AnalyticsScreen(
                 )
             }
 
+            // Calculate total budget amounts
+            val totalMaxBudget = categories.sumOf { it.maxBudget }
+            val totalMinBudget = categories.sumOf { it.minBudget }
+
+            // Get total amount spent each day
+            val dailyTotalsMap = filteredTransactions
+                .filter { it.transactionType.equals("Expense", ignoreCase = true) }
+                .groupBy { it.transactionDate }
+                .mapValues { (_, list) ->
+                    list.sumOf { it.transactionAmount }
+                }
+
+            // Build full date range
+            val start = LocalDate.parse(startDate)
+            val end = LocalDate.parse(endDate)
+
+            // Generate map of totals for line graph
+            var runningTotal = 0.0
+
+            val runningTotalMap = (0..ChronoUnit.DAYS.between(start, end).toInt())
+                .associate { offset ->
+                    val date = start.plusDays(offset.toLong()).toString()
+                    val dailyTotal = dailyTotalsMap[date] ?: 0.0
+                    runningTotal += dailyTotal
+                    date to runningTotal
+                }
 
             CardBox(
                 cards = listOf() {
@@ -186,13 +230,12 @@ fun AnalyticsScreen(
 
                     if (selectedChart == "Transactions") {
 
-//                        // Render bar graph
-//                        if (data.isNotEmpty()) {
-//                            ChartCard({ ComposeBarChart(data, minBudget, maxBudget, labels) })
-//                            selectedType = "Expense"
-//                        } else {
-//                            Text("No data available")
-//                        }
+                        // Render line graph
+                        if (runningTotalMap.isNotEmpty()) {
+                            ComposeLineGraph(runningTotalMap, totalMinBudget, totalMaxBudget)
+                        } else {
+                            Text("No data available")
+                        }
 
                         // Toggle for switching between expenses or income on pie chart
                         TransactionTypeToggle(

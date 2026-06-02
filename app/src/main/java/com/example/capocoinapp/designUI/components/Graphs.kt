@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -60,19 +61,30 @@ import kotlin.collections.mapIndexed
 import co.yml.charts.common.model.Point
 import com.example.capocoinapp.ui.theme.Accent
 import com.example.capocoinapp.ui.theme.CapoType.cardSubTitle
+import com.example.capocoinapp.ui.theme.TextGreen
+import com.example.capocoinapp.ui.theme.TextRed
 import com.example.capocoinapp.ui.theme.TextWhite
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
+import com.patrykandpatrick.vico.compose.cartesian.Scroll
+import com.patrykandpatrick.vico.compose.cartesian.Zoom
 import com.patrykandpatrick.vico.compose.cartesian.axis.HorizontalAxis
 import com.patrykandpatrick.vico.compose.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.compose.cartesian.data.columnSeries
 import com.patrykandpatrick.vico.compose.cartesian.data.lineSeries
+import com.patrykandpatrick.vico.compose.cartesian.decoration.Decoration
+import com.patrykandpatrick.vico.compose.cartesian.decoration.HorizontalLine
 import com.patrykandpatrick.vico.compose.cartesian.layer.ColumnCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.layer.LineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberColumnCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
+import com.patrykandpatrick.vico.compose.cartesian.rememberVicoScrollState
+import com.patrykandpatrick.vico.compose.cartesian.rememberVicoZoomState
 import com.patrykandpatrick.vico.compose.common.Fill
+import com.patrykandpatrick.vico.compose.common.Position
+import com.patrykandpatrick.vico.compose.common.component.LineComponent
+import com.patrykandpatrick.vico.compose.common.component.TextComponent
 import com.patrykandpatrick.vico.compose.common.component.rememberLineComponent
 import com.patrykandpatrick.vico.core.chart.column.ColumnChart
 import kotlinx.coroutines.runBlocking
@@ -212,6 +224,110 @@ fun ComposeBarChart(
 }
 
 @Composable
+fun ComposeLineGraph(
+    totalsMap: Map<String, Double>,
+    minBudget: Double,
+    maxBudget: Double
+) {
+    // Instantiate modelProducer
+    val modelProducer = remember { CartesianChartModelProducer() }
+
+    // Extract x and y values for chart
+    val chartValues = totalsMap.toSortedMap().values.toList()
+    val chartDates = totalsMap.toSortedMap().keys.toList()
+
+    // Markers for min and max budget
+    val minLine = HorizontalLine(
+        y = { minBudget },
+        line = LineComponent(
+            fill = Fill(TextGreen),
+            thickness = 1.dp
+        ),
+        labelComponent = TextComponent(
+            textStyle = CapoType.labelGreen
+        ),
+        label = { "Minimum" },
+        horizontalLabelPosition = Position.Horizontal.Start,
+        verticalLabelPosition = Position.Vertical.Top
+    )
+
+    val maxLine = HorizontalLine(
+        y = { maxBudget },
+        line = LineComponent(
+            fill = Fill(TextRed),
+            thickness = 1.dp
+        ),
+        labelComponent = TextComponent(
+            textStyle = CapoType.labelRed
+        ),
+        label = { "Maximum" },
+        horizontalLabelPosition = Position.Horizontal.Start,
+        verticalLabelPosition = Position.Vertical.Bottom
+    )
+
+    // Create a new series so that the max budget is always visible
+    val maxBudgetPadding = List(chartValues.size) { maxBudget }
+
+    val maxPaddingComponent = LineCartesianLayer.Line(
+        fill = LineCartesianLayer.LineFill.single(
+            fill = Fill.Transparent
+        )
+    )
+
+    // Line styling
+    val valueComponent = LineCartesianLayer.Line(
+        fill = LineCartesianLayer.LineFill.single(
+            fill = Fill(Accent)
+        )
+    )
+
+    val lineLayer = rememberLineCartesianLayer(
+        lineProvider = LineCartesianLayer.LineProvider.series(
+            valueComponent,
+            maxPaddingComponent
+        )
+    )
+
+    val horizontalLines = listOf(minLine, maxLine)
+
+    // Render Line
+    LaunchedEffect(chartValues, maxBudgetPadding) {
+        modelProducer.runTransaction {
+            lineSeries {
+                series(chartValues)
+                series(maxBudgetPadding)
+            }
+        }
+    }
+
+    CartesianChartHost(
+        chart = rememberCartesianChart(
+            lineLayer,
+            decorations = horizontalLines,
+            bottomAxis = HorizontalAxis.rememberBottom(
+                valueFormatter = { _, value, _ ->
+                    chartDates.getOrNull(value.toInt()) ?: ""
+                }
+            ),
+            startAxis = VerticalAxis.rememberStart()
+        ),
+
+        scrollState = rememberVicoScrollState(
+            initialScroll = Scroll.Absolute.Start
+        ),
+        zoomState = rememberVicoZoomState(
+            initialZoom = Zoom.Content
+        ),
+
+
+        modelProducer = modelProducer,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(300.dp)
+    )
+}
+
+@Composable
 fun TransactionTypeToggle(
     selectedType: String,
     onTypeSelected: (String) -> Unit
@@ -261,6 +377,8 @@ fun TransactionTypeToggle(
         }
     }
 }
+
+
 
 @Composable
 fun AnalyticsChartToggle(
@@ -390,14 +508,14 @@ fun BudgetAnalyticsCard(
                     if (cardMin != null) {
                         Text(
                             text = "Min: $minString",
-                            style = CapoType.cardSubTitle
+                            style = cardSubTitle
                         )
                     }
 
                     if (cardMax != null) {
                         Text(
                             text = "Max: $maxString",
-                            style = CapoType.cardSubTitle
+                            style = cardSubTitle
                         )
                     }
                 }
