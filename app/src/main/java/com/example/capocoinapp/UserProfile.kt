@@ -11,6 +11,8 @@ import com.example.capocoinapp.data.entities.Category
 import com.example.capocoinapp.data.entities.User
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import com.example.capocoinapp.data.ViewModels.AchievementViewModel
+import com.example.capocoinapp.data.entities.Achievements
 import com.example.capocoinapp.designUI.components.AppScaffold
 import com.example.capocoinapp.designUI.components.BottomNavBar
 import com.example.capocoinapp.designUI.components.CardBox
@@ -23,13 +25,18 @@ import kotlin.collections.emptyList
 @Composable
 fun UserProfileScreen(
     navController: NavController,
-    userViewModel: UserViewModel) {
+    userViewModel: UserViewModel,
+    achievementsViewModel: AchievementViewModel) {
 
     val users: List<User> by userViewModel
         .getAllUsers()
         .collectAsState(initial = emptyList())
 
     val currentUser:User? = users.firstOrNull()
+
+    val achievements: List<Achievements> by achievementsViewModel
+        .getAllAchievements(currentUser?.id ?: "")
+        .collectAsState(initial = emptyList())
 
     CapoCoinAppTheme {
         AppScaffold(
@@ -59,7 +66,7 @@ fun UserProfileScreen(
                         },
 
                         {
-                            PageSubTitleText("Recent Milestones")
+                            PageSubTitleText("Recent Achievements")
                         },
 
                         {
