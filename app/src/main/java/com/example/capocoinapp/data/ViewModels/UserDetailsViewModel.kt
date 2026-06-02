@@ -14,7 +14,9 @@ import com.example.capocoinapp.Supabase.SupabaseClient
 import com.example.capocoinapp.Utils.isInternetAvailable
 import com.example.capocoinapp.data.dto.UserDTO
 import com.example.capocoinapp.data.dto.toEntity
+import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.postgrest
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
@@ -31,19 +33,59 @@ class UserDetailsViewModel(
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error
 
+    var currentUserID: String = ""
+        private set
+
     init {
         viewModelScope.launch {
 
-            // gets current user logged in
-            val localUser = dao.getUser(userID).first()
+            var fetchedUserID = false
+            while(!fetchedUserID){
+                val sessionEmail = SupabaseClient.client.auth.currentUserOrNull()?.email
 
-            // checks to see if its false
+                if(sessionEmail != null){
+
+                    try {
+
+                        if (application.isInternetAvailable()) {
+
+                            val foundUserDTO = SupabaseClient.client.postgrest["users"]
+                                .select {
+                                    filter {
+                                        eq("email", sessionEmail)
+                                    }
+                                }
+                                .decodeSingle<UserDTO>()
+
+                            currentUserID = foundUserDTO.toEntity().id
+                            fetchedUserID = true
+                            Log.d("UserDetailsVM", "Successfully fetched current user ID: $currentUserID")
+
+                        } else {
+                            Log.w("UserDetailsVM", "Currently Offline - Retrying again in 5 seconds")
+                            delay(5000)
+                        }
+                        
+                    } catch (e: Exception) {
+                        Log.e("UserDetailsVM", "Failed to fetch user ID. Retrying again in 5 seconds${e.message}")
+                        delay(5000)
+                    }
+                }
+                else{
+                    Log.w("UserDetailsVM", "No authenticated user found. Retrying in 5 seconds.")
+                    delay(5000)
+                }
+            }
+
+            // Loads user details from RoomDB first
+            val localUser = dao.getUser(userID).first()
             if (localUser != null) {
                 _userDetails.value = localUser
-                Log.d("UserDetailsVM", "Loaded user from roomdb")
+                Log.d("UserDetailsVM", "Loaded user from RoomDB")
             }
-            if (application.isInternetAvailable()) {
 
+            // Sync from Supabase if online
+            if (application.isInternetAvailable()) {
                 try {
                     val onlineUser = SupabaseClient.client.postgrest
                         .from("users")
@@ -51,19 +93,21 @@ class UserDetailsViewModel(
                             filter { eq("id", userID) }
                         }
                         .decodeSingle<UserDTO>()
-                    // Updates Room with latest from Supabase
-                    dao.insertUser(onlineUser.toEntity())
 
-                    // updates the UI with the latest user information
+                    dao.insertUser(onlineUser.toEntity())
                     _userDetails.value = onlineUser.toEntity()
-                    Log.d("UserDetailsVM", "Synced user Supabase to Room")
+
+                    Log.d("UserDetailsVM", "Synced user from Supabase to Room")
+
                 } catch (e: Exception) {
-                    Log.e("UserDetailsVM", "Remote user fetch was unsuccessful ${e.message}")
+
+                    Log.e("UserDetailsVM", "Remote user fetch was unsuccessful: ${e.message}")
                     _error.value = e.message
                 }
             } else {
-                Log.d("UserDetailsVM", "Currently Offline - showing only the roomdb information")
+                Log.d("UserDetailsVM", "Currently offline - showing only RoomDB information")
             }
+
         }
     }
 
