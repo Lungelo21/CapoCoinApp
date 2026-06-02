@@ -1471,6 +1471,72 @@ fun MilestoneAchievementCard(
     }
 }
 
+@Composable
+fun AchievementCard(
+    title: String,
+    description: String,
+    dateUnlocked: String?
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = CardBG
+        ),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+                .wrapContentHeight()
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                Text(
+                    text = title,
+                    style = CapoType.cardTitle,
+                    color = TextWhite
+                )
+
+                Text(
+                    text = "Date Achieved",
+                    style = CapoType.cardSubTitle
+                )
+            }
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                Text(
+                    text = description,
+                    style = CapoType.cardSubTitle,
+                    color = TextWhite.copy(alpha = 0.7f),
+                    modifier = Modifier.weight(1f)
+                )
+
+                Text(
+                    text = if (dateUnlocked.isNullOrEmpty())
+                        "Not Achieved yet"
+                    else
+                        dateUnlocked,
+                    style = CapoType.cardSubTitle
+                )
+            }
+        }
+    }
+}
+
 
 @Composable
 fun BudgetCard(

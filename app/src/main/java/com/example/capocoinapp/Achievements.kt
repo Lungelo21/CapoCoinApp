@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.capocoinapp.data.ViewModels.AchievementViewModel
 import com.example.capocoinapp.data.entities.Achievements
+import com.example.capocoinapp.designUI.components.AchievementCard
 import com.example.capocoinapp.designUI.components.AppScaffold
 import com.example.capocoinapp.designUI.components.BottomNavBar
 import com.example.capocoinapp.designUI.components.CardBox
@@ -48,80 +49,88 @@ import com.example.capocoinapp.ui.theme.TextWhite
         ) { _ ->
             CardBox(
                 cards = achievements.map { achievement ->
-                    { AchievementCard(achievement = achievement) }
+                    {
+                        //AchievementCard(achievement = achievement)
+
+                        AchievementCard(
+                            title = achievement.achievementTitle,
+                            description = achievement.description,
+                            dateUnlocked = achievement.dateUnlocked
+                        )
+                    }
                 }
             )
         }
     }
 }
 
-@Composable
-fun AchievementCard(achievement: Achievements)
-{
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight(),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = CardBG
-        ),
-        elevation = CardDefaults.cardElevation(4.dp)
-    ) {
-    Column(
-        modifier = Modifier
-            .padding(16.dp)
-            .wrapContentHeight()
-    ) {
-        Row(modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically)
-        {
-            //Displaying the achievement title
-            Text(
-                text = achievement.achievementTitle,
-                style = CapoType.cardTitle,
-                color = TextWhite
-            )
-
-            //Displaying the Date Achieved text
-            Text(
-                text = "Date Achieved",
-                style = CapoType.cardSubTitle
-            )
-        }
-
-        //Spacer to space out the card
-        Spacer(modifier = Modifier.height(4.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            //Displaying the Description
-            Text(
-                text = achievement.description,
-                style = CapoType.cardSubTitle,
-                color = TextWhite.copy(alpha = 0.7f),
-                modifier = Modifier.weight(1f)
-            )
-
-            //Checks if achievement has been unlocked by checking date variable
-            if(achievement.dateUnlocked.isNullOrEmpty()) {
-                Text(
-                    text = "Not Achieved yet",
-                    style = CapoType.cardSubTitle
-                )
-            }
-            else
-            {
-                Text(
-                    text = achievement.dateUnlocked,
-                    style = CapoType.cardSubTitle
-                )
-            }
-        }
-    }
-}
-}
+//@Composable
+//fun AchievementCard(achievement: Achievements)
+//{
+//    Card(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .wrapContentHeight(),
+//        shape = RoundedCornerShape(16.dp),
+//        colors = CardDefaults.cardColors(
+//            containerColor = CardBG
+//        ),
+//        elevation = CardDefaults.cardElevation(4.dp)
+//    ) {
+//    Column(
+//        modifier = Modifier
+//            .padding(16.dp)
+//            .wrapContentHeight()
+//    ) {
+//        Row(modifier = Modifier.fillMaxWidth(),
+//            horizontalArrangement = Arrangement.SpaceBetween,
+//            verticalAlignment = Alignment.CenterVertically)
+//        {
+//            //Displaying the achievement title
+//            Text(
+//                text = achievement.achievementTitle,
+//                style = CapoType.cardTitle,
+//                color = TextWhite
+//            )
+//
+//            //Displaying the Date Achieved text
+//            Text(
+//                text = "Date Achieved",
+//                style = CapoType.cardSubTitle
+//            )
+//        }
+//
+//        //Spacer to space out the card
+//        Spacer(modifier = Modifier.height(4.dp))
+//
+//        Row(
+//            modifier = Modifier.fillMaxWidth(),
+//            horizontalArrangement = Arrangement.SpaceBetween,
+//            verticalAlignment = Alignment.CenterVertically
+//        ) {
+//            //Displaying the Description
+//            Text(
+//                text = achievement.description,
+//                style = CapoType.cardSubTitle,
+//                color = TextWhite.copy(alpha = 0.7f),
+//                modifier = Modifier.weight(1f)
+//            )
+//
+//            //Checks if achievement has been unlocked by checking date variable
+//            if(achievement.dateUnlocked.isNullOrEmpty()) {
+//                Text(
+//                    text = "Not Achieved yet",
+//                    style = CapoType.cardSubTitle
+//                )
+//            }
+//            else
+//            {
+//                Text(
+//                    text = achievement.dateUnlocked,
+//                    style = CapoType.cardSubTitle
+//                )
+//            }
+//        }
+//    }
+//}
+//}
