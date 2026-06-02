@@ -1129,16 +1129,16 @@ fun LogTransactionButton(
 fun UserProfileCard(
     name: String,
     username: String,
-    level: Int,
-    profileTitle: String,
-    currentXP: Int,
-    nextLevelXP: Int,
+    //level: Int,
+    //profileTitle: String,
+    //currentXP: Int,
+    //nextLevelXP: Int,
     onClick: () -> Unit = {}
 ) {
     // variables to capture xpRemaining, progress bar total and progress bar percent
-    val xpRemaining = nextLevelXP - currentXP
-    val progressFloat = currentXP.toFloat() / nextLevelXP.toFloat()
-    val progressPercent = (progressFloat * 100).toInt()
+    //val xpRemaining = nextLevelXP - currentXP
+    //val progressFloat = currentXP.toFloat() / nextLevelXP.toFloat()
+    //val progressPercent = (progressFloat * 100).toInt()
 
     // Card for UserProfile Card
     Card(
@@ -1152,100 +1152,79 @@ fun UserProfileCard(
         ),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
-        //Defining the top of the card
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Primary)
-        ) {
-
-            // Row for the Icon, Users full name, level number and profile title
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                // profile icon
-
-                Icon(
-                    imageVector = Icons.Default.AccountCircle,
-                    contentDescription = "User Profile",
-                    modifier = Modifier.size(56.dp),
-                    tint = TextWhite
-                )
-
-                // Spacer between Icon and Details
-                Spacer(modifier = Modifier.width(12.dp))
-
-                // Column for User Details
-                Column {
-
-                    // Text with users first and last name
-                    Text(
-                        text = "$name",
-                        style = CapoType.cardTitle
-                    )
-
-                    Spacer(modifier = Modifier.width(16.dp))
-                    Text(
-                        text = "$username",
-                        style = CapoType.cardTitle
-                    )
-
-                    Spacer(modifier = Modifier.width(16.dp))
-
-                    // Text with the users level and profile title
-                    Text(
-                        text = "Level $level: $profileTitle",
-                        style = CapoType.cardTitle,
-                    )
-                }
-            }
-        }
-        // Column for the xp needed to reach the next level
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Text which shows the amount of xp users needs to lvl up
-            Text(
-                text = "$xpRemaining more xp to Level ${level + 1}",
-                style = CapoType.cardTitle,
-                modifier = Modifier.padding(bottom = 16.dp)
+            // profile icon
+
+            Icon(
+                imageVector = Icons.Default.AccountCircle,
+                contentDescription = "User Profile",
+                modifier = Modifier.size(72.dp),
+                tint = TextWhite
             )
 
-            // Progress bar
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(20.dp)
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(BackgroundColor),
-                contentAlignment = Alignment.Center
-            ) {
-                // Fills the progress bar from left to right
-                Box(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .fillMaxWidth(progressFloat)
-                        .align(Alignment.CenterStart)
-                        .background(ProgressBarBlue)
-                )
+            // Spacer between Icon and Details
+            Spacer(modifier = Modifier.width(12.dp))
 
-                // Percentage of xp to next level
-                Text(
-                    text = "$progressPercent%",
-                    modifier = Modifier.fillMaxWidth(),
-                    style = CapoType.cardTitle,
-                    textAlign = TextAlign.Center
-                )
-            }
+            // Text with users first and last name
+            Text(
+                text = "$name",
+                style = CapoType.cardTitle
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = "$username",
+                style = CapoType.cardTitle
+            )
         }
     }
-
 }
+        // Column for the xp needed to reach the next level
+//        Column(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(16.dp)
+//        ) {
+//            // Text which shows the amount of xp users needs to lvl up
+//            Text(
+//                text = "$xpRemaining more xp to Level ${level + 1}",
+//                style = CapoType.cardTitle,
+//                modifier = Modifier.padding(bottom = 16.dp)
+//            )
+//
+//            // Progress bar
+//            Box(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .height(20.dp)
+//                    .clip(RoundedCornerShape(16.dp))
+//                    .background(BackgroundColor),
+//                contentAlignment = Alignment.Center
+//            ) {
+//                // Fills the progress bar from left to right
+//                Box(
+//                    modifier = Modifier
+//                        .fillMaxHeight()
+//                        .fillMaxWidth(progressFloat)
+//                        .align(Alignment.CenterStart)
+//                        .background(ProgressBarBlue)
+//                )
+//
+//                // Percentage of xp to next level
+//                Text(
+//                    text = "$progressPercent%",
+//                    modifier = Modifier.fillMaxWidth(),
+//                    style = CapoType.cardTitle,
+//                    textAlign = TextAlign.Center
+//                )
+//            }
+//        }
+
 @Composable
 fun PhotoSection(
     name: String?,

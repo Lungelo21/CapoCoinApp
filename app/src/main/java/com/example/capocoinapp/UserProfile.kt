@@ -55,10 +55,10 @@ fun UserProfileScreen(
                         UserProfileCard(
                             name = currentUser.name,
                             username=currentUser.username,
-                            4,
-                            "Penny Pincher",
-                            100,
-                            1100,
+                            //4,
+                            //"Penny Pincher",
+                            //100,
+                            //1100,
                             onClick = {
                                 // Navigates to UserDetails after onClick
                                 navController.navigate("UserDetails")
