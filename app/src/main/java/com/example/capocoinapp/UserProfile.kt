@@ -13,6 +13,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import com.example.capocoinapp.data.ViewModels.AchievementViewModel
 import com.example.capocoinapp.data.entities.Achievements
+import com.example.capocoinapp.designUI.components.AchievementCard
 import com.example.capocoinapp.designUI.components.AppScaffold
 import com.example.capocoinapp.designUI.components.BottomNavBar
 import com.example.capocoinapp.designUI.components.CardBox
@@ -34,8 +35,9 @@ fun UserProfileScreen(
 
     val currentUser:User? = users.firstOrNull()
 
-    val achievements: List<Achievements> by achievementsViewModel
-        .getAllAchievements(currentUser?.id ?: "")
+
+    val achievements by achievementsViewModel
+        .getAllAchievements(achievementsViewModel.currentUserID)
         .collectAsState(initial = emptyList())
 
     CapoCoinAppTheme {
@@ -47,37 +49,38 @@ fun UserProfileScreen(
 
             if (currentUser != null) {
 
-                CardBox(
-                    cards = listOf(
-
-                        {
-                            UserProfileCard(
-                                name = currentUser.name,
-                                username=currentUser.username,
-                                4,
-                                "Penny Pincher",
-                                100,
-                                1100,
-                                onClick = {
-                                    // Navigates to UserDetails after onClick
-                                    navController.navigate("UserDetails")
+                val cards = buildList<@Composable () -> Unit>
+                {
+                    add{
+                        UserProfileCard(
+                            name = currentUser.name,
+                            username=currentUser.username,
+                            //4,
+                            //"Penny Pincher",
+                            //100,
+                            //1100,
+                            onClick = {
+                                // Navigates to UserDetails after onClick
+                                navController.navigate("UserDetails")
                                 }
                             )
-                        },
-
-                        {
-                            PageSubTitleText("Recent Achievements")
-                        },
-
-                        {
-                            MilestoneAchievementCard(
-                                "Weekly Logger",
-                                "Log Expenses everyday for a week",
-                                "5"
-                            )
                         }
-                    )
-                )
+
+                    add{
+                        PageSubTitleText("Recent Achievements")
+                    }
+
+                    achievements.take(3).forEach { recentAchievements ->
+                        add{
+                            AchievementCard(
+                                title = recentAchievements.achievementTitle,
+                                description = recentAchievements.description,
+                                dateUnlocked =  recentAchievements.dateUnlocked
+                                )
+                            }
+                        }
+                    }
+                CardBox(cards = cards)
 
             } else {
 

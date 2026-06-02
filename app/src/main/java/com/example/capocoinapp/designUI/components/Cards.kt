@@ -1129,16 +1129,16 @@ fun LogTransactionButton(
 fun UserProfileCard(
     name: String,
     username: String,
-    level: Int,
-    profileTitle: String,
-    currentXP: Int,
-    nextLevelXP: Int,
+    //level: Int,
+    //profileTitle: String,
+    //currentXP: Int,
+    //nextLevelXP: Int,
     onClick: () -> Unit = {}
 ) {
     // variables to capture xpRemaining, progress bar total and progress bar percent
-    val xpRemaining = nextLevelXP - currentXP
-    val progressFloat = currentXP.toFloat() / nextLevelXP.toFloat()
-    val progressPercent = (progressFloat * 100).toInt()
+    //val xpRemaining = nextLevelXP - currentXP
+    //val progressFloat = currentXP.toFloat() / nextLevelXP.toFloat()
+    //val progressPercent = (progressFloat * 100).toInt()
 
     // Card for UserProfile Card
     Card(
@@ -1152,100 +1152,79 @@ fun UserProfileCard(
         ),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
-        //Defining the top of the card
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Primary)
-        ) {
-
-            // Row for the Icon, Users full name, level number and profile title
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                // profile icon
-
-                Icon(
-                    imageVector = Icons.Default.AccountCircle,
-                    contentDescription = "User Profile",
-                    modifier = Modifier.size(56.dp),
-                    tint = TextWhite
-                )
-
-                // Spacer between Icon and Details
-                Spacer(modifier = Modifier.width(12.dp))
-
-                // Column for User Details
-                Column {
-
-                    // Text with users first and last name
-                    Text(
-                        text = "$name",
-                        style = CapoType.cardTitle
-                    )
-
-                    Spacer(modifier = Modifier.width(16.dp))
-                    Text(
-                        text = "$username",
-                        style = CapoType.cardTitle
-                    )
-
-                    Spacer(modifier = Modifier.width(16.dp))
-
-                    // Text with the users level and profile title
-                    Text(
-                        text = "Level $level: $profileTitle",
-                        style = CapoType.cardTitle,
-                    )
-                }
-            }
-        }
-        // Column for the xp needed to reach the next level
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Text which shows the amount of xp users needs to lvl up
-            Text(
-                text = "$xpRemaining more xp to Level ${level + 1}",
-                style = CapoType.cardTitle,
-                modifier = Modifier.padding(bottom = 16.dp)
+            // profile icon
+
+            Icon(
+                imageVector = Icons.Default.AccountCircle,
+                contentDescription = "User Profile",
+                modifier = Modifier.size(72.dp),
+                tint = TextWhite
             )
 
-            // Progress bar
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(20.dp)
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(BackgroundColor),
-                contentAlignment = Alignment.Center
-            ) {
-                // Fills the progress bar from left to right
-                Box(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .fillMaxWidth(progressFloat)
-                        .align(Alignment.CenterStart)
-                        .background(ProgressBarBlue)
-                )
+            // Spacer between Icon and Details
+            Spacer(modifier = Modifier.width(12.dp))
 
-                // Percentage of xp to next level
-                Text(
-                    text = "$progressPercent%",
-                    modifier = Modifier.fillMaxWidth(),
-                    style = CapoType.cardTitle,
-                    textAlign = TextAlign.Center
-                )
-            }
+            // Text with users first and last name
+            Text(
+                text = "$name",
+                style = CapoType.cardTitle
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = "$username",
+                style = CapoType.cardTitle
+            )
         }
     }
-
 }
+        // Column for the xp needed to reach the next level
+//        Column(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(16.dp)
+//        ) {
+//            // Text which shows the amount of xp users needs to lvl up
+//            Text(
+//                text = "$xpRemaining more xp to Level ${level + 1}",
+//                style = CapoType.cardTitle,
+//                modifier = Modifier.padding(bottom = 16.dp)
+//            )
+//
+//            // Progress bar
+//            Box(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .height(20.dp)
+//                    .clip(RoundedCornerShape(16.dp))
+//                    .background(BackgroundColor),
+//                contentAlignment = Alignment.Center
+//            ) {
+//                // Fills the progress bar from left to right
+//                Box(
+//                    modifier = Modifier
+//                        .fillMaxHeight()
+//                        .fillMaxWidth(progressFloat)
+//                        .align(Alignment.CenterStart)
+//                        .background(ProgressBarBlue)
+//                )
+//
+//                // Percentage of xp to next level
+//                Text(
+//                    text = "$progressPercent%",
+//                    modifier = Modifier.fillMaxWidth(),
+//                    style = CapoType.cardTitle,
+//                    textAlign = TextAlign.Center
+//                )
+//            }
+//        }
+
 @Composable
 fun PhotoSection(
     name: String?,
@@ -1262,27 +1241,28 @@ fun PhotoSection(
             modifier = Modifier
                 .size(84.dp)
                 .clip(CircleShape),
-            color = MaterialTheme.colorScheme.primaryContainer
+            color = CardBG
         ) {
             Box(contentAlignment = Alignment.Center) {
                 Icon(
                     imageVector = Icons.Outlined.Person,
                     contentDescription = null,
                     modifier = Modifier.size(40.dp),
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer
+                    tint = TextWhite
                 )
             }
         }
 
         Text(
             text = "@$name",
-            style = MaterialTheme.typography.headlineSmall
+            style = CapoType.cardTitle,
+            color = TextWhite
         )
 
         Text(
             text = "@$username",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            style = CapoType.cardSubTitle,
+            color = TextWhite.copy(alpha = 0.7f)
         )
     }
 
@@ -1297,9 +1277,9 @@ fun InfoCard(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
+            containerColor = CardBG
         ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 14.dp, vertical = 12.dp),
@@ -1308,7 +1288,7 @@ fun InfoCard(
         ) {
             Surface(
                 shape = RoundedCornerShape(8.dp),
-                color = MaterialTheme.colorScheme.secondaryContainer,
+                color = CardBG.copy(alpha = 0.3f),
                 modifier = Modifier.size(36.dp)
             ) {
                 Box(contentAlignment = Alignment.Center) {
@@ -1316,7 +1296,7 @@ fun InfoCard(
                         imageVector = icon,
                         contentDescription = null,
                         modifier = Modifier.size(18.dp),
-                        tint = MaterialTheme.colorScheme.onSecondaryContainer
+                        tint = TextWhite
                     )
                 }
             }
@@ -1324,13 +1304,13 @@ fun InfoCard(
             Column {
                 Text(
                     text = label,
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    style = CapoType.cardSubTitle,
+                    color = TextWhite.copy(alpha = 0.7f)
                 )
                 Text(
                     text = value,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurface
+                    style = CapoType.cardTitle,
+                    color = TextWhite
                 )
             }
         }
