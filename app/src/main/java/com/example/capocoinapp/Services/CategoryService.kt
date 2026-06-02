@@ -144,7 +144,7 @@ public class CategoryService(private val categoryDao: CategoryDAO) {
     }
 
     //Having a method used to populate the base icons that will be seen by all users upon entry to the app
-    suspend fun populateDefaultCategories() {
+    suspend fun populateDefaultCategories(currentUserID: String) {
 
         //Saving the four base categories
         val defaultCategories = listOf(
@@ -155,7 +155,7 @@ public class CategoryService(private val categoryDao: CategoryDAO) {
                 categoryColour = "Dark Navy",
                 minBudget = 0.0,
                 maxBudget = 0.0,
-                userID = "1"
+                userID = currentUserID
             ),
             Category(
                 transactionType = "Expense",
@@ -164,7 +164,7 @@ public class CategoryService(private val categoryDao: CategoryDAO) {
                 categoryColour = "Grey",
                 minBudget = 0.0,
                 maxBudget = 0.0,
-                userID = "1"
+                userID = currentUserID
             ),
             Category(
                 transactionType = "Expense",
@@ -173,7 +173,7 @@ public class CategoryService(private val categoryDao: CategoryDAO) {
                 categoryColour = "Vibrant Green",
                 minBudget = 0.0,
                 maxBudget = 0.0,
-                userID = "1"
+                userID = currentUserID
             ),
             Category(
                 transactionType = "Expense",
@@ -182,7 +182,7 @@ public class CategoryService(private val categoryDao: CategoryDAO) {
                 categoryColour = "Slate",
                 minBudget = 0.0,
                 maxBudget = 0.0,
-                userID = "1"
+                userID = currentUserID
             )
         )
 
