@@ -101,6 +101,20 @@ class MainActivity : ComponentActivity() {
                             navController
                         )
                     }
+
+                    composable("UserSpendingReport") {
+                        UserSpendingReportScreen(
+                            TransactionService
+                                (
+                                AppDatabase.getDatabase
+                                    (applicationContext).transactionDao()
+                            ), CategoryService(
+                                AppDatabase.getDatabase
+                                    (applicationContext).categoryDao()
+                            ), categoryViewModel,
+                            navController
+                        )
+                    }
                     composable("More") {
                         MoreScreen(navController)
                     }

@@ -46,7 +46,7 @@ import com.example.capocoinapp.ui.theme.TextWhite
 import kotlin.math.roundToInt
 
 @Composable
-fun AnalyticsScreen(
+fun UserSpendingReportScreen(
     service: TransactionService,
     categoryService: CategoryService,
     categoryViewModel: CategoryViewModel,
@@ -55,8 +55,8 @@ fun AnalyticsScreen(
     CapoCoinAppTheme {
         AppScaffold(
             topBar = { TopNavBar(navController) },
-            bottomBar = { BottomNavBar(navController, 3) },
-            pageTitle = "Analytics"
+            bottomBar = { BottomNavBar(navController, 4) },
+            pageTitle = "User Spending Report"
         ) { _ ->
 
             //Instantiating a variable to hold the users current
@@ -114,9 +114,6 @@ fun AnalyticsScreen(
             // Toggle state for transaction type
             var selectedType by rememberSaveable { mutableStateOf("Expense") }
 
-            // Toggle state for chart type
-            var selectedChart by rememberSaveable { mutableStateOf("Totals") }
-
             // Filter totals based on selected category type
             val filteredTotals = totals.filter { total ->
 
@@ -125,33 +122,6 @@ fun AnalyticsScreen(
                 }
 
                 matchingCategory?.transactionType.equals(selectedType, ignoreCase = true)
-            }
-
-            // Total amount among filtered categories for calculating percentage
-            val grandTotal = filteredTotals.sumOf { it.totalAmount }
-
-            // Map entries to pie chart data set
-            val slices = filteredTotals.map { t ->
-
-                val percentage = if (grandTotal == 0.0) {
-                    0f
-                } else {
-                    ((t.totalAmount / grandTotal) * 100).toFloat()
-                }
-
-                val category = categories.find {
-                    it.categoryTitle == t.categoryTitle
-                }
-
-                // Get category colour value from category service
-                val categoryColourHex =
-                    categoryService.getColour(category?.categoryColour ?: "Grey")
-
-                PieChartData.Slice(
-                    label = t.categoryTitle,
-                    value = percentage,
-                    color = Color(categoryColourHex.toColorInt())
-                )
             }
 
             // Instantiate data set to use with bar graph
@@ -191,35 +161,12 @@ fun AnalyticsScreen(
             CardBox(
                 cards = listOf() {
 
-                    // Toggle for selecting between pie chart and bar graph
-                    AnalyticsChartToggle(
-                        selectedChart = selectedChart,
-                        onChartSelected = { selectedChart = it }
-                    )
-
-                    if (selectedChart == "Totals") {
-
-                        // Render pie chart
-                        if (slices.isNotEmpty()) {
-                            ChartCard({ CategoryPieChart(slices) })
-                        } else {
-                            Text("No data available")
-                        }
-
-                        // Toggle for switching between expenses or income on pie chart
-                        PieChartTypeToggle(
-                            selectedType = selectedType,
-                            onTypeSelected = { selectedType = it })
-
-                    } else if (selectedChart == "Budget") {
-
-                        // Render bar graph
-                        if (data.isNotEmpty()) {
-                            ChartCard({ ComposeBarChart(data, minBudget, maxBudget, labels) })
-                            selectedType = "Expense"
-                        } else {
-                            Text("No data available")
-                        }
+                    // Render bar graph
+                    if (data.isNotEmpty()) {
+                        ChartCard({ ComposeBarChart(data, minBudget, maxBudget, labels) })
+                        selectedType = "Expense"
+                    } else {
+                        Text("No data available")
                     }
 
                     //Row for Date Selection
@@ -301,70 +248,32 @@ fun AnalyticsScreen(
                         }
                     }
 
-                    // Render cards
-                    if (selectedChart == "Totals") {
+                    // Render bar graph data
+                    if (data.isNotEmpty()) {
+                        // Category cards
+                        filteredTotals.forEach { total ->
 
-                        // Render pie chart data
-                        if (slices.isNotEmpty()) {
-                            // Category cards
-                            filteredTotals.forEach { total ->
-
-                                // Instantiating variable to get category colour and icon
-                                val category = categories.find {
-                                    it.categoryTitle == total.categoryTitle
-                                }
-
-                                // Convert amount to percentage
-                                val percentString = if (grandTotal == 0.0) {
-                                    0
-                                } else {
-                                    (((total.totalAmount
-                                        ?: 0.0) / grandTotal) * 100).roundToInt()
-                                }
-                                CategoryAnalyticsCard(
-                                    total.categoryTitle,
-                                    total.totalAmount,
-                                    percentString,
-                                    categoryService.getColour(
-                                        category?.categoryColour ?: "Grey"
-                                    ),
-                                    category?.categoryIcon ?: "Salary",
-                                    onClick = {}
-                                )
+                            // Instantiating variable to get category colour and icon
+                            val category = categories.find {
+                                it.categoryTitle == total.categoryTitle
                             }
-                        } else {
-                            Text("No data available")
+
+                            val (CategoryColor, CategoryIcon) =
+                                rememberCategoryUI(category?.categoryID ?: 0, categoryViewModel)
+
+                            // Render cards
+                            BudgetAnalyticsCard(
+                                cardTitle = total.categoryTitle,
+                                cardMin = category?.minBudget,
+                                cardAmount = total.totalAmount,
+                                cardMax = category?.maxBudget,
+                                categoryColor = CategoryColor,
+                                categoryIcon = CategoryIcon,
+                            )
                         }
-
-                    } else if (selectedChart == "Budget") {
-
-                        // Render bar graph data
-                        if (data.isNotEmpty()) {
-                            // Category cards
-                            filteredTotals.forEach { total ->
-
-                                // Instantiating variable to get category colour and icon
-                                val category = categories.find {
-                                    it.categoryTitle == total.categoryTitle
-                                }
-
-                                val (CategoryColor, CategoryIcon) =
-                                    rememberCategoryUI(category?.categoryID ?: 0, categoryViewModel)
-
-                                // Render cards
-                                BudgetAnalyticsCard(
-                                    cardTitle = total.categoryTitle,
-                                    cardMin = category?.minBudget,
-                                    cardAmount = total.totalAmount,
-                                    cardMax = category?.maxBudget,
-                                    categoryColor = CategoryColor,
-                                    categoryIcon = CategoryIcon,
-                                )
-                            }
-                            selectedType = "Expense"
-                        } else {
-                            Text("No data available")
-                        }
+                        selectedType = "Expense"
+                    } else {
+                        Text("No data available")
                     }
                 }
             )
@@ -374,7 +283,7 @@ fun AnalyticsScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun AnalyticsPreview() {
+fun UserSpendingReportPreview() {
     CapoCoinAppTheme {
     }
 }

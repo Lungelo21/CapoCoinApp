@@ -1,6 +1,7 @@
 package com.example.capocoinapp
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.ContentPaste
 import androidx.compose.material.icons.filled.FileDownload
@@ -43,6 +44,13 @@ fun MoreScreen(navController: NavController) {
                             "View budgets for each category",
                             Icons.Default.ContentPaste,
                             { navController.navigate("UserBudget") })
+                    },
+                    {
+                        MoreCard(
+                            "User Spending Report",
+                            "View a graph showing amount spent and budget in each category",
+                            Icons.Default.BarChart,
+                            { navController.navigate("UserSpendingReport") })
                     },
                     {
                         MoreCard(
