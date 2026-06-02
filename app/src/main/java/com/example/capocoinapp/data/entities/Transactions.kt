@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.example.capocoinapp.data.dto.TransactionsDTO
 
 @Entity(
     tableName = "transactions",
@@ -35,5 +36,25 @@ data class Transactions(
     val dateLogged: String, //Should be set to current date
     val timeLogged: String, //Should be set to current time
 
-    val uploadedPhotoPath: String?
+    val uploadedPhotoPath: String?,
+
+    //Store the UserID for personalised Transactions
+    val userID: String
 )
+
+// maps the entities from Transactions to the TransactionsDTO
+fun Transactions.toDTO(): TransactionsDTO {
+    return TransactionsDTO(
+        transactionID = transactionID,
+        transactionType = transactionType,
+        transactionName = transactionName,
+        transactionAmount = transactionAmount,
+        categoryID = categoryID,
+        transactionDate = transactionDate,
+        transactionTime = transactionTime,
+        dateLogged = dateLogged,
+        timeLogged = timeLogged,
+        uploadedPhotoPath = uploadedPhotoPath,
+        userID = userID
+    )
+}

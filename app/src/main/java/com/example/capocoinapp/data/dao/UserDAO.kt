@@ -20,12 +20,15 @@ interface UserDAO {
     @Update
     suspend fun updateUser(user: User)
 
+    @Query("SELECT * FROM users WHERE id = :userId")
+    fun getUser(userId: String): Flow<User?>
+
     @Query("SELECT * FROM users ORDER BY id DESC")
     fun getAllUsers(): Flow<List<User>>
 
     @Query("SELECT * FROM users WHERE username = :usernameInput LIMIT 1")
     suspend fun getUserByUsername(usernameInput: String): User?
 
-    @Query("SELECT * FROM users WHERE email = :emailInput AND password = :passwordInput LIMIT 1")
-    suspend fun loginUser(emailInput: String, passwordInput: String): User?
+    @Query("SELECT * FROM users WHERE email = :emailInput LIMIT 1")
+    suspend fun getUserByEmail(emailInput: String): User?
 }

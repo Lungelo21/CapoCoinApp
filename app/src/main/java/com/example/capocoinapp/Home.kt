@@ -3,6 +3,7 @@ package com.example.capocoinapp
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -25,7 +26,10 @@ fun HomeScreen(
     transactionViewModel: TransactionViewModel
 ) {
 
-    val transactions by transactionViewModel.getAllTransactions().collectAsState(initial = emptyList())
+    val transactions by remember (transactionViewModel)
+    {
+        transactionViewModel.getAllTransactions()
+    }.collectAsState(initial = emptyList())
 
     CapoCoinAppTheme {
         AppScaffold(

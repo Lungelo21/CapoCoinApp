@@ -105,6 +105,8 @@ fun AddCategory(viewModel: CategoryViewModel, service: CategoryService, navContr
     val currentColourHex = service.selectableColours[iconColour] ?: "#000000"
     val currentIcon = service.getIcon(selectedIcon)
 
+    val userID = viewModel.achievementViewModel.currentUserID
+
     /*
     CapoCoinAppTheme{
         val navController = rememberNavController()
@@ -355,7 +357,8 @@ fun AddCategory(viewModel: CategoryViewModel, service: CategoryService, navContr
                         categoryColour = iconColour,
                         categoryIcon = selectedIcon,
                         minBudget = minBudget,
-                        maxBudget = maxBudget
+                        maxBudget = maxBudget,
+                        userID = userID
                     )
 
                     //Navigate to the Categories screen
