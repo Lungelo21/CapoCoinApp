@@ -18,6 +18,7 @@ import com.example.capocoinapp.data.entities.Transactions
 import com.example.capocoinapp.data.entities.toDTO
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.postgrest
+import io.github.jan.supabase.storage.storage
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -137,7 +138,7 @@ class TransactionViewModel(
         categoryID: Int,
         date: String,
         time: String,
-        photoPath: String?
+        photoBytes: ByteArray?
     ) {
         viewModelScope.launch {
 
@@ -186,6 +187,32 @@ class TransactionViewModel(
                 return@launch
             }
 
+            // stores the imagepath
+            var bucketImagePath: String? = null
+
+            //checking if a photo was uploaded
+            if (photoBytes != null) {
+                try {
+                    val fileName = "transactions/$currentUserID/${System.currentTimeMillis()}.jpg"
+
+                    // uploads image to bucket
+                    SupabaseClient.client.storage
+                        .from("transactionImage")
+                        .upload(fileName, photoBytes)
+
+                    // Get the public URL to store in DB
+                    bucketImagePath = SupabaseClient.client.storage
+                        .from("transactionImage")
+                        .publicUrl(fileName)
+
+                    Log.d("ImageUpload", "Image uploaded successfully: $bucketImagePath")
+
+                } catch (e: Exception) {
+                    Log.e("ImageUpload", "Image upload failed: ${e.message}")
+                    // bucketImagePath stays null — transaction still saves without image
+                }
+            }
+
             //Storing the current date and time
             val calendar = Calendar.getInstance()
 
@@ -201,7 +228,7 @@ class TransactionViewModel(
                 transactionTime = time,
                 dateLogged = dateLogged,
                 timeLogged = timeLogged,
-                uploadedPhotoPath = photoPath,
+                uploadedPhotoPath = bucketImagePath,
                 userID = currentUserID
             )
 
