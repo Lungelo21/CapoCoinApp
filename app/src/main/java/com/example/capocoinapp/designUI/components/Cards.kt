@@ -1241,27 +1241,28 @@ fun PhotoSection(
             modifier = Modifier
                 .size(84.dp)
                 .clip(CircleShape),
-            color = MaterialTheme.colorScheme.primaryContainer
+            color = CardBG
         ) {
             Box(contentAlignment = Alignment.Center) {
                 Icon(
                     imageVector = Icons.Outlined.Person,
                     contentDescription = null,
                     modifier = Modifier.size(40.dp),
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer
+                    tint = TextWhite
                 )
             }
         }
 
         Text(
             text = "@$name",
-            style = MaterialTheme.typography.headlineSmall
+            style = CapoType.cardTitle,
+            color = TextWhite
         )
 
         Text(
             text = "@$username",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            style = CapoType.cardSubTitle,
+            color = TextWhite.copy(alpha = 0.7f)
         )
     }
 
@@ -1276,9 +1277,9 @@ fun InfoCard(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
+            containerColor = CardBG
         ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 14.dp, vertical = 12.dp),
@@ -1287,7 +1288,7 @@ fun InfoCard(
         ) {
             Surface(
                 shape = RoundedCornerShape(8.dp),
-                color = MaterialTheme.colorScheme.secondaryContainer,
+                color = CardBG.copy(alpha = 0.3f),
                 modifier = Modifier.size(36.dp)
             ) {
                 Box(contentAlignment = Alignment.Center) {
@@ -1295,7 +1296,7 @@ fun InfoCard(
                         imageVector = icon,
                         contentDescription = null,
                         modifier = Modifier.size(18.dp),
-                        tint = MaterialTheme.colorScheme.onSecondaryContainer
+                        tint = TextWhite
                     )
                 }
             }
@@ -1303,13 +1304,13 @@ fun InfoCard(
             Column {
                 Text(
                     text = label,
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    style = CapoType.cardSubTitle,
+                    color = TextWhite.copy(alpha = 0.7f)
                 )
                 Text(
                     text = value,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurface
+                    style = CapoType.cardTitle,
+                    color = TextWhite
                 )
             }
         }
