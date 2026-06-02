@@ -89,6 +89,9 @@ fun AddTransaction(navController: NavController, categoryViewModel: CategoryView
 
     var showCalculator by remember { mutableStateOf(true) }
 
+    // Add context for reading the URI
+    val context = androidx.compose.ui.platform.LocalContext.current
+
     CapoCoinAppTheme {
 
         AppScaffold(
@@ -207,6 +210,21 @@ fun AddTransaction(navController: NavController, categoryViewModel: CategoryView
 
                             // when Log Transaction is clicked passes the values to be entered into Transactions table
                             onClick = {
+
+                                /*
+                                * Author: Peter F
+                                * Link: https://stackoverflow.com/questions/2436385/android-getting-from-a-uri-to-an-inputstream-to-a-byte-array
+                                * Specific Thread: https://stackoverflow.com/a/54240973
+                                * Date Accessed: 02/06/2026
+                                *
+                                * Use: Repurposed the use of the method made by Peter, to apply it to a variable.
+                                * */
+
+                                // Converts the uri to a Byte array before being passed to the viewmodel
+                                val photoBytes = selectedImageUri?.let { uri ->
+                                    context.contentResolver.openInputStream(uri)?.use { it.readBytes() }
+                                }
+
                                 // runs query to add the transaction
                                 transactionViewModel.addTransaction(
                                     type = chosenTransactionType,
@@ -215,7 +233,7 @@ fun AddTransaction(navController: NavController, categoryViewModel: CategoryView
                                     categoryID = selectedCategory?.categoryID ?: 0,
                                     date = selectedDate,
                                     time = selectedTime,
-                                    photoPath = selectedImageUri?.toString()
+                                    photoBytes = photoBytes
                                 )
 
                                 // Navigates to Transactions Page after onClick
