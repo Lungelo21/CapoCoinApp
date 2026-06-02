@@ -38,7 +38,7 @@ import com.example.capocoinapp.designUI.components.CategoryAnalyticsCard
 import com.example.capocoinapp.designUI.components.CategoryPieChart
 import com.example.capocoinapp.designUI.components.ChartCard
 import com.example.capocoinapp.designUI.components.ComposeBarChart
-import com.example.capocoinapp.designUI.components.PieChartTypeToggle
+import com.example.capocoinapp.designUI.components.TransactionTypeToggle
 import com.example.capocoinapp.designUI.components.TopNavBar
 import com.example.capocoinapp.designUI.components.rememberCategoryUI
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme

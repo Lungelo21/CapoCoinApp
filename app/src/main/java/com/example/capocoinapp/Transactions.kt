@@ -40,8 +40,6 @@ fun TransactionsScreen(
             pageTitle = "Transactions"
         ) { _ ->
 
-            //ToDo: add transactions filtering
-
             // Values used for selecting the date range
             var startDate by remember { mutableStateOf("") }
             var endDate by remember { mutableStateOf("") }
@@ -127,7 +125,7 @@ fun TransactionsScreen(
                                 t.transactionTime,
                                 categoryColor,
                                 CategoryIcon,
-                                "expense",
+                                t.transactionType,
                                 {
                                     navController.navigate(
                                         "TransactionDetails/${t.transactionID}"

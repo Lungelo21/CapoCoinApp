@@ -1,5 +1,6 @@
 package com.example.capocoinapp
 
+import android.R.attr.data
 import android.app.DatePickerDialog
 import android.icu.util.Calendar
 import androidx.compose.foundation.layout.Arrangement
@@ -29,17 +30,20 @@ import co.yml.charts.ui.piechart.models.PieChartData
 import com.example.capocoinapp.Services.CategoryService
 import com.example.capocoinapp.Services.TransactionService
 import com.example.capocoinapp.data.ViewModels.CategoryViewModel
+import com.example.capocoinapp.data.ViewModels.TransactionViewModel
 import com.example.capocoinapp.designUI.components.AnalyticsChartToggle
 import com.example.capocoinapp.designUI.components.AppScaffold
 import com.example.capocoinapp.designUI.components.BottomNavBar
 import com.example.capocoinapp.designUI.components.BudgetAnalyticsCard
 import com.example.capocoinapp.designUI.components.CardBox
+import com.example.capocoinapp.designUI.components.CardComponent
 import com.example.capocoinapp.designUI.components.CategoryAnalyticsCard
 import com.example.capocoinapp.designUI.components.CategoryPieChart
 import com.example.capocoinapp.designUI.components.ChartCard
 import com.example.capocoinapp.designUI.components.ComposeBarChart
-import com.example.capocoinapp.designUI.components.PieChartTypeToggle
+import com.example.capocoinapp.designUI.components.TransactionTypeToggle
 import com.example.capocoinapp.designUI.components.TopNavBar
+import com.example.capocoinapp.designUI.components.TransactionTypeToggle
 import com.example.capocoinapp.designUI.components.rememberCategoryUI
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 import com.example.capocoinapp.ui.theme.TextWhite
@@ -50,6 +54,7 @@ fun AnalyticsScreen(
     service: TransactionService,
     categoryService: CategoryService,
     categoryViewModel: CategoryViewModel,
+    transactionViewModel: TransactionViewModel,
     navController: NavHostController
 ) {
     CapoCoinAppTheme {
@@ -111,17 +116,32 @@ fun AnalyticsScreen(
                 .getAllCategories()
                 .collectAsState(initial = emptyList())
 
+            // Instantiating variable to hold transaction data
+            val transactions by transactionViewModel
+                .getFilterTransactions(startDate, endDate)
+                .collectAsState(initial = emptyList())
+
             // Toggle state for transaction type
             var selectedType by rememberSaveable { mutableStateOf("Expense") }
 
             // Toggle state for chart type
-            var selectedChart by rememberSaveable { mutableStateOf("Totals") }
+            var selectedChart by rememberSaveable { mutableStateOf("Transactions") }
 
             // Filter totals based on selected category type
             val filteredTotals = totals.filter { total ->
 
                 val matchingCategory = categories.find {
                     it.categoryTitle == total.categoryTitle
+                }
+
+                matchingCategory?.transactionType.equals(selectedType, ignoreCase = true)
+            }
+
+            // Filter transactions based on selected category type
+            val filteredTransactions = transactions.filter { transaction ->
+
+                val matchingCategory = categories.find {
+                    it.categoryID == transaction.categoryID
                 }
 
                 matchingCategory?.transactionType.equals(selectedType, ignoreCase = true)
@@ -154,39 +174,6 @@ fun AnalyticsScreen(
                 )
             }
 
-            // Instantiate data set to use with bar graph
-            data class BudgetChartItem(
-                val label: String,
-                val actual: Double,
-                val min: Double,
-                val max: Double
-            )
-
-            // Map entries to bar graph data set
-            val expenseChartData = totals.mapNotNull { total ->
-
-                val category = categories.find {
-                    it.categoryTitle == total.categoryTitle
-                } ?: return@mapNotNull null
-
-                val isExpense = category.transactionType
-                    .equals("Expense", ignoreCase = true)
-
-                if (!isExpense) return@mapNotNull null
-
-                BudgetChartItem(
-                    label = total.categoryTitle,
-                    actual = total.totalAmount,
-                    min = category.minBudget,
-                    max = category.maxBudget
-                )
-            }
-
-            // Extract lists from data set
-            val labels = expenseChartData.map { it.label }
-            val data = expenseChartData.map { it.actual }
-            val minBudget = expenseChartData.map { it.min }
-            val maxBudget = expenseChartData.map { it.max }
 
             CardBox(
                 cards = listOf() {
@@ -197,7 +184,22 @@ fun AnalyticsScreen(
                         onChartSelected = { selectedChart = it }
                     )
 
-                    if (selectedChart == "Totals") {
+                    if (selectedChart == "Transactions") {
+
+//                        // Render bar graph
+//                        if (data.isNotEmpty()) {
+//                            ChartCard({ ComposeBarChart(data, minBudget, maxBudget, labels) })
+//                            selectedType = "Expense"
+//                        } else {
+//                            Text("No data available")
+//                        }
+
+                        // Toggle for switching between expenses or income on pie chart
+                        TransactionTypeToggle(
+                            selectedType = selectedType,
+                            onTypeSelected = { selectedType = it })
+
+                    } else if (selectedChart == "Categories") {
 
                         // Render pie chart
                         if (slices.isNotEmpty()) {
@@ -207,19 +209,9 @@ fun AnalyticsScreen(
                         }
 
                         // Toggle for switching between expenses or income on pie chart
-                        PieChartTypeToggle(
+                        TransactionTypeToggle(
                             selectedType = selectedType,
                             onTypeSelected = { selectedType = it })
-
-                    } else if (selectedChart == "Budget") {
-
-                        // Render bar graph
-                        if (data.isNotEmpty()) {
-                            ChartCard({ ComposeBarChart(data, minBudget, maxBudget, labels) })
-                            selectedType = "Expense"
-                        } else {
-                            Text("No data available")
-                        }
                     }
 
                     //Row for Date Selection
@@ -302,7 +294,26 @@ fun AnalyticsScreen(
                     }
 
                     // Render cards
-                    if (selectedChart == "Totals") {
+                    if (selectedChart == "Transactions") {
+
+                        filteredTransactions.forEach { t ->
+                            val (categoryColor, CategoryIcon) = rememberCategoryUI(
+                                t.categoryID,
+                                categoryViewModel
+                            )
+                            CardComponent(
+                                t.transactionName,
+                                t.transactionDate,
+                                t.transactionAmount.toString(),
+                                t.transactionTime,
+                                categoryColor,
+                                CategoryIcon,
+                                t.transactionType,
+                                { navController.navigate("TransactionDetails/${t.transactionID}") }
+                            )
+                        }
+
+                    } else if (selectedChart == "Categories") {
 
                         // Render pie chart data
                         if (slices.isNotEmpty()) {
@@ -332,36 +343,6 @@ fun AnalyticsScreen(
                                     onClick = {}
                                 )
                             }
-                        } else {
-                            Text("No data available")
-                        }
-
-                    } else if (selectedChart == "Budget") {
-
-                        // Render bar graph data
-                        if (data.isNotEmpty()) {
-                            // Category cards
-                            filteredTotals.forEach { total ->
-
-                                // Instantiating variable to get category colour and icon
-                                val category = categories.find {
-                                    it.categoryTitle == total.categoryTitle
-                                }
-
-                                val (CategoryColor, CategoryIcon) =
-                                    rememberCategoryUI(category?.categoryID ?: 0, categoryViewModel)
-
-                                // Render cards
-                                BudgetAnalyticsCard(
-                                    cardTitle = total.categoryTitle,
-                                    cardMin = category?.minBudget,
-                                    cardAmount = total.totalAmount,
-                                    cardMax = category?.maxBudget,
-                                    categoryColor = CategoryColor,
-                                    categoryIcon = CategoryIcon,
-                                )
-                            }
-                            selectedType = "Expense"
                         } else {
                             Text("No data available")
                         }

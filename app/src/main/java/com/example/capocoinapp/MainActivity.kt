@@ -98,6 +98,7 @@ class MainActivity : ComponentActivity() {
                                 AppDatabase.getDatabase
                                     (applicationContext).categoryDao()
                             ), categoryViewModel,
+                            transactionViewModel,
                             navController
                         )
                     }

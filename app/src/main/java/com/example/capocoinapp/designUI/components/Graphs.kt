@@ -212,7 +212,7 @@ fun ComposeBarChart(
 }
 
 @Composable
-fun PieChartTypeToggle(
+fun TransactionTypeToggle(
     selectedType: String,
     onTypeSelected: (String) -> Unit
 ) {
@@ -275,17 +275,17 @@ fun AnalyticsChartToggle(
     ) {
 
         Button(
-            onClick = { onChartSelected("Totals") },
+            onClick = { onChartSelected("Transactions") },
             colors = ButtonDefaults.buttonColors(
                 containerColor =
-                    if (selectedChart == "Totals")
+                    if (selectedChart == "Transactions")
                         Primary
                     else
                         CardBG
             )
         ) {
             Text(
-                text = "Totals",
+                text = "Transactions",
                 style = CapoType.cardTitle
             )
         }
@@ -293,17 +293,17 @@ fun AnalyticsChartToggle(
         Spacer(modifier = Modifier.width(12.dp))
 
         Button(
-            onClick = { onChartSelected("Budget") },
+            onClick = { onChartSelected("Categories") },
             colors = ButtonDefaults.buttonColors(
                 containerColor =
-                    if (selectedChart == "Budget")
+                    if (selectedChart == "Categories")
                         Primary
                     else
                         CardBG
             )
         ) {
             Text(
-                text = "Budgets",
+                text = "Categories",
                 style = CapoType.cardTitle
             )
         }

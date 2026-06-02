@@ -54,7 +54,7 @@ fun HomeScreen(
                             t.transactionTime,
                             categoryColor,
                             CategoryIcon,
-                            "expense",
+                            t.transactionType,
                             {
                                 navController.navigate(
                                     "TransactionDetails/${t.transactionID}"
