@@ -76,7 +76,7 @@ fun UserDetails(
                         InfoCard(
                             icon = Icons.Outlined.AlternateEmail,
                             label = "Username",
-                            value = "@${userDetails!!.username}"
+                            value = userDetails!!.username
                         )
 
                         Spacer(modifier = Modifier.height(8.dp))
@@ -87,13 +87,13 @@ fun UserDetails(
                             value = userDetails!!.email
                         )
 
-                        Spacer(modifier = Modifier.height(8.dp))
+                        //Spacer(modifier = Modifier.height(8.dp))
 
-                        PasswordCard(
-                            icon = Icons.Outlined.Password,
-                            label = "Password",
-                            password = ""
-                        )
+//                        PasswordCard(
+//                            icon = Icons.Outlined.Password,
+//                            label = "Password",
+//                            password = ""
+//                        )
                 }
             }
         }

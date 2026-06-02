@@ -146,7 +146,7 @@ class MainActivity : ComponentActivity() {
                     }
 
                     composable("UserProfile") {
-                        UserProfileScreen(navController, userViewModel)
+                        UserProfileScreen(navController, userViewModel, achievementViewModel)
                     }
                     composable("Settings") {
                         SettingsScreen(navController)
