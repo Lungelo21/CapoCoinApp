@@ -2,6 +2,19 @@ package com.example.capocoinapp
 
 import android.R
 import android.R.attr.data
+import android.app.DatePickerDialog
+import android.icu.util.Calendar
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -9,9 +22,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.core.graphics.toColorInt
 import androidx.navigation.NavHostController
 import co.yml.charts.ui.piechart.models.PieChartData
@@ -35,6 +51,7 @@ import com.example.capocoinapp.designUI.components.TopNavBar
 import com.example.capocoinapp.designUI.components.rememberCategoryUI
 import com.example.capocoinapp.ui.theme.Accent
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
+import com.example.capocoinapp.ui.theme.TextWhite
 import java.util.Locale
 import kotlin.math.roundToInt
 
@@ -58,6 +75,43 @@ fun AnalyticsScreen(
             //Instantiating variables for the user selected start and end dates for filtering
             var startDate by rememberSaveable { mutableStateOf("") }
             var endDate by rememberSaveable { mutableStateOf("") }
+
+            //Instantiating a variable to hold the user's current scroll state
+            val scrollState = androidx.compose.foundation.rememberScrollState()
+
+            //Instantiating a Date Picker
+            val showDatePicker = { isStartDate: Boolean ->
+                //Instantiating a Calendar
+                val calendar = Calendar.getInstance()
+                DatePickerDialog(
+                    context,
+                    { _, year, month, day ->
+                        // Format as YYYY-MM-DD for the Service/DAO
+                        val formatted = String.format("%04d-%02d-%02d", year, month + 1, day)
+
+                        if (isStartDate) {
+                            startDate = formatted
+                        } else {
+                            endDate = formatted
+                        }
+                    },
+                    calendar.get(Calendar.YEAR),
+                    calendar.get(Calendar.MONTH),
+                    calendar.get(Calendar.DAY_OF_MONTH)
+                ).show()
+
+                /*
+                 * Author: Kotlin Programming Language
+                 * Link: https://kotlinlang.org/api/compose-multiplatform/material3/androidx.compose.material3/-date-picker-dialog.html
+                 * DateAccessed: 28/04/2026
+                 * */
+
+                /*
+                 * Author: GeeksforGeeks
+                 * Link: https://www.geeksforgeeks.org/android/datepickerdialog-in-android/
+                 * DateAccessed: 28/04/2026
+                 * */
+            }
 
             // Instantiating variables to hold category data
             val totals by service.getCategoryTotals(startDate, endDate)
@@ -175,6 +229,85 @@ fun AnalyticsScreen(
                             selectedType = "Expense"
                         } else {
                             Text("No data available")
+                        }
+                    }
+
+                    //Row for Date Selection
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    )
+                    {
+                        // Start Date Button
+                        OutlinedButton(
+                            onClick = { showDatePicker(true) },
+                            modifier = Modifier.weight(1f)
+                        )
+                        {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Start
+                            )
+                            {
+                                //Added an Icon to the Filter button for easier readability and usability
+                                Icon(
+                                    imageVector = Icons.Default.CalendarMonth,
+                                    contentDescription = null,
+                                    modifier = Modifier.padding(end = 8.dp),
+                                    tint = TextWhite
+                                )
+
+                                //Setting the text for the End Date Filter button and accounts when an end date is selected
+                                Text(
+                                    text = if (startDate.isEmpty()) "Start Date" else "From: $startDate",
+                                    color = TextWhite,
+                                )
+                            }
+                        }
+                        // End Date Button
+                        OutlinedButton(
+                            onClick = { showDatePicker(false) },
+                            modifier = Modifier.weight(1f)
+                        )
+                        {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Start
+                            )
+                            {
+                                //Added an Icon to the Filter button for easier readability and usability
+                                Icon(
+                                    imageVector = Icons.Default.CalendarMonth,
+                                    contentDescription = null,
+                                    modifier = Modifier.padding(end = 8.dp),
+                                    tint = TextWhite
+                                )
+
+                                //Setting the text for the End Date Filter button and accounts when an end date is selected
+                                Text(
+                                    text = if (endDate.isEmpty()) "End Date" else "To: $endDate",
+                                    color = TextWhite
+                                )
+                            }
+                        }
+                    }
+
+                    //Check to ensure Clear Filters button wont appear if no filter has been made
+                    if (startDate.isNotEmpty() || endDate.isNotEmpty()) {
+                        //Instantiating the button for the Clear Filter with empty values (no filter - all days)
+                        OutlinedButton(
+                            onClick = {
+                                startDate = ""
+                                endDate = ""
+                            },
+                            //Making the button take up the fill width of the screen
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        //Setting button's text
+                        {
+                            Text("Clear All filters", color = TextWhite)
                         }
                     }
 
