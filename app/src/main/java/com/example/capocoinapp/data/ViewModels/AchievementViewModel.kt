@@ -129,6 +129,7 @@ class AchievementViewModel(
         viewModelScope.launch {
             val userID = currentUserID
 
+            //Finding the achievement for the searched achievement and if the achievement has not been achieved yet
             val targetedAchievement = achievementService.getAllAchievements(userID).first()
                 .find { it.achievementTitle == achievementTitle && it.isUnlocked == 0 }
 

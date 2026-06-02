@@ -19,20 +19,8 @@ class AchievementService(
         return achievementsDAO.getAllAchievements(userID)
     }
 
-    // function to get locked achievements from the DAO for a specific user
-    fun getLockedAchievements(userID: String): Flow<List<Achievements>> {
-        return achievementsDAO.getLockedAchievements(userID)
-    }
-
     suspend fun createOrUpdateAchievement(achievement: Achievements) {
         achievementsDAO.insertAchievements(achievement)
     }
 
-    //Function used to unlock an achievement
-    suspend fun unlockAchievement(achievements: Achievements, date: String)
-    {
-        val unlocked = achievements.copy(isUnlocked = 1, dateUnlocked = date)
-
-        achievementsDAO.updateAchievement(unlocked)
-    }
 }

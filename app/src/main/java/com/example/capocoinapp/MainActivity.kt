@@ -25,6 +25,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.capocoinapp.Services.AchievementService
 import com.example.capocoinapp.Services.CategoryService
 import com.example.capocoinapp.Services.TransactionService
 import com.example.capocoinapp.data.DB.AppDatabase
@@ -39,6 +40,9 @@ import com.example.capocoinapp.designUI.components.BottomNavBar
 import com.example.capocoinapp.designUI.components.CapoCoinAuthenticationLayout
 import com.example.capocoinapp.designUI.components.TopNavBar
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
+import com.example.capocoinapp.data.ViewModels.AchievementViewModel
+import com.example.capocoinapp.data.ViewModels.AchievementViewModelFactory
+import com.example.capocoinapp.data.entities.Achievements
 
 //
 
@@ -49,15 +53,20 @@ class MainActivity : ComponentActivity() {
         val db = AppDatabase.getDatabase(applicationContext)
         UserViewModel.ViewModelFactory(db.userDao())
     }
+    val achievementViewModel: AchievementViewModel by viewModels {
+        val db = AppDatabase.getDatabase(applicationContext)
+        AchievementViewModelFactory(AchievementService(db.achievementDao()))
+    }
+
     private val categoryViewModel: CategoryViewModel by viewModels {
         val db = AppDatabase.getDatabase(applicationContext)
-        CategoryViewModelFactory(CategoryService(db.categoryDao()))
+        CategoryViewModelFactory(CategoryService(db.categoryDao()), achievementViewModel)
 
 
     }
     private val transactionViewModel: TransactionViewModel by viewModels {
         val db = AppDatabase.getDatabase(applicationContext)
-        TransactionViewModelFactory(db.transactionDao())
+        TransactionViewModelFactory(db.transactionDao(), achievementViewModel)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -251,6 +260,22 @@ class MainActivity : ComponentActivity() {
                         }
                     }
 
+                    composable("Achievements")
+                    {
+                        AppScaffold(
+                            topBar = { TopNavBar(navController) },
+                            bottomBar = { BottomNavBar(navController, 4) },
+                            pageTitle = "Achievements"
+                        ) { padding ->
+                            Box(modifier = Modifier.padding(padding))
+                            {
+                                AchievementsScreen(
+                                    navController = navController,
+                                    achievementViewModel = achievementViewModel
+                                )
+                            }
+                        }
+                    }
 
                 }
 
