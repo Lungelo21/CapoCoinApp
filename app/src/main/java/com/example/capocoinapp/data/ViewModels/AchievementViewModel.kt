@@ -10,6 +10,7 @@ import com.example.capocoinapp.Services.AchievementService
 import com.example.capocoinapp.Supabase.SupabaseClient
 import com.example.capocoinapp.Utils.isInternetAvailable
 import com.example.capocoinapp.data.dto.AchievementsDTO
+import com.example.capocoinapp.data.dto.UserDTO
 import com.example.capocoinapp.data.dto.toEntity
 import com.example.capocoinapp.data.entities.Achievements
 import com.example.capocoinapp.data.entities.User
@@ -43,16 +44,21 @@ class AchievementViewModel(
                if (sessionEmail != null) {
                    try {
                        if (application.isInternetAvailable()) {
-                           val foundUser = SupabaseClient.client.postgrest["users"]
+                           val foundUserDTO = SupabaseClient.client.postgrest["users"]
                                .select {
                                    filter {
                                        eq("email", sessionEmail)
                                    }
                                }
-                               .decodeSingle<User>()
+                               .decodeSingle<UserDTO>()
 
+                           //Converting the DTO data back to the entity
+                           val foundUser = foundUserDTO.toEntity()
+
+                           //Retrieving the user's ID
                            currentUserID = foundUser.id
 
+                           //Setting the ID to true to break the loop safely
                            fetchedUserID = true
                            Log.d(
                                "AchievementVM",
