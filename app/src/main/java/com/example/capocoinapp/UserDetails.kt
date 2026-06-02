@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.capocoinapp.data.ViewModels.UserDetailsViewModel
-import com.example.capocoinapp.data.ViewModels.UserViewModel
 import com.example.capocoinapp.data.dao.UserDAO
 import com.example.capocoinapp.designUI.components.AppScaffold
 import com.example.capocoinapp.designUI.components.BottomNavBar

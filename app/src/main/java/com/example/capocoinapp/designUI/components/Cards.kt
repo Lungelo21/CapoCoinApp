@@ -95,7 +95,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
-import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import com.example.capocoinapp.data.ViewModels.CategoryViewModel
 import com.example.capocoinapp.data.entities.Category
@@ -1249,7 +1248,7 @@ fun UserProfileCard(
 }
 @Composable
 fun PhotoSection(
-    name: String,
+    name: String?,
     username: String?
 ){
     Column(
@@ -1276,7 +1275,7 @@ fun PhotoSection(
         }
 
         Text(
-            text = name,
+            text = "@$name",
             style = MaterialTheme.typography.headlineSmall
         )
 

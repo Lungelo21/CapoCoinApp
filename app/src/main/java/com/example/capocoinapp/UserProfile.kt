@@ -50,7 +50,11 @@ fun UserProfileScreen(
                                 4,
                                 "Penny Pincher",
                                 100,
-                                1100
+                                1100,
+                                onClick = {
+                                    // Navigates to UserDetails after onClick
+                                    navController.navigate("UserDetails")
+                                }
                             )
                         },
 
