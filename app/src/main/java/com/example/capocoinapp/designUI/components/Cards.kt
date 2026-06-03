@@ -1889,7 +1889,11 @@ fun HomeCard(
                             shape = RoundedCornerShape(16.dp)
                         )
                 )
-
+                /*
+                 * Author: Android Kotlin
+                 * Link: https://developer.android.com/reference/kotlin/androidx/compose/material3/LinearProgressIndicator.composable#LinearProgressIndicator(kotlin.Function0,androidx.compose.ui.Modifier,androidx.compose.ui.graphics.Color,androidx.compose.ui.graphics.Color,androidx.compose.ui.graphics.StrokeCap,androidx.compose.ui.unit.Dp,kotlin.Function1)
+                 * DateAccessed: 02/06/2026
+                 * */
                 LinearProgressIndicator(
                     progress = { progressFloat },
                     modifier = Modifier

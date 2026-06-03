@@ -384,6 +384,12 @@ class TransactionViewModel(
         private set
 
 
+
+    /*
+     * Author: Supabase
+     * Link: https://supabase.com/docs/reference/kotlin/update
+     * DateAccessed: 02/06/2026
+     * */
     fun loadHomeBudgetFromSupabase() {
         viewModelScope.launch {
             try {
@@ -395,6 +401,8 @@ class TransactionViewModel(
                     return@launch
                 }
 
+
+                // get categories for current user in supabase
                 val categories = SupabaseClient.client.postgrest["categories"]
                     .select {
                         filter {
@@ -403,6 +411,7 @@ class TransactionViewModel(
                     }
                     .decodeList<Category>()
 
+                // get transactions for current user in supabase
                 val transactions = SupabaseClient.client.postgrest["transactions"]
                     .select {
                         filter {
@@ -411,11 +420,16 @@ class TransactionViewModel(
                     }
                     .decodeList<TransactionsDTO>()
 
+                // Get min and max budget from supabase
                 totalMinBudgetFromSupabase =
-                    categories.sumOf { it.minBudget }
+                    categories
+                        .filter { it.transactionType.equals("Expense", true) }
+                        .sumOf { it.minBudget }
 
                 totalMaxBudgetFromSupabase =
-                    categories.sumOf { it.maxBudget }
+                    categories
+                        .filter { it.transactionType.equals("Expense", true) }
+                        .sumOf { it.maxBudget }
 
                 val currentMonth = YearMonth.now()
 
@@ -426,7 +440,7 @@ class TransactionViewModel(
                                 val date = LocalDate.parse(it.transactionDate)
 
                                 YearMonth.from(date) == currentMonth &&
-                                        it.transactionType.lowercase() == "expense"
+                                        it.transactionType.equals("Expense",true)
 
                             } catch (e: Exception) {
                                 false

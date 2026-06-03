@@ -35,7 +35,7 @@ fun MoreScreen(navController: NavController) {
                     {
                         MoreCard(
                             "Settings",
-                            "Coming soon in Part 3",
+                            "Future development option",
                             Icons.Default.Settings,
                             { navController.navigate("Settings") })
                     },
@@ -71,14 +71,14 @@ fun MoreScreen(navController: NavController) {
                     {
                         MoreCard(
                             "Import",
-                            "Coming soon in Part 3",
+                            "Future development option",
                             Icons.Default.FileDownload
                         )
                     },
                     {
                         MoreCard(
                             "Export",
-                            "Coming soon in Part 3",
+                            "Future development option",
                             Icons.Default.FileUpload
                         )
                     },

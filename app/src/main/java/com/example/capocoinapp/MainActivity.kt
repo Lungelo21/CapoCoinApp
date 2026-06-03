@@ -147,6 +147,7 @@ class MainActivity : ComponentActivity() {
                         UserBudgetScreen(
                             navController = navController,
                             categoryViewModel = categoryViewModel,
+                            transactionViewModel = transactionViewModel,
                             categoryService = CategoryService(
                                 AppDatabase.getDatabase
                                     (applicationContext).categoryDao()

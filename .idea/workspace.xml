@@ -10,10 +10,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="843cdec9-d7fe-4e04-a3f1-ea54e0a311c8" name="Changes" comment="added home screen">
+      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/capocoinapp/Analytics.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/capocoinapp/Analytics.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/capocoinapp/designUI/components/Graphs.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/capocoinapp/designUI/components/Graphs.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/capocoinapp/ui/theme/CapoType.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/capocoinapp/ui/theme/CapoType.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/capocoinapp/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/capocoinapp/MainActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/capocoinapp/More.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/capocoinapp/More.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/capocoinapp/Settings.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/capocoinapp/Settings.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/capocoinapp/UserBudget.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/capocoinapp/UserBudget.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/capocoinapp/data/ViewModels/TransactionViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/capocoinapp/data/ViewModels/TransactionViewModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/capocoinapp/designUI/components/Cards.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/capocoinapp/designUI/components/Cards.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,7 +28,7 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[PhysicalDevice::serial=R5CY521NJYM]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[LocalEmulator::path=C:\Users\lsokh\.android\avd\CapoCoin.avd]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -76,7 +81,7 @@
     &quot;accountId&quot;: &quot;bea2e2b7-74b8-43df-89a0-b65cf1f6d9eb&quot;
   }
 }</component>
-  <component name="GradleScriptDefinitionsStorage" workingDir="$PROJECT_DIR$" gradleHome="C:\Users\abdul\.gradle\wrapper\dists\gradle-9.1.0-bin\9agqghryom9wkf8r80qlhnts3\gradle-9.1.0" javaHome="C:\Program Files\Android\Android Studio\jbr" gradleVersion="9.1.0" />
+  <component name="GradleScriptDefinitionsStorage" workingDir="$PROJECT_DIR$" gradleHome="C:\Users\lsokh\.gradle\wrapper\dists\gradle-9.1.0-bin\9agqghryom9wkf8r80qlhnts3\gradle-9.1.0" javaHome="C:\Program Files\Android\Android Studio\jbr" gradleVersion="9.1.0" />
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 3
 }</component>
@@ -96,9 +101,10 @@
     "RunOnceActivity.readMode.enableVisualFormatting": "true",
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
-    "git-widget-placeholder": "feature/graph-column",
+    "git-widget-placeholder": "develop",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/lsokh/Documents/GitHub/Capo_Coin_Android"
+    "last_opened_file_path": "C:/Users/lsokh/Documents/GitHub/Capo_Coin_Android",
+    "settings.editor.selected.configurable": "experimental"
   }
 }]]></component>
   <component name="RunManager">
