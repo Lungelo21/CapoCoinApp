@@ -25,6 +25,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.capocoinapp.Services.AchievementService
 import com.example.capocoinapp.Services.CategoryService
 import com.example.capocoinapp.Services.TransactionService
 import com.example.capocoinapp.data.DB.AppDatabase
@@ -32,13 +33,16 @@ import com.example.capocoinapp.data.ViewModels.CategoryViewModel
 import com.example.capocoinapp.data.ViewModels.CategoryViewModelFactory
 import com.example.capocoinapp.data.ViewModels.TransactionViewModel
 import com.example.capocoinapp.data.ViewModels.TransactionViewModelFactory
+
 import com.example.capocoinapp.data.ViewModels.UserViewModel
-import com.example.capocoinapp.data.ViewModels.ViewModelFactory
 import com.example.capocoinapp.designUI.components.AppScaffold
 import com.example.capocoinapp.designUI.components.BottomNavBar
 import com.example.capocoinapp.designUI.components.CapoCoinAuthenticationLayout
 import com.example.capocoinapp.designUI.components.TopNavBar
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
+import com.example.capocoinapp.data.ViewModels.AchievementViewModel
+import com.example.capocoinapp.data.ViewModels.AchievementViewModelFactory
+import com.example.capocoinapp.data.entities.Achievements
 
 //
 
@@ -47,17 +51,22 @@ class MainActivity : ComponentActivity() {
 
     private val userViewModel: UserViewModel by viewModels {
         val db = AppDatabase.getDatabase(applicationContext)
-        ViewModelFactory(db.userDao())
+        UserViewModel.ViewModelFactory(db.userDao())
     }
+    val achievementViewModel: AchievementViewModel by viewModels {
+        val db = AppDatabase.getDatabase(applicationContext)
+        AchievementViewModelFactory(AchievementService(db.achievementDao()))
+    }
+
     private val categoryViewModel: CategoryViewModel by viewModels {
         val db = AppDatabase.getDatabase(applicationContext)
-        CategoryViewModelFactory(CategoryService(db.categoryDao()))
+        CategoryViewModelFactory(CategoryService(db.categoryDao()), achievementViewModel)
 
 
     }
     private val transactionViewModel: TransactionViewModel by viewModels {
         val db = AppDatabase.getDatabase(applicationContext)
-        TransactionViewModelFactory(db.transactionDao())
+        TransactionViewModelFactory(db.transactionDao(), achievementViewModel)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -89,7 +98,32 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                     composable("Analytics") {
-                        AnalyticsScreen(navController)
+                        AnalyticsScreen(
+                            TransactionService
+                                (
+                                AppDatabase.getDatabase
+                                    (applicationContext).transactionDao()
+                            ), CategoryService(
+                                AppDatabase.getDatabase
+                                    (applicationContext).categoryDao()
+                            ), categoryViewModel,
+                            transactionViewModel,
+                            navController
+                        )
+                    }
+
+                    composable("UserSpendingReport") {
+                        UserSpendingReportScreen(
+                            TransactionService
+                                (
+                                AppDatabase.getDatabase
+                                    (applicationContext).transactionDao()
+                            ), CategoryService(
+                                AppDatabase.getDatabase
+                                    (applicationContext).categoryDao()
+                            ), categoryViewModel,
+                            navController
+                        )
                     }
                     composable("More") {
                         MoreScreen(navController)
@@ -113,6 +147,7 @@ class MainActivity : ComponentActivity() {
                         UserBudgetScreen(
                             navController = navController,
                             categoryViewModel = categoryViewModel,
+                            transactionViewModel = transactionViewModel,
                             categoryService = CategoryService(
                                 AppDatabase.getDatabase
                                     (applicationContext).categoryDao()
@@ -137,7 +172,7 @@ class MainActivity : ComponentActivity() {
                     }
 
                     composable("UserProfile") {
-                        UserProfileScreen(navController, userViewModel)
+                        UserProfileScreen(navController, userViewModel, achievementViewModel)
                     }
                     composable("Settings") {
                         SettingsScreen(navController)
@@ -161,6 +196,7 @@ class MainActivity : ComponentActivity() {
                             }
                             Login(
                                 modifier = Modifier.padding(padding),
+                                message = userViewModel.message,
                                 onLoginClick = { email, password ->
                                     userViewModel.loginUser(email, password)
                                 },
@@ -250,11 +286,25 @@ class MainActivity : ComponentActivity() {
                         }
                     }
 
+                    composable("Achievements")
+                    {
+                        AchievementsScreen(
+                            navController = navController,
+                            achievementViewModel = achievementViewModel
+                        )
 
+                    }
+
+                    composable("UserDetails/{userID}") { backStackEntry ->
+                        val userID = backStackEntry.arguments?.getString("userID") ?: ""
+                        UserDetails(
+                            navController = navController,
+                            userID = userID,
+                            userDetailsDAO = AppDatabase.getDatabase(applicationContext).userDao()
+                        )
+                    }
                 }
-
             }
-
         }
     }
 }

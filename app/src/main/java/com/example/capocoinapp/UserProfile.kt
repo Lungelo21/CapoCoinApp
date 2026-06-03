@@ -11,6 +11,9 @@ import com.example.capocoinapp.data.entities.Category
 import com.example.capocoinapp.data.entities.User
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import com.example.capocoinapp.data.ViewModels.AchievementViewModel
+import com.example.capocoinapp.data.entities.Achievements
+import com.example.capocoinapp.designUI.components.AchievementCard
 import com.example.capocoinapp.designUI.components.AppScaffold
 import com.example.capocoinapp.designUI.components.BottomNavBar
 import com.example.capocoinapp.designUI.components.CardBox
@@ -19,52 +22,78 @@ import com.example.capocoinapp.designUI.components.PageSubTitleText
 import com.example.capocoinapp.designUI.components.TopNavBar
 import com.example.capocoinapp.designUI.components.UserProfileCard
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
-
+import kotlin.collections.emptyList
 @Composable
 fun UserProfileScreen(
     navController: NavController,
-    userViewModel: UserViewModel) {
+    userViewModel: UserViewModel,
+    achievementsViewModel: AchievementViewModel) {
 
-    val users by userViewModel
-        .getAllUsers()
+    val currentUser = userViewModel.currentUser.collectAsState().value
+
+    val achievements by achievementsViewModel
+        .getAllAchievements(achievementsViewModel.currentUserID)
         .collectAsState(initial = emptyList())
 
     CapoCoinAppTheme {
         AppScaffold(
             topBar = { TopNavBar(navController) },
             bottomBar = { BottomNavBar(navController,4) },
-            pageTitle = "Home"
+            pageTitle = "Profile"
         ) { _ ->
 
-            //ToDo: add remaining values for user levels
-            users.forEach { user ->
+            if (currentUser != null) {
+
+                val cards = buildList<@Composable () -> Unit>
+                {
+                    add{
+                        UserProfileCard(
+                            name = currentUser.name,
+                            username=currentUser.username,
+                            //4,
+                            //"Penny Pincher",
+                            //100,
+                            //1100,
+                            onClick = {
+                                // Navigates to UserDetails after onClick
+                                navController.navigate("UserDetails/${currentUser.id}")
+                                }
+                            )
+                        }
+
+                    add{
+                        PageSubTitleText("Recent Achievements")
+                    }
+
+                    achievements
+                        .filter{ it.isUnlocked == 1 }
+                        .take(3)
+                        .forEach { recentAchievements ->
+                        add{
+                            AchievementCard(
+                                title = recentAchievements.achievementTitle,
+                                description = recentAchievements.description,
+                                dateUnlocked =  recentAchievements.dateUnlocked
+                                )
+                            }
+                        }
+                    }
+                CardBox(cards = cards)
+
+            } else {
+
                 CardBox(
                     cards = listOf(
                         {
-                            UserProfileCard(
-                                user.name,
-                                "Davis",
-                                4,
-                                "Penny Pincher",
-                                100,
-                                1100
-                            )
-                        },
-
-                        {
-                            PageSubTitleText("Recent Milestones")
-                        },
-
-                        {
-                            MilestoneAchievementCard(
-                                "Weekly Logger",
-                                "Log Expenses everyday for a week",
-                                "5"
+                            PageSubTitleText(
+                                "No user profile found. Please login first."
                             )
                         }
                     )
                 )
+
             }
+
         }
     }
 }

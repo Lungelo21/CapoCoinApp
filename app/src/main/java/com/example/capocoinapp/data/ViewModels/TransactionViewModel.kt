@@ -1,21 +1,45 @@
 package com.example.capocoinapp.data.ViewModels
+import android.app.Application
+import android.os.Build
+import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.CreationExtras
+import com.example.capocoinapp.Services.TransactionService
+import com.example.capocoinapp.Supabase.SupabaseClient
+import com.example.capocoinapp.Utils.isInternetAvailable
 import com.example.capocoinapp.data.dao.TransactionsDAO
+import com.example.capocoinapp.data.dto.TransactionsDTO
+import com.example.capocoinapp.data.dto.UserDTO
+import com.example.capocoinapp.data.dto.toEntity
 import com.example.capocoinapp.data.entities.Transactions
+import com.example.capocoinapp.data.entities.toDTO
+import io.github.jan.supabase.auth.auth
+import io.github.jan.supabase.postgrest.postgrest
+import io.github.jan.supabase.storage.storage
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import com.example.capocoinapp.data.entities.Category
+import java.time.LocalDate
+import java.time.YearMonth
+import io.github.jan.supabase.auth.status.SessionStatus
 
 class TransactionViewModel(
-    private val dao: TransactionsDAO
+    private val dao: TransactionsDAO,
+    private val application: Application, // Injected via factory extras bundle cleanly
+    private val achievementViewModel: AchievementViewModel
 ) : ViewModel() {
 
     //Validation
@@ -28,6 +52,143 @@ class TransactionViewModel(
         message = ""
     }
 
+    var currentUserID: String = ""
+        private set
+    //Using init to make sure this will be actioned as the code is first run
+    /*
+     * Author: Ranjeet
+     * Link: https://medium.com/@ranjeet123/init-block-in-kotlin-518b050cada1
+     * DateAccessed: 22/05/2026
+     * */
+
+    init {
+
+        viewModelScope.launch {
+
+
+            //var fetchedUserID = false
+
+            //while(!fetchedUserID){
+            // Listen dynamically to authentication state transitions safely
+            SupabaseClient.client.auth.sessionStatus.collect { status ->
+                if (status is SessionStatus.Authenticated) {
+
+                    //val sessionEmail = SupabaseClient.client.auth.currentUserOrNull()?.email
+                    val sessionEmail = status.session.user?.email
+
+                    if (sessionEmail != null) {
+                        try {
+                            if (application.isInternetAvailable()) {
+                                val foundUserDTO = SupabaseClient.client.postgrest["users"]
+                                    .select {
+                                        filter {
+                                            eq("email", sessionEmail)
+                                        }
+                                    }
+                                    .decodeSingle<UserDTO>()
+
+                                currentUserID = foundUserDTO.toEntity().id
+                                //fetchedUserID = true
+                                Log.d(
+                                    "TransactionVM",
+                                    "Successfully fetched current user ID: $currentUserID"
+                                )
+                            } else {
+                                Log.w("TransactionVM", "No internet. Retrying in 5 seconds.")
+                                delay(5000)
+                            }
+                        } catch (e: Exception) {
+                            Log.e(
+                                "TransactionVM",
+                                "Failed to fetch user ID. Retrying in 5 seconds: ${e.message}"
+                            )
+                            delay(5000)
+                        }
+                    } else {
+                        Log.w(
+                            "TransactionVM",
+                            "No authenticated user found. Retrying in 5 seconds."
+                        )
+                        delay(5000)
+                    }
+                }
+            }
+            // Fetch transactions stored in room
+            val currentTransactions = dao.getAllTransactions().first()
+
+            if (currentTransactions.isEmpty()) {
+                Log.d("TransactionVMCheck", "No local transactions found. Waiting for user input.")
+
+            } else {
+                Log.d("TransactionVMCheck", "Transactions exist locally. Ensuring remote Supabase DB is caught up...")
+
+                // syncs roomdb to remote supabase
+                viewModelScope.launch {
+                    var synced = false
+                    while (!synced) {
+                        if (application.isInternetAvailable()) {
+                            try {
+                                Log.d("SyncCheck", "Startup Transaction Sync: Pushing local ledger to Supabase...")
+
+                                // .upsert() inserts records written offline and leaves existing ones untouched
+                                //SupabaseClient.client.postgrest["transactions"].upsert(currentTransactions)
+
+                                val mapDTO = currentTransactions.map { it.toDTO() }
+                                SupabaseClient.client.postgrest["transactions"].upsert(mapDTO)
+
+                                Log.d("SyncCheck", "Startup Transaction Sync: Remote ledger successfully updated!")
+                                synced = true // Safely exit loop
+                            } catch (e: Exception) {
+                                Log.e("SyncCheck", "Startup Transaction Sync failed, retrying in 10s: ${e.message}")
+                                delay(10000) // Wait 10 seconds before trying again
+                            }
+                        }
+                        else {
+                            Log.d("SyncCheck", "Startup Transaction Sync: Offline. Waiting for internet connection...")
+                            delay(5000) // Test connection again in 5 seconds
+                        }
+                    }
+                }
+            }
+
+            // Pulls any supabase records to roomdb
+            try {
+                if (application.isInternetAvailable()) {
+
+                    val currentUserID = SupabaseClient.client.auth.currentUserOrNull()?.id
+
+                    if(currentUserID != null){
+                        val supabaseTransactionsDTOs = SupabaseClient.client.postgrest["transactions"].select{
+                            filter {
+                                eq("userID", currentUserID)
+                            }
+                        }
+                            .decodeList<TransactionsDTO>()
+
+                        if (supabaseTransactionsDTOs.isNotEmpty()) {
+                            Log.d("TransactionVMCheck", "Found ${supabaseTransactionsDTOs.size} transactions on remote for user $currentUserID. Syncing to Room...")
+
+                            supabaseTransactionsDTOs.forEach { dto ->
+                                dao.insertTransactions(dto.toEntity())
+                            }
+                            Log.d("TransactionVMCheck", "Successfully pulled remote transaction records!")
+                        }
+                        else
+                        {
+                            Log.w("TransactionVMCheck", "No active user session has been found. Skipping remote pull.")
+                        }
+                    }
+
+                }
+            } catch (e: Exception) {
+                // Fails silently if device is offline on first remote pull
+                Log.e("TransactionVMCheck", "Initial remote transaction pull failed: ${e.message}")
+            }
+        }
+    }
+
+
+
     fun addTransaction(
         type: String,
         name: String,
@@ -35,10 +196,29 @@ class TransactionViewModel(
         categoryID: Int,
         date: String,
         time: String,
-        photoPath: String?
+        photoBytes: ByteArray?
     ) {
         viewModelScope.launch {
-            val amountDouble = amount.toDoubleOrNull()
+
+
+            // checks if ID is null
+            if(currentUserID.isBlank()){
+                message = "Session expired. Please log in again, to add transaction"
+                return@launch
+            }
+
+
+            val amountDouble = try{
+                NumberFormat.getInstance().parse(amount)?.toDouble()
+            }
+            catch (e: Exception){
+                amount.replace(",", ".").toDoubleOrNull()
+            }
+
+//            val amountDouble = amount
+//                .trim()
+//                .replace(",", ".")
+//                .toDoubleOrNull()
 
             // list of error messages
             val errors = mutableListOf<String>()
@@ -74,30 +254,134 @@ class TransactionViewModel(
                 return@launch
             }
 
-                    //Storing the current date and time
-                    val calendar = Calendar.getInstance()
+            // stores the imagepath
+            var bucketImagePath: String? = null
 
-                    val dateLogged = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(calendar.time)
-                    val timeLogged = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(calendar.time)
+            //checking if a photo was uploaded
+            if (photoBytes != null) {
+                try {
+                    val fileName = "transactions/$currentUserID/${System.currentTimeMillis()}.jpg"
 
-                    val transaction = Transactions(
-                        transactionType = type,
-                        transactionName = name,
-                        transactionAmount = amountDouble!!,
-                        categoryID = categoryID,
-                        transactionDate = date,
-                        transactionTime = time,
-                        dateLogged = dateLogged,
-                        timeLogged = timeLogged,
-                        uploadedPhotoPath = photoPath
-                    )
+                    // uploads image to bucket
+                    SupabaseClient.client.storage
+                        .from("transactionImage")
+                        .upload(fileName, photoBytes)
 
-                    dao.insertTransactions(transaction)
+                    // Get the public URL to store in DB
+                    bucketImagePath = SupabaseClient.client.storage
+                        .from("transactionImage")
+                        .publicUrl(fileName)
 
-                    //message = "Transaction saved!"
+                    Log.d("ImageUpload", "Image uploaded successfully: $bucketImagePath")
+
+                } catch (e: Exception) {
+                    Log.e("ImageUpload", "Image upload failed: ${e.message}")
+                    // bucketImagePath stays null — transaction still saves without image
                 }
+            }
 
+            //Storing the current date and time
+            val calendar = Calendar.getInstance()
+
+            val dateLogged = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(calendar.time)
+            val timeLogged = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(calendar.time)
+
+            val transaction = Transactions(
+                transactionType = type,
+                transactionName = name,
+                transactionAmount = amountDouble!!,
+                categoryID = categoryID,
+                transactionDate = date,
+                transactionTime = time,
+                dateLogged = dateLogged,
+                timeLogged = timeLogged,
+                uploadedPhotoPath = bucketImagePath,
+                userID = currentUserID
+            )
+
+            dao.insertTransactions(transaction)
+
+            //Check for Achievement 1: Breaking the Ice
+            val allTransactions = dao.getAllTransactions().first()
+
+            //Checking if the size of Transactions is 1 so that the first achievement can be earned
+            if(allTransactions.size == 1)
+            {
+                //Calling the method through the AchievementViewModel with the parsed Achievement title
+                achievementViewModel.unlockAchievement("Breaking the Ice")
+            }
+
+            //Check for Achievement 3: Night Shift
+            val hour = time.substringBefore(":").toIntOrNull()
+
+            //Checking if the hour is NOT NULL AND between 10PM or 4AM
+            if(hour != null && (hour >= 22 || hour < 4))
+            {
+                //Calling the method through the AchievementViewModel with the parsed Achievement title
+                achievementViewModel.unlockAchievement("Night Shift")
+            }
+
+            //Check for Achievement 4: Saver's Streak
+
+            //Checking if the transaction type is income
+            if(type.lowercase() == "income")
+            {
+                //Sourcing the number of all income transactions
+                val incomeTransactions = allTransactions.count { it.transactionType.lowercase() == "income"}
+
+                //Checking if the number of income transactions is 10
+                if(incomeTransactions == 10)
+                {
+                    //Calling the method through the AchievementViewModel with the parsed Achievement title
+                    achievementViewModel.unlockAchievement("Saver's Streak")
+                }
+            }
+
+            //Check for Achievement 5: Big Spender
+
+            //Checking if the amount is greater than 500
+            if(amountDouble > 500)
+            {
+                //Calling the method through the AchievementViewModel with the parsed Achievement title
+                achievementViewModel.unlockAchievement("Big Spender")
+            }
+
+            //Check for Achievement 6: The Century Club
+
+            //Checking if the number of transaction is 100
+            if(allTransactions.size == 100)
+            {
+                //Calling the method through the AchievementViewModel with the parsed Achievement title
+                achievementViewModel.unlockAchievement("The Century Club")
+            }
+
+            viewModelScope.launch {
+
+                var uploaded = false // set upload to false
+                val app = application // application context
+
+                while (!uploaded) { // continuously run while upload is true (continuously syncs roomdb to supabase)
+                    if (app.isInternetAvailable()) {
+                        try {
+                            SupabaseClient.client.postgrest["transactions"].insert(transaction.toDTO())
+                            Log.d("SyncCheck", "Successfully synced offline transaction to Supabase.")
+                            uploaded = true // Breaks the loop
+                        } catch (e: Exception) {
+                            Log.e("SyncCheck", "Server error, retrying in 10 seconds: ${e.message}")
+                            kotlinx.coroutines.delay(10000) // Wait 10 seconds before retrying server errors
+                        }
+                    } else { // if app has no internet connection
+                        Log.d("SyncCheck", "Device's internet connection offline. Retrying connection check in 5 seconds...")
+                        kotlinx.coroutines.delay(5000) // Check connection again in 5 seconds
+                    }
+                }
+                // insert transaction into supabase client
+                //SupabaseClient.client.postgrest["transactions"].insert(transaction.toDTO())
+            }
         }
+
+
+    }
 
     // Get all transactions for your view transactions screen
     fun getAllTransactions(): Flow<List<Transactions>> {
@@ -115,14 +399,98 @@ class TransactionViewModel(
             flowOf(null)
         }
     }
+
+    // budget tracker variable to load data
+    var monthlySpentFromSupabase by mutableStateOf(0.0)
+        private set
+
+    var totalMinBudgetFromSupabase by mutableStateOf(0.0)
+        private set
+
+    var totalMaxBudgetFromSupabase by mutableStateOf(0.0)
+        private set
+
+
+
+    /*
+     * Author: Supabase
+     * Link: https://supabase.com/docs/reference/kotlin/update
+     * DateAccessed: 02/06/2026
+     * */
+    fun loadHomeBudgetFromSupabase() {
+        viewModelScope.launch {
+            try {
+                val currentUserID =
+                    SupabaseClient.client.auth.currentUserOrNull()?.id
+
+                if (currentUserID == null) {
+                    message = "No logged in user found"
+                    return@launch
+                }
+
+
+                // get categories for current user in supabase
+                val categories = SupabaseClient.client.postgrest["categories"]
+                    .select {
+                        filter {
+                            eq("userID", currentUserID)
+                        }
+                    }
+                    .decodeList<Category>()
+
+                // get transactions for current user in supabase
+                val transactions = SupabaseClient.client.postgrest["transactions"]
+                    .select {
+                        filter {
+                            eq("userID", currentUserID)
+                        }
+                    }
+                    .decodeList<TransactionsDTO>()
+
+                // Get min and max budget from supabase
+                totalMinBudgetFromSupabase =
+                    categories
+                        .filter { it.transactionType.equals("Expense", true) }
+                        .sumOf { it.minBudget }
+
+                totalMaxBudgetFromSupabase =
+                    categories
+                        .filter { it.transactionType.equals("Expense", true) }
+                        .sumOf { it.maxBudget }
+
+                val currentMonth = YearMonth.now()
+
+                monthlySpentFromSupabase =
+                    transactions
+                        .filter {
+                            try {
+                                val date = LocalDate.parse(it.transactionDate)
+
+                                YearMonth.from(date) == currentMonth &&
+                                        it.transactionType.equals("Expense",true)
+
+                            } catch (e: Exception) {
+                                false
+                            }
+                        }
+                        .sumOf { it.transactionAmount }
+
+            } catch (e: Exception) {
+                message = "Could not load budget tracker: ${e.message}"
+            }
+        }
+    }
 }
 
 // Factory to inject the DAO
-class TransactionViewModelFactory(private val dao: TransactionsDAO) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+class TransactionViewModelFactory(private val dao: TransactionsDAO, private val achievementViewModel: AchievementViewModel) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
         if (modelClass.isAssignableFrom(TransactionViewModel::class.java)) {
+
+            val application = checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY])
+
             @Suppress("UNCHECKED_CAST")
-            return TransactionViewModel(dao) as T
+            return TransactionViewModel(dao, application, achievementViewModel) as T
         }
         throw IllegalArgumentException("Error Occurred")
     }

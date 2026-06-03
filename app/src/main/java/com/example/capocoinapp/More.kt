@@ -1,8 +1,10 @@
 package com.example.capocoinapp
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.ContentPaste
+import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.FileDownload
 import androidx.compose.material.icons.filled.FileUpload
 import androidx.compose.material.icons.filled.Settings
@@ -33,7 +35,7 @@ fun MoreScreen(navController: NavController) {
                     {
                         MoreCard(
                             "Settings",
-                            "Coming soon in Part 3",
+                            "Future development option",
                             Icons.Default.Settings,
                             { navController.navigate("Settings") })
                     },
@@ -46,6 +48,13 @@ fun MoreScreen(navController: NavController) {
                     },
                     {
                         MoreCard(
+                            "User Spending Report",
+                            "View a graph showing amount spent and budget in each category",
+                            Icons.Default.BarChart,
+                            { navController.navigate("UserSpendingReport") })
+                    },
+                    {
+                        MoreCard(
                             "Categories",
                             "View and add transaction categories",
                             Icons.Default.Category,
@@ -53,15 +62,23 @@ fun MoreScreen(navController: NavController) {
                     },
                     {
                         MoreCard(
+                            "User Achievements",
+                            "A list of achievements that the user has received",
+                            Icons.Default.EmojiEvents,
+                            { navController.navigate("Achievements")}
+                        )
+                    },
+                    {
+                        MoreCard(
                             "Import",
-                            "Coming soon in Part 3",
+                            "Future development option",
                             Icons.Default.FileDownload
                         )
                     },
                     {
                         MoreCard(
                             "Export",
-                            "Coming soon in Part 3",
+                            "Future development option",
                             Icons.Default.FileUpload
                         )
                     },

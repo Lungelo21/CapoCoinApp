@@ -37,6 +37,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.capocoinapp.Services.CategoryService
+import com.example.capocoinapp.data.ViewModels.TransactionViewModel
 import com.example.capocoinapp.ui.theme.Accent
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 import com.example.capocoinapp.ui.theme.Primary
@@ -49,6 +50,7 @@ fun UserBudgetScreen(
     modifier: Modifier = Modifier,
     categoryViewModel: CategoryViewModel,
     categoryService: CategoryService,
+    transactionViewModel: TransactionViewModel,
     message: String = "",
     onAddCategoryClick: () -> Unit = {},
     navController: NavController
@@ -157,6 +159,9 @@ fun UserBudgetScreen(
                                 minBudget = min,
                                 maxBudget = max
                             )
+
+                            transactionViewModel.loadHomeBudgetFromSupabase()
+
                             selectedCategory = null
                         }
                     ) {

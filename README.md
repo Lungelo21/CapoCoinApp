@@ -11,7 +11,7 @@ The app allows users to register, log in, and manage financial data such as tran
 
 ## Features
 
-- User registration stored in RoomDB  
+- User registration stored in Supabase  
 - Login system with validation  
 - Input validation   
 - Navigation using Jetpack Compose  
@@ -25,6 +25,9 @@ The app allows users to register, log in, and manage financial data such as tran
 - Filtering Category Totals by user selecteable period
 - View transctions uploaded image 
 - Top and bottom navigation for ease-of-use
+- Budget Progress tracker
+- Analytical graph to track user habits
+- Achievement system
 
 ---
 
@@ -55,27 +58,41 @@ UI ->ViewModel -> DAO -> Room Database local storage
 
 ---
 
-## Room Database
+## Supabase Database
 
-The application uses Room Database for storing user data.
+The application uses Supabase Database for storing user data.
 
 Components used:
-- User entity  
-- UserDAO
-- Category entity
-- CategoryDAO
-- Transaction entity
-- TransactionDAO 
-- AppDatabase singleton instance
+- Data table
+- Image bucket
+- User Email Authentication
+
+
+
+---
+## Custom Features
+- Built-in calculator to use within the app
+- User Achievement tracking on User Profile to track what user has progress
 
 ---
 
 ## ChangeLog 
 
+# Part 2
 - Menus different
 - App customization features dropped
 - Calculator screen layout
 - User variable First and Last Name Combined into Name
 - Category screen layout
 - Welcome screen dropped
+
+# Part 3
+- Removed XP Bar
+- Removed Level
+- Removed Profile Title
+- Adjusted doubleAmount variable to replace comma with decimal for validation checking
+- Added Supabase Integration for Transactions
+- Image is uploaded to bucket storage
+- Added app icon
+- Added graphs
 
