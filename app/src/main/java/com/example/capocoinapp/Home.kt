@@ -19,6 +19,7 @@ import com.example.capocoinapp.designUI.components.TopNavBar
 import com.example.capocoinapp.designUI.components.rememberCategoryUI
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
 import androidx.compose.runtime.LaunchedEffect
+import androidx.navigation.compose.currentBackStackEntryAsState
 import java.time.LocalDate
 import java.time.YearMonth
 
@@ -35,7 +36,9 @@ fun HomeScreen(
     val daysRemaining =
         currentMonth.lengthOfMonth() - today.dayOfMonth
 
-    LaunchedEffect(Unit) {
+    val currentBackStackEntry by navController.currentBackStackEntryAsState()
+
+    LaunchedEffect(currentBackStackEntry) {
         transactionViewModel.loadHomeBudgetFromSupabase()
     }
 

@@ -35,7 +35,6 @@ import com.example.capocoinapp.data.entities.Category
 import java.time.LocalDate
 import java.time.YearMonth
 import io.github.jan.supabase.auth.status.SessionStatus
-import java.text.NumberFormat
 
 class TransactionViewModel(
     private val dao: TransactionsDAO,
