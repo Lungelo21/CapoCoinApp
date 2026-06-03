@@ -31,19 +31,19 @@ fun SettingsScreen(navController: NavController) {
                 cards = listOf(
                     { MoreCard(
                         "Notifications",
-                        "Coming soon in Part 3",
+                        "Future development option",
                         Icons.Default.Notifications)},
                     { MoreCard(
                         "App Lock",
-                        "Coming soo in Part 3",
+                        "Future development option",
                         Icons.Default.Lock,)},
                     { MoreCard(
                         "Default Page",
-                        "Coming soon in Part 3",
+                        "Future development option",
                         Icons.Default.Home)},
                     { MoreCard(
                         "Default Currency",
-                        "Coming soon in Part 3",
+                        "Future development option",
                         Icons.Default.CurrencyExchange)},
 
                     )
