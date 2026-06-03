@@ -152,6 +152,10 @@ class CategoryViewModel(
 
                             //Upserting Category entries
                             SupabaseClient.client.postgrest["categories"].upsert(currentCategories)
+                            {
+                                //If duplicate is found relate to the category title and userID
+                                onConflict = "categoryTitle,userID"
+                            }
 
                             Log.d("CategorySyncCheck", "Successfully synced Supabase with Local data")
 
@@ -199,9 +203,28 @@ class CategoryViewModel(
                                 "Found ${supabaseCategories.size} categories. Syncing Room to Supabase"
                             )
 
+                            //Get current local categories
+                            val localCategories = service.getAllCategories().first()
+
                             // Updates existing records and inserts new ones seamlessly
-                            supabaseCategories.forEach {
-                                service.createCategory(it)
+                            supabaseCategories.forEach { remoteCategory ->
+                                //Check if the transaction already exists
+                                var existsLocally = localCategories.any { localCategory ->
+                                    localCategory.categoryTitle.equals(remoteCategory.categoryTitle, ignoreCase = true)
+                                    && localCategory.userID == remoteCategory.userID
+                                }
+
+                                if(!existsLocally)
+                                {
+                                    Log.d("CategoryVMCheck", "Inserting new remote category: ${remoteCategory.categoryTitle}")
+
+                                    //Creating the category on the remote
+                                    service.createCategory(remoteCategory)
+                                }
+                                else
+                                {
+                                    Log.d("CategoryVMCheck", "Category '${remoteCategory.categoryTitle}' already exists locally. Not creating duplicated categories.")
+                                }
                             }
 
                             Log.d("CategoryVMCheck", "Successfully synced from remote to local!")
@@ -276,6 +299,10 @@ class CategoryViewModel(
                                         {
                                             //Inserting category to Supabase
                                             SupabaseClient.client.postgrest["categories"].upsert(newCategory)
+                                            {
+                                                //If duplicate is found relate to the category title and userID
+                                                onConflict = "categoryTitle,userID"
+                                            }
 
                                             Log.d("CategorySyncCheck", "Successfully synced custom category to Supabase.")
 
