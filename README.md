@@ -78,6 +78,7 @@ Components used:
 
 ## ChangeLog 
 
+-- Part 2
 - Menus different
 - App customization features dropped
 - Calculator screen layout
@@ -85,5 +86,13 @@ Components used:
 - Category screen layout
 - Welcome screen dropped
 
-- 
+--Part 3
+- Removed XP Bar
+- Removed Level
+- Removed Profile Title
+- Adjusted doubleAmount variable to replace comma with decimal for validation checking
+- Added Supabase Integration for Transactions
+- Image is uploaded to bucket storage
+- Added app icon
+- Added graphs
 
