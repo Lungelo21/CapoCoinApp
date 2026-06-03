@@ -82,7 +82,7 @@ class MainActivity : ComponentActivity() {
 
                 // Nav Host wraps all composable routes
                 NavHost(
-                    navController = navController, startDestination = "Home"
+                    navController = navController, startDestination = "Login"
                 ) {
                     composable("Home") {
                         HomeScreen(navController, categoryViewModel, transactionViewModel)

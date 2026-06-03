@@ -275,7 +275,7 @@ class CategoryViewModel(
                                         try
                                         {
                                             //Inserting category to Supabase
-                                            SupabaseClient.client.postgrest["categories"].insert(newCategory)
+                                            SupabaseClient.client.postgrest["categories"].upsert(newCategory)
 
                                             Log.d("CategorySyncCheck", "Successfully synced custom category to Supabase.")
 
