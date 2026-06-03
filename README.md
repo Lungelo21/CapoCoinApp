@@ -86,7 +86,7 @@ Components used:
 - Category screen layout
 - Welcome screen dropped
 
-#Part 3
+# Part 3
 - Removed XP Bar
 - Removed Level
 - Removed Profile Title
