@@ -72,7 +72,7 @@
 }</component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/Lungelo21/Capo_Coin_Android.git&quot;,
+    &quot;url&quot;: &quot;https://github.com/Lungelo21/CapoCoinApp.git&quot;,
     &quot;accountId&quot;: &quot;bea2e2b7-74b8-43df-89a0-b65cf1f6d9eb&quot;
   }
 }</component>
@@ -178,5 +178,21 @@
       <updated>1777012741992</updated>
     </task>
     <servers />
+  </component>
+  <component name="play_dynamic_filters_status">
+    <option name="appIdToCheckInfo">
+      <map>
+        <entry key="com.example.capocoinapp">
+          <value>
+            <CheckInfo lastCheckTimestamp="1780226252339" />
+          </value>
+        </entry>
+        <entry key="com.example.capocoinapp.test">
+          <value>
+            <CheckInfo lastCheckTimestamp="1780226252338" />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>

@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     id("com.google.devtools.ksp") version "2.3.4"
+    kotlin("plugin.serialization") version "2.0.21"
 }
 
 android {
@@ -72,4 +73,16 @@ dependencies {
     implementation("com.patrykandpatrick.vico:compose-m3:3.1.0")
     implementation("com.patrykandpatrick.vico:compose-m2:1.15.0")
     implementation("com.patrykandpatrick.vico:core:1.15.0")
+    //Ensures Supabase is recognised
+    implementation(platform("io.github.jan-tennert.supabase:bom:3.6.0"))
+
+    //Database and Storage Implementations
+    implementation("io.github.jan-tennert.supabase:postgrest-kt")
+    implementation("io.github.jan-tennert.supabase:storage-kt")
+
+    //Supabase Client implementation
+    implementation("io.ktor:ktor-client-android:3.4.3")
+
+    //Serialization library implementation
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.10.0")
 }
