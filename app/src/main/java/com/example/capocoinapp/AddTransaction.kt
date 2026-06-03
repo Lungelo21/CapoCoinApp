@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.capocoinapp.Calculator.CalculatorViewModel
+import com.example.capocoinapp.data.ViewModels.AchievementViewModel
 import com.example.capocoinapp.data.ViewModels.CategoryViewModel
 import com.example.capocoinapp.data.ViewModels.TransactionViewModel
 import com.example.capocoinapp.data.entities.Category

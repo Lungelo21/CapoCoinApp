@@ -1254,13 +1254,13 @@ fun PhotoSection(
         }
 
         Text(
-            text = "@$name",
+            text = name?:"",
             style = CapoType.cardTitle,
             color = TextWhite
         )
 
         Text(
-            text = "@$username",
+            text = username?:"",
             style = CapoType.cardSubTitle,
             color = TextWhite.copy(alpha = 0.7f)
         )

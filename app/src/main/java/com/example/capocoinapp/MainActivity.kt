@@ -268,6 +268,15 @@ class MainActivity : ComponentActivity() {
                         )
 
                     }
+
+                    composable("UserDetails/{userID}") { backStackEntry ->
+                        val userID = backStackEntry.arguments?.getString("userID") ?: ""
+                        UserDetails(
+                            navController = navController,
+                            userID = userID,
+                            userDetailsDAO = AppDatabase.getDatabase(applicationContext).userDao()
+                        )
+                    }
                 }
             }
         }

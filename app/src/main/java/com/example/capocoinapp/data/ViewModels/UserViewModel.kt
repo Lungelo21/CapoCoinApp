@@ -1,5 +1,6 @@
 package com.example.capocoinapp.data.ViewModels
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -13,8 +14,14 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import com.example.capocoinapp.Supabase.SupabaseClient
+import com.example.capocoinapp.data.dto.UserDTO
+import com.example.capocoinapp.data.dto.toEntity
 import io.github.jan.supabase.auth.providers.builtin.Email
 import io.github.jan.supabase.postgrest.postgrest
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
 
 
 class UserViewModel (
@@ -40,6 +47,14 @@ class UserViewModel (
 
     fun getAllUsers(): Flow<List<User>> {
         return dao?.getAllUsers() ?: emptyFlow()
+    }
+
+    fun getUserByID(userID: String): Flow<User?> {
+        return dao?.getUser(userID) ?: emptyFlow()
+    }
+
+    fun getCurrentUser(): Flow<User?> {
+        return dao?.getAllUsers()?.map { it.firstOrNull() } ?: emptyFlow()
     }
 
     fun registerUser(
@@ -163,6 +178,41 @@ class UserViewModel (
         }
 
     }
+
+    private val _currentUser = MutableStateFlow<User?>(null)
+    val currentUser: StateFlow<User?> = _currentUser
+
+    init {
+        viewModelScope.launch {
+            var fetchedUser = false
+            while (!fetchedUser) {
+                val sessionEmail = SupabaseClient.client.auth.currentUserOrNull()?.email
+
+                if (sessionEmail != null) {
+                    try {
+                        val foundUserDTO = SupabaseClient.client.postgrest["users"]
+                            .select {
+                                filter {
+                                    eq("email", sessionEmail)
+                                }
+                            }
+                            .decodeSingle<UserDTO>()
+
+                        _currentUser.value = foundUserDTO.toEntity()
+                        fetchedUser = true
+                        Log.d("UserViewModel", "Successfully fetched current user: ${foundUserDTO.id}")
+                    } catch (e: Exception) {
+                        Log.e("UserViewModel", "Failed to fetch user, retrying in 5 seconds: ${e.message}")
+                        delay(5000)
+                    }
+                } else {
+                    Log.w("UserViewModel", "No session found. Retrying in 5 seconds.")
+                    delay(5000)
+                }
+            }
+        }
+    }
+
 
     class ViewModelFactory(
         private val dao: UserDAO
