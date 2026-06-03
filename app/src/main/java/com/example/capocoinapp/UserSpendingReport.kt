@@ -1,14 +1,8 @@
 package com.example.capocoinapp
 
-import android.R
-import android.R.attr.data
-import android.R.attr.end
 import android.app.DatePickerDialog
 import android.icu.util.Calendar
-import android.util.Log
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -21,7 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -36,58 +29,42 @@ import co.yml.charts.ui.piechart.models.PieChartData
 import com.example.capocoinapp.Services.CategoryService
 import com.example.capocoinapp.Services.TransactionService
 import com.example.capocoinapp.data.ViewModels.CategoryViewModel
-import com.example.capocoinapp.data.ViewModels.TransactionViewModel
 import com.example.capocoinapp.designUI.components.AnalyticsChartToggle
 import com.example.capocoinapp.designUI.components.AppScaffold
 import com.example.capocoinapp.designUI.components.BottomNavBar
 import com.example.capocoinapp.designUI.components.BudgetAnalyticsCard
 import com.example.capocoinapp.designUI.components.CardBox
-import com.example.capocoinapp.designUI.components.CardComponent
 import com.example.capocoinapp.designUI.components.CategoryAnalyticsCard
 import com.example.capocoinapp.designUI.components.CategoryPieChart
 import com.example.capocoinapp.designUI.components.ChartCard
 import com.example.capocoinapp.designUI.components.ComposeBarChart
-import com.example.capocoinapp.designUI.components.ComposeLineGraph
 import com.example.capocoinapp.designUI.components.TransactionTypeToggle
 import com.example.capocoinapp.designUI.components.TopNavBar
-import com.example.capocoinapp.designUI.components.TransactionTypeToggle
 import com.example.capocoinapp.designUI.components.rememberCategoryUI
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
-import com.example.capocoinapp.ui.theme.CapoType
 import com.example.capocoinapp.ui.theme.TextWhite
-import java.time.LocalDate
-import java.time.MonthDay
-import java.time.YearMonth
-import java.time.temporal.ChronoUnit
 import kotlin.math.roundToInt
-import kotlin.toString
 
 @Composable
-fun AnalyticsScreen(
+fun UserSpendingReportScreen(
     service: TransactionService,
     categoryService: CategoryService,
     categoryViewModel: CategoryViewModel,
-    transactionViewModel: TransactionViewModel,
     navController: NavHostController
 ) {
     CapoCoinAppTheme {
         AppScaffold(
             topBar = { TopNavBar(navController) },
-            bottomBar = { BottomNavBar(navController, 3) },
-            pageTitle = "Analytics"
+            bottomBar = { BottomNavBar(navController, 4) },
+            pageTitle = "User Spending Report"
         ) { _ ->
 
             //Instantiating a variable to hold the users current
             val context = LocalContext.current
 
-            // Instantiating variables for the user selected start and end dates for filtering
-            // (defaults to the current month)
-            var startDate by rememberSaveable {
-                mutableStateOf(
-                    YearMonth.now().atDay(1).toString()
-                )
-            }
-            var endDate by rememberSaveable { mutableStateOf(LocalDate.now().toString()) }
+            //Instantiating variables for the user selected start and end dates for filtering
+            var startDate by rememberSaveable { mutableStateOf("") }
+            var endDate by rememberSaveable { mutableStateOf("") }
 
             //Instantiating a variable to hold the user's current scroll state
             val scrollState = androidx.compose.foundation.rememberScrollState()
@@ -134,16 +111,8 @@ fun AnalyticsScreen(
                 .getAllCategories()
                 .collectAsState(initial = emptyList())
 
-            // Instantiating variable to hold transaction data
-            val transactions by transactionViewModel
-                .getFilterTransactions(startDate, endDate)
-                .collectAsState(initial = emptyList())
-
             // Toggle state for transaction type
             var selectedType by rememberSaveable { mutableStateOf("Expense") }
-
-            // Toggle state for chart type
-            var selectedChart by rememberSaveable { mutableStateOf("Transactions") }
 
             // Filter totals based on selected category type
             val filteredTotals = totals.filter { total ->
@@ -155,106 +124,49 @@ fun AnalyticsScreen(
                 matchingCategory?.transactionType.equals(selectedType, ignoreCase = true)
             }
 
-            // Filter transactions based on selected category type
-            val filteredTransactions = transactions.filter { transaction ->
+            // Instantiate data set to use with bar graph
+            data class BudgetChartItem(
+                val label: String,
+                val actual: Double,
+                val min: Double,
+                val max: Double
+            )
 
-                val matchingCategory = categories.find {
-                    it.categoryID == transaction.categoryID
-                }
-
-                matchingCategory?.transactionType.equals(selectedType, ignoreCase = true)
-            }
-
-            // Total amount among filtered categories for calculating percentage
-            val grandTotal = filteredTotals.sumOf { it.totalAmount }
-
-            // Map entries to pie chart data set
-            val slices = filteredTotals.map { t ->
-
-                val percentage = if (grandTotal == 0.0) {
-                    0f
-                } else {
-                    ((t.totalAmount / grandTotal) * 100).toFloat()
-                }
+            // Map entries to bar graph data set
+            val expenseChartData = totals.mapNotNull { total ->
 
                 val category = categories.find {
-                    it.categoryTitle == t.categoryTitle
-                }
+                    it.categoryTitle == total.categoryTitle
+                } ?: return@mapNotNull null
 
-                // Get category colour value from category service
-                val categoryColourHex =
-                    categoryService.getColour(category?.categoryColour ?: "Grey")
+                val isExpense = category.transactionType
+                    .equals("Expense", ignoreCase = true)
 
-                PieChartData.Slice(
-                    label = t.categoryTitle,
-                    value = percentage,
-                    color = Color(categoryColourHex.toColorInt())
+                if (!isExpense) return@mapNotNull null
+
+                BudgetChartItem(
+                    label = total.categoryTitle,
+                    actual = total.totalAmount,
+                    min = category.minBudget,
+                    max = category.maxBudget
                 )
             }
 
-            // Calculate total budget amounts
-            val totalMaxBudget = categories.sumOf { it.maxBudget }
-            val totalMinBudget = categories.sumOf { it.minBudget }
-
-            // Get total amount spent each day
-            val dailyTotalsMap = filteredTransactions
-                .filter { it.transactionType.equals("Expense", ignoreCase = true) }
-                .groupBy { it.transactionDate }
-                .mapValues { (_, list) ->
-                    list.sumOf { it.transactionAmount }
-                }
-
-            // Build full date range
-            val start = LocalDate.parse(startDate)
-            val end = LocalDate.parse(endDate)
-
-            // Generate map of totals for line graph
-            var runningTotal = 0.0
-
-            val runningTotalMap = (0..ChronoUnit.DAYS.between(start, end).toInt())
-                .associate { offset ->
-                    val date = start.plusDays(offset.toLong()).toString()
-                    val dailyTotal = dailyTotalsMap[date] ?: 0.0
-                    runningTotal += dailyTotal
-                    date to runningTotal
-                }
+            // Extract lists from data set
+            val labels = expenseChartData.map { it.label }
+            val data = expenseChartData.map { it.actual }
+            val minBudget = expenseChartData.map { it.min }
+            val maxBudget = expenseChartData.map { it.max }
 
             CardBox(
                 cards = listOf() {
 
-                    // Toggle for selecting between pie chart and bar graph
-                    AnalyticsChartToggle(
-                        selectedChart = selectedChart,
-                        onChartSelected = { selectedChart = it }
-                    )
-
-                    if (selectedChart == "Transactions") {
-
-                        // Render line graph
-                        if (runningTotalMap.isNotEmpty()) {
-                            ComposeLineGraph(runningTotalMap, totalMinBudget, totalMaxBudget)
-                        } else {
-                            Text("No data available")
-                        }
-
-                        // Toggle for switching between expenses or income on pie chart
-                        TransactionTypeToggle(
-                            selectedType = selectedType,
-                            onTypeSelected = { selectedType = it })
-
-                    } else if (selectedChart == "Categories") {
-
-                        // Render pie chart
-                        if (slices.isNotEmpty()) {
-                            ChartCard({ CategoryPieChart(slices) })
-                        } else {
-                            Text("No data available")
-                        }
-
-                        // Toggle for switching between expenses or income on pie chart
-                        TransactionTypeToggle(
-                            selectedType = selectedType,
-                            onTypeSelected = { selectedType = it })
+                    // Render bar graph
+                    if (data.isNotEmpty()) {
+                        ChartCard({ ComposeBarChart(data, minBudget, maxBudget, labels) })
+                        selectedType = "Expense"
+                    } else {
+                        Text("No data available")
                     }
 
                     //Row for Date Selection
@@ -336,59 +248,32 @@ fun AnalyticsScreen(
                         }
                     }
 
-                    // Render cards
-                    if (selectedChart == "Transactions") {
+                    // Render bar graph data
+                    if (data.isNotEmpty()) {
+                        // Category cards
+                        filteredTotals.forEach { total ->
 
-                        filteredTransactions.forEach { t ->
-                            val (categoryColor, CategoryIcon) = rememberCategoryUI(
-                                t.categoryID,
-                                categoryViewModel
-                            )
-                            CardComponent(
-                                t.transactionName,
-                                t.transactionDate,
-                                t.transactionAmount.toString(),
-                                t.transactionTime,
-                                categoryColor,
-                                CategoryIcon,
-                                t.transactionType,
-                                { navController.navigate("TransactionDetails/${t.transactionID}") }
-                            )
-                        }
-
-                    } else if (selectedChart == "Categories") {
-
-                        // Render pie chart data
-                        if (slices.isNotEmpty()) {
-                            // Category cards
-                            filteredTotals.forEach { total ->
-
-                                // Instantiating variable to get category colour and icon
-                                val category = categories.find {
-                                    it.categoryTitle == total.categoryTitle
-                                }
-
-                                // Convert amount to percentage
-                                val percentString = if (grandTotal == 0.0) {
-                                    0
-                                } else {
-                                    (((total.totalAmount
-                                        ?: 0.0) / grandTotal) * 100).roundToInt()
-                                }
-                                CategoryAnalyticsCard(
-                                    total.categoryTitle,
-                                    total.totalAmount,
-                                    percentString,
-                                    categoryService.getColour(
-                                        category?.categoryColour ?: "Grey"
-                                    ),
-                                    category?.categoryIcon ?: "Salary",
-                                    onClick = {}
-                                )
+                            // Instantiating variable to get category colour and icon
+                            val category = categories.find {
+                                it.categoryTitle == total.categoryTitle
                             }
-                        } else {
-                            Text("No data available")
+
+                            val (CategoryColor, CategoryIcon) =
+                                rememberCategoryUI(category?.categoryID ?: 0, categoryViewModel)
+
+                            // Render cards
+                            BudgetAnalyticsCard(
+                                cardTitle = total.categoryTitle,
+                                cardMin = category?.minBudget,
+                                cardAmount = total.totalAmount,
+                                cardMax = category?.maxBudget,
+                                categoryColor = CategoryColor,
+                                categoryIcon = CategoryIcon,
+                            )
                         }
+                        selectedType = "Expense"
+                    } else {
+                        Text("No data available")
                     }
                 }
             )
@@ -398,7 +283,7 @@ fun AnalyticsScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun AnalyticsPreview() {
+fun UserSpendingReportPreview() {
     CapoCoinAppTheme {
     }
 }
