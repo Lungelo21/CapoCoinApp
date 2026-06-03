@@ -354,9 +354,11 @@ class CategoryViewModel(
             try
             {
                 service.updateCategory(updatedCategory)
+
                 message = "Budget updated"
 
-                Log.d("CategoryVMCheck", "Local budget updated successfully for: ${category.categoryTitle}")
+                Log.d("CategoryVMCheck",
+                    "Local budget updated successfully for: ${category.categoryTitle}")
 
                 //Co routine to sync after updating budget
                 viewModelScope.launch {
@@ -369,9 +371,24 @@ class CategoryViewModel(
                             try
                             {
                                 //Updating/Inserting Category after changing budget
-                                SupabaseClient.client.postgrest["categories"].upsert(updatedCategory)
+                                SupabaseClient.client.postgrest["categories"]
+                                    .update(
+                                        mapOf(
+                                            "minBudget" to minBudget,
+                                            "maxBudget" to maxBudget
+                                        )
+                                    ) {
+                                        filter {
+                                            eq("categoryID", category.categoryID)
+                                            eq("userID", category.userID)
+                                        }
+                                    }
 
-                                Log.d("CategorySyncCheck", "Successfully synced updated budget for '${category.categoryTitle}' to Supabase.")
+                                Log.d(
+                                    "CategorySyncCheck",
+                                    "Successfully synced updated budget for '${category.categoryTitle}' to Supabase.")
+
+                                message = "Budget updated successfully"
 
                                 updatedRemote = true //Ending loop
                             }

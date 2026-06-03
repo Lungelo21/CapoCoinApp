@@ -1,6 +1,8 @@
 package com.example.capocoinapp.data.ViewModels
 import android.app.Application
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -27,6 +29,9 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import com.example.capocoinapp.data.entities.Category
+import java.time.LocalDate
+import java.time.YearMonth
 
 class TransactionViewModel(
     private val dao: TransactionsDAO,
@@ -330,6 +335,73 @@ class TransactionViewModel(
             dao.getTransactionById(id)
         } else {
             flowOf(null)
+        }
+    }
+
+    // budget tracker variable to load data
+    var monthlySpentFromSupabase by mutableStateOf(0.0)
+        private set
+
+    var totalMinBudgetFromSupabase by mutableStateOf(0.0)
+        private set
+
+    var totalMaxBudgetFromSupabase by mutableStateOf(0.0)
+        private set
+
+
+    fun loadHomeBudgetFromSupabase() {
+        viewModelScope.launch {
+            try {
+                val currentUserID =
+                    SupabaseClient.client.auth.currentUserOrNull()?.id
+
+                if (currentUserID == null) {
+                    message = "No logged in user found"
+                    return@launch
+                }
+
+                val categories = SupabaseClient.client.postgrest["categories"]
+                    .select {
+                        filter {
+                            eq("userID", currentUserID)
+                        }
+                    }
+                    .decodeList<Category>()
+
+                val transactions = SupabaseClient.client.postgrest["transactions"]
+                    .select {
+                        filter {
+                            eq("userID", currentUserID)
+                        }
+                    }
+                    .decodeList<TransactionsDTO>()
+
+                totalMinBudgetFromSupabase =
+                    categories.sumOf { it.minBudget }
+
+                totalMaxBudgetFromSupabase =
+                    categories.sumOf { it.maxBudget }
+
+                val currentMonth = YearMonth.now()
+
+                monthlySpentFromSupabase =
+                    transactions
+                        .filter {
+                            try {
+                                val date = LocalDate.parse(it.transactionDate)
+
+                                YearMonth.from(date) == currentMonth &&
+                                        it.transactionType.lowercase() == "expense"
+
+                            } catch (e: Exception) {
+                                false
+                            }
+                        }
+                        .sumOf { it.transactionAmount }
+
+            } catch (e: Exception) {
+                message = "Could not load budget tracker: ${e.message}"
+            }
         }
     }
 }
