@@ -40,6 +40,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.benchmark.traceprocessor)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -52,7 +53,6 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.compose.foundation.layout)
-    implementation(libs.mediation.test.suite)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -69,6 +69,10 @@ dependencies {
     ksp("androidx.room:room-compiler:2.8.4")
     implementation("io.coil-kt:coil-compose:2.6.0")
 
+    implementation("co.yml:ycharts:2.1.0")
+    implementation("com.patrykandpatrick.vico:compose-m3:3.1.0")
+    implementation("com.patrykandpatrick.vico:compose-m2:1.15.0")
+    implementation("com.patrykandpatrick.vico:core:1.15.0")
     //Ensures Supabase is recognised
     implementation(platform("io.github.jan-tennert.supabase:bom:3.6.0"))
 

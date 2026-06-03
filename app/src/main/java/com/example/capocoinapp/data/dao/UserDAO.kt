@@ -31,4 +31,7 @@ interface UserDAO {
 
     @Query("SELECT * FROM users WHERE email = :emailInput LIMIT 1")
     suspend fun getUserByEmail(emailInput: String): User?
+
+    @Query("SELECT * FROM users WHERE email = :email LIMIT 1")
+    fun getCurrentUser(email: String): Flow<User?>
 }

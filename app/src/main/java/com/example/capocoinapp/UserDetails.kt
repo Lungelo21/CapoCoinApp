@@ -47,7 +47,7 @@ fun UserDetails(
         AppScaffold(
             topBar = { TopNavBar(navController) },
             bottomBar = { BottomNavBar(navController, 2) },
-            pageTitle = "Add Transaction"
+            pageTitle = "User Details"
         ) { _ ->
             Column(
                 modifier = Modifier
@@ -64,11 +64,12 @@ fun UserDetails(
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
+                    if(userDetails != null){
 
                         InfoCard(
                             icon = Icons.Outlined.Person,
                             label = "Full name",
-                            value = userDetails!!.name
+                            value = userDetails?.name ?: ""
                         )
 
                         Spacer(modifier = Modifier.height(8.dp))
@@ -76,7 +77,7 @@ fun UserDetails(
                         InfoCard(
                             icon = Icons.Outlined.AlternateEmail,
                             label = "Username",
-                            value = userDetails!!.username
+                            value = userDetails?.username ?: ""
                         )
 
                         Spacer(modifier = Modifier.height(8.dp))
@@ -84,7 +85,7 @@ fun UserDetails(
                         InfoCard(
                             icon = Icons.Outlined.Email,
                             label = "Email",
-                            value = userDetails!!.email
+                            value = userDetails?.email ?: ""
                         )
 
                         //Spacer(modifier = Modifier.height(8.dp))
@@ -94,6 +95,8 @@ fun UserDetails(
 //                            label = "Password",
 //                            password = ""
 //                        )
+                    }
+
                 }
             }
         }

@@ -29,12 +29,7 @@ fun UserProfileScreen(
     userViewModel: UserViewModel,
     achievementsViewModel: AchievementViewModel) {
 
-    val users: List<User> by userViewModel
-        .getAllUsers()
-        .collectAsState(initial = emptyList())
-
-    val currentUser:User? = users.firstOrNull()
-
+    val currentUser = userViewModel.currentUser.collectAsState().value
 
     val achievements by achievementsViewModel
         .getAllAchievements(achievementsViewModel.currentUserID)
@@ -61,7 +56,7 @@ fun UserProfileScreen(
                             //1100,
                             onClick = {
                                 // Navigates to UserDetails after onClick
-                                navController.navigate("UserDetails")
+                                navController.navigate("UserDetails/${currentUser.id}")
                                 }
                             )
                         }
@@ -70,7 +65,10 @@ fun UserProfileScreen(
                         PageSubTitleText("Recent Achievements")
                     }
 
-                    achievements.take(3).forEach { recentAchievements ->
+                    achievements
+                        .filter{ it.isUnlocked == 1 }
+                        .take(3)
+                        .forEach { recentAchievements ->
                         add{
                             AchievementCard(
                                 title = recentAchievements.achievementTitle,

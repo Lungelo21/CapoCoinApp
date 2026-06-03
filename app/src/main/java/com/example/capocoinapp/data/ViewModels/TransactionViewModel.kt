@@ -15,6 +15,7 @@ import com.example.capocoinapp.Supabase.SupabaseClient
 import com.example.capocoinapp.Utils.isInternetAvailable
 import com.example.capocoinapp.data.dao.TransactionsDAO
 import com.example.capocoinapp.data.dto.TransactionsDTO
+import com.example.capocoinapp.data.dto.UserDTO
 import com.example.capocoinapp.data.dto.toEntity
 import com.example.capocoinapp.data.entities.Transactions
 import com.example.capocoinapp.data.entities.toDTO
@@ -49,6 +50,8 @@ class TransactionViewModel(
         message = ""
     }
 
+    var currentUserID: String = ""
+        private set
     //Using init to make sure this will be actioned as the code is first run
     /*
      * Author: Ranjeet
@@ -60,6 +63,40 @@ class TransactionViewModel(
 
         viewModelScope.launch {
 
+
+            var fetchedUserID = false
+
+            while(!fetchedUserID){
+
+                val sessionEmail = SupabaseClient.client.auth.currentUserOrNull()?.email
+
+                if (sessionEmail != null) {
+                    try {
+                        if (application.isInternetAvailable()) {
+                            val foundUserDTO = SupabaseClient.client.postgrest["users"]
+                                .select {
+                                    filter {
+                                        eq("email", sessionEmail)
+                                    }
+                                }
+                                .decodeSingle<UserDTO>()
+
+                            currentUserID = foundUserDTO.toEntity().id
+                            fetchedUserID = true
+                            Log.d("TransactionVM", "Successfully fetched current user ID: $currentUserID")
+                        } else {
+                            Log.w("TransactionVM", "No internet. Retrying in 5 seconds.")
+                            delay(5000)
+                        }
+                    } catch (e: Exception) {
+                        Log.e("TransactionVM", "Failed to fetch user ID. Retrying in 5 seconds: ${e.message}")
+                        delay(5000)
+                    }
+                } else {
+                    Log.w("TransactionVM", "No authenticated user found. Retrying in 5 seconds.")
+                    delay(5000)
+                }
+            }
             // Fetch transactions stored in room
             val currentTransactions = dao.getAllTransactions().first()
 
@@ -147,11 +184,9 @@ class TransactionViewModel(
     ) {
         viewModelScope.launch {
 
-            // gets current signed in users ID
-            val currentUserID = SupabaseClient.client.auth.currentUserOrNull()?.id
 
             // checks if ID is null
-            if(currentUserID == null){
+            if(currentUserID.isBlank()){
                 message = "Session expired. Please log in again, to add transaction"
                 return@launch
             }

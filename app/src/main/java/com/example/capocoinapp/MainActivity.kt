@@ -82,7 +82,7 @@ class MainActivity : ComponentActivity() {
 
                 // Nav Host wraps all composable routes
                 NavHost(
-                    navController = navController, startDestination = "Login"
+                    navController = navController, startDestination = "Home"
                 ) {
                     composable("Home") {
                         HomeScreen(navController, categoryViewModel, transactionViewModel)
@@ -98,7 +98,32 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                     composable("Analytics") {
-                        AnalyticsScreen(navController)
+                        AnalyticsScreen(
+                            TransactionService
+                                (
+                                AppDatabase.getDatabase
+                                    (applicationContext).transactionDao()
+                            ), CategoryService(
+                                AppDatabase.getDatabase
+                                    (applicationContext).categoryDao()
+                            ), categoryViewModel,
+                            transactionViewModel,
+                            navController
+                        )
+                    }
+
+                    composable("UserSpendingReport") {
+                        UserSpendingReportScreen(
+                            TransactionService
+                                (
+                                AppDatabase.getDatabase
+                                    (applicationContext).transactionDao()
+                            ), CategoryService(
+                                AppDatabase.getDatabase
+                                    (applicationContext).categoryDao()
+                            ), categoryViewModel,
+                            navController
+                        )
                     }
                     composable("More") {
                         MoreScreen(navController)
@@ -267,6 +292,15 @@ class MainActivity : ComponentActivity() {
                             achievementViewModel = achievementViewModel
                         )
 
+                    }
+
+                    composable("UserDetails/{userID}") { backStackEntry ->
+                        val userID = backStackEntry.arguments?.getString("userID") ?: ""
+                        UserDetails(
+                            navController = navController,
+                            userID = userID,
+                            userDetailsDAO = AppDatabase.getDatabase(applicationContext).userDao()
+                        )
                     }
                 }
             }
