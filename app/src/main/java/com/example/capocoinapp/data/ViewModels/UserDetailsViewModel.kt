@@ -48,7 +48,6 @@ class UserDetailsViewModel(
                 Log.d("UserDetailsVM", "Current user ID: $currentUserID")
             }
 
-
             // Loads user details from RoomDB first
             val localUser = dao.getUser(userID).first()
             if (localUser != null) {
