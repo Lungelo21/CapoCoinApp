@@ -29,4 +29,16 @@ object CapoType {
         fontWeight = FontWeight.Bold,
         color = Accent
     )
+    val labelGreen = TextStyle(
+        fontSize = 14.sp,
+        fontFamily = RobotoSlab,
+        fontWeight = FontWeight.Medium,
+        color = TextGreen
+    )
+    val labelRed = TextStyle(
+        fontSize = 14.sp,
+        fontFamily = RobotoSlab,
+        fontWeight = FontWeight.Medium,
+        color = TextRed
+    )
 }

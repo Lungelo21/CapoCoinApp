@@ -1,6 +1,7 @@
 package com.example.capocoinapp
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.ContentPaste
 import androidx.compose.material.icons.filled.EmojiEvents
@@ -34,7 +35,7 @@ fun MoreScreen(navController: NavController) {
                     {
                         MoreCard(
                             "Settings",
-                            "Coming soon in Part 3",
+                            "Future development option",
                             Icons.Default.Settings,
                             { navController.navigate("Settings") })
                     },
@@ -44,6 +45,13 @@ fun MoreScreen(navController: NavController) {
                             "View budgets for each category",
                             Icons.Default.ContentPaste,
                             { navController.navigate("UserBudget") })
+                    },
+                    {
+                        MoreCard(
+                            "User Spending Report",
+                            "View a graph showing amount spent and budget in each category",
+                            Icons.Default.BarChart,
+                            { navController.navigate("UserSpendingReport") })
                     },
                     {
                         MoreCard(
@@ -63,14 +71,14 @@ fun MoreScreen(navController: NavController) {
                     {
                         MoreCard(
                             "Import",
-                            "Coming soon in Part 3",
+                            "Future development option",
                             Icons.Default.FileDownload
                         )
                     },
                     {
                         MoreCard(
                             "Export",
-                            "Coming soon in Part 3",
+                            "Future development option",
                             Icons.Default.FileUpload
                         )
                     },

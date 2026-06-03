@@ -1,6 +1,8 @@
 package com.example.capocoinapp.data.ViewModels
 import android.app.Application
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -29,6 +31,11 @@ import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import com.example.capocoinapp.data.entities.Category
+import java.time.LocalDate
+import java.time.YearMonth
+import io.github.jan.supabase.auth.status.SessionStatus
+import java.text.NumberFormat
 
 class TransactionViewModel(
     private val dao: TransactionsDAO,
@@ -60,37 +67,51 @@ class TransactionViewModel(
         viewModelScope.launch {
 
 
-            var fetchedUserID = false
+            //var fetchedUserID = false
 
-            while(!fetchedUserID){
+            //while(!fetchedUserID){
+            // Listen dynamically to authentication state transitions safely
+            SupabaseClient.client.auth.sessionStatus.collect { status ->
+                if (status is SessionStatus.Authenticated) {
 
-                val sessionEmail = SupabaseClient.client.auth.currentUserOrNull()?.email
+                    //val sessionEmail = SupabaseClient.client.auth.currentUserOrNull()?.email
+                    val sessionEmail = status.session.user?.email
 
-                if (sessionEmail != null) {
-                    try {
-                        if (application.isInternetAvailable()) {
-                            val foundUserDTO = SupabaseClient.client.postgrest["users"]
-                                .select {
-                                    filter {
-                                        eq("email", sessionEmail)
+                    if (sessionEmail != null) {
+                        try {
+                            if (application.isInternetAvailable()) {
+                                val foundUserDTO = SupabaseClient.client.postgrest["users"]
+                                    .select {
+                                        filter {
+                                            eq("email", sessionEmail)
+                                        }
                                     }
-                                }
-                                .decodeSingle<UserDTO>()
+                                    .decodeSingle<UserDTO>()
 
-                            currentUserID = foundUserDTO.toEntity().id
-                            fetchedUserID = true
-                            Log.d("TransactionVM", "Successfully fetched current user ID: $currentUserID")
-                        } else {
-                            Log.w("TransactionVM", "No internet. Retrying in 5 seconds.")
+                                currentUserID = foundUserDTO.toEntity().id
+                                //fetchedUserID = true
+                                Log.d(
+                                    "TransactionVM",
+                                    "Successfully fetched current user ID: $currentUserID"
+                                )
+                            } else {
+                                Log.w("TransactionVM", "No internet. Retrying in 5 seconds.")
+                                delay(5000)
+                            }
+                        } catch (e: Exception) {
+                            Log.e(
+                                "TransactionVM",
+                                "Failed to fetch user ID. Retrying in 5 seconds: ${e.message}"
+                            )
                             delay(5000)
                         }
-                    } catch (e: Exception) {
-                        Log.e("TransactionVM", "Failed to fetch user ID. Retrying in 5 seconds: ${e.message}")
+                    } else {
+                        Log.w(
+                            "TransactionVM",
+                            "No authenticated user found. Retrying in 5 seconds."
+                        )
                         delay(5000)
                     }
-                } else {
-                    Log.w("TransactionVM", "No authenticated user found. Retrying in 5 seconds.")
-                    delay(5000)
                 }
             }
             // Fetch transactions stored in room
@@ -187,12 +208,18 @@ class TransactionViewModel(
                 return@launch
             }
 
+
             val amountDouble = try{
                 NumberFormat.getInstance().parse(amount)?.toDouble()
             }
             catch (e: Exception){
                 amount.replace(",", ".").toDoubleOrNull()
             }
+
+//            val amountDouble = amount
+//                .trim()
+//                .replace(",", ".")
+//                .toDoubleOrNull()
 
             // list of error messages
             val errors = mutableListOf<String>()
@@ -371,6 +398,87 @@ class TransactionViewModel(
             dao.getTransactionById(id)
         } else {
             flowOf(null)
+        }
+    }
+
+    // budget tracker variable to load data
+    var monthlySpentFromSupabase by mutableStateOf(0.0)
+        private set
+
+    var totalMinBudgetFromSupabase by mutableStateOf(0.0)
+        private set
+
+    var totalMaxBudgetFromSupabase by mutableStateOf(0.0)
+        private set
+
+
+
+    /*
+     * Author: Supabase
+     * Link: https://supabase.com/docs/reference/kotlin/update
+     * DateAccessed: 02/06/2026
+     * */
+    fun loadHomeBudgetFromSupabase() {
+        viewModelScope.launch {
+            try {
+                val currentUserID =
+                    SupabaseClient.client.auth.currentUserOrNull()?.id
+
+                if (currentUserID == null) {
+                    message = "No logged in user found"
+                    return@launch
+                }
+
+
+                // get categories for current user in supabase
+                val categories = SupabaseClient.client.postgrest["categories"]
+                    .select {
+                        filter {
+                            eq("userID", currentUserID)
+                        }
+                    }
+                    .decodeList<Category>()
+
+                // get transactions for current user in supabase
+                val transactions = SupabaseClient.client.postgrest["transactions"]
+                    .select {
+                        filter {
+                            eq("userID", currentUserID)
+                        }
+                    }
+                    .decodeList<TransactionsDTO>()
+
+                // Get min and max budget from supabase
+                totalMinBudgetFromSupabase =
+                    categories
+                        .filter { it.transactionType.equals("Expense", true) }
+                        .sumOf { it.minBudget }
+
+                totalMaxBudgetFromSupabase =
+                    categories
+                        .filter { it.transactionType.equals("Expense", true) }
+                        .sumOf { it.maxBudget }
+
+                val currentMonth = YearMonth.now()
+
+                monthlySpentFromSupabase =
+                    transactions
+                        .filter {
+                            try {
+                                val date = LocalDate.parse(it.transactionDate)
+
+                                YearMonth.from(date) == currentMonth &&
+                                        it.transactionType.equals("Expense",true)
+
+                            } catch (e: Exception) {
+                                false
+                            }
+                        }
+                        .sumOf { it.transactionAmount }
+
+            } catch (e: Exception) {
+                message = "Could not load budget tracker: ${e.message}"
+            }
         }
     }
 }

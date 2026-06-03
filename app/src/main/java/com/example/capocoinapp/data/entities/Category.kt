@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 @Entity(tableName = "categories")
-data class Category(
+data class  Category(
     @PrimaryKey(autoGenerate = true)
     val categoryID: Int = 0,
 

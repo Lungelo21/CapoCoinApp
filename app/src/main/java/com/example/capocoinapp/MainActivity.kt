@@ -98,7 +98,32 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                     composable("Analytics") {
-                        AnalyticsScreen(navController)
+                        AnalyticsScreen(
+                            TransactionService
+                                (
+                                AppDatabase.getDatabase
+                                    (applicationContext).transactionDao()
+                            ), CategoryService(
+                                AppDatabase.getDatabase
+                                    (applicationContext).categoryDao()
+                            ), categoryViewModel,
+                            transactionViewModel,
+                            navController
+                        )
+                    }
+
+                    composable("UserSpendingReport") {
+                        UserSpendingReportScreen(
+                            TransactionService
+                                (
+                                AppDatabase.getDatabase
+                                    (applicationContext).transactionDao()
+                            ), CategoryService(
+                                AppDatabase.getDatabase
+                                    (applicationContext).categoryDao()
+                            ), categoryViewModel,
+                            navController
+                        )
                     }
                     composable("More") {
                         MoreScreen(navController)
@@ -122,6 +147,7 @@ class MainActivity : ComponentActivity() {
                         UserBudgetScreen(
                             navController = navController,
                             categoryViewModel = categoryViewModel,
+                            transactionViewModel = transactionViewModel,
                             categoryService = CategoryService(
                                 AppDatabase.getDatabase
                                     (applicationContext).categoryDao()
