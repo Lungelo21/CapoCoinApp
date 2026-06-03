@@ -36,59 +36,68 @@ class AchievementViewModel(
 
    init {
        viewModelScope.launch {
-           var fetchedUserID = false
-           while (!fetchedUserID) {
+           //Fetch local user
+           var localUserID = SupabaseClient.client.auth.currentUserOrNull()?.id
 
-               val sessionEmail = SupabaseClient.client.auth.currentUserOrNull()?.email
+           if(localUserID != null)
+           {
+               //Setting the current user to the local user (works when they're offline)
+               currentUserID = localUserID
 
-               if (sessionEmail != null) {
-                   try {
-                       if (application.isInternetAvailable()) {
-                           val foundUserDTO = SupabaseClient.client.postgrest["users"]
-                               .select {
-                                   filter {
-                                       eq("email", sessionEmail)
+               Log.d("AchievementVM", "Offline user found with ID: ${currentUserID}")
+           }
+           else {
+               //Setting flag variable to false
+               var fetchedUserID = false
+
+               //Running loop till flag is set to true
+               while (!fetchedUserID) {
+                   //Fetching the user's email from the session
+                   val sessionEmail = SupabaseClient.client.auth.currentUserOrNull()?.email
+
+                   //Checking if the email is not null
+                   if (sessionEmail != null && application.isInternetAvailable()) {
+                       try {
+                               val foundUserDTO = SupabaseClient.client.postgrest["users"]
+                                   .select {
+                                       filter {
+                                           eq("email", sessionEmail)
+                                       }
                                    }
-                               }
-                               .decodeSingle<UserDTO>()
+                                   .decodeSingle<UserDTO>()
 
-                           //Converting the DTO data back to the entity
-                           val foundUser = foundUserDTO.toEntity()
+                               //Converting the DTO data back to the entity
+                               val foundUser = foundUserDTO.toEntity()
 
-                           //Retrieving the user's ID
-                           currentUserID = foundUser.id
+                               //Retrieving the user's ID
+                               currentUserID = foundUser.id
 
-                           //Setting the ID to true to break the loop safely
-                           fetchedUserID = true
-                           Log.d(
+                               //Setting the ID to true to break the loop safely
+                               fetchedUserID = true
+                               Log.d(
+                                   "AchievementVM",
+                                   "Successfully fetched the current user's id from Postgrest users table: ${currentUserID}"
+                               )
+
+                       } catch (e: Exception) {
+                           Log.e(
                                "AchievementVM",
-                               "Successfully fetched the current user's id from Postgrest users table: ${currentUserID}"
-                           )
-                       } else {
-                           Log.w(
-                               "AchievementVM",
-                               "No Internet Connection. Attempting user retrieval after 5 seconds."
+                               "Issue finding user from Users table. retrying after 5 seconds. ${e.message}"
                            )
 
                            delay(5000)//Delay by 5 seconds
                        }
-                   } catch (e: Exception) {
-                       Log.e(
+                   } else {
+                       Log.w(
                            "AchievementVM",
-                           "Issue finding user from Users table. retrying after 5 seconds. ${e.message}"
+                           "No authenticated users found or no Internet Connection. Retrying after 5 seconds."
                        )
 
                        delay(5000)//Delay by 5 seconds
                    }
-               } else {
-                   Log.w(
-                       "AchievementVM",
-                       "No authenticated users found. Retrying initialization after 5 seconds."
-                   )
-
-                   delay(5000)//Delay by 5 seconds
                }
            }
+               //Retrieving the current user ID
                val userID = currentUserID
 
                val localAchievements = achievementService.getAllAchievements(userID).first()
