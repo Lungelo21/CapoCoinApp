@@ -33,6 +33,7 @@ import java.util.Locale
 import com.example.capocoinapp.data.entities.Category
 import java.time.LocalDate
 import java.time.YearMonth
+import io.github.jan.supabase.auth.status.SessionStatus
 
 class TransactionViewModel(
     private val dao: TransactionsDAO,
@@ -64,37 +65,51 @@ class TransactionViewModel(
         viewModelScope.launch {
 
 
-            var fetchedUserID = false
+            //var fetchedUserID = false
 
-            while(!fetchedUserID){
+            //while(!fetchedUserID){
+            // Listen dynamically to authentication state transitions safely
+            SupabaseClient.client.auth.sessionStatus.collect { status ->
+                if (status is SessionStatus.Authenticated) {
 
-                val sessionEmail = SupabaseClient.client.auth.currentUserOrNull()?.email
+                    //val sessionEmail = SupabaseClient.client.auth.currentUserOrNull()?.email
+                    val sessionEmail = status.session.user?.email
 
-                if (sessionEmail != null) {
-                    try {
-                        if (application.isInternetAvailable()) {
-                            val foundUserDTO = SupabaseClient.client.postgrest["users"]
-                                .select {
-                                    filter {
-                                        eq("email", sessionEmail)
+                    if (sessionEmail != null) {
+                        try {
+                            if (application.isInternetAvailable()) {
+                                val foundUserDTO = SupabaseClient.client.postgrest["users"]
+                                    .select {
+                                        filter {
+                                            eq("email", sessionEmail)
+                                        }
                                     }
-                                }
-                                .decodeSingle<UserDTO>()
+                                    .decodeSingle<UserDTO>()
 
-                            currentUserID = foundUserDTO.toEntity().id
-                            fetchedUserID = true
-                            Log.d("TransactionVM", "Successfully fetched current user ID: $currentUserID")
-                        } else {
-                            Log.w("TransactionVM", "No internet. Retrying in 5 seconds.")
+                                currentUserID = foundUserDTO.toEntity().id
+                                //fetchedUserID = true
+                                Log.d(
+                                    "TransactionVM",
+                                    "Successfully fetched current user ID: $currentUserID"
+                                )
+                            } else {
+                                Log.w("TransactionVM", "No internet. Retrying in 5 seconds.")
+                                delay(5000)
+                            }
+                        } catch (e: Exception) {
+                            Log.e(
+                                "TransactionVM",
+                                "Failed to fetch user ID. Retrying in 5 seconds: ${e.message}"
+                            )
                             delay(5000)
                         }
-                    } catch (e: Exception) {
-                        Log.e("TransactionVM", "Failed to fetch user ID. Retrying in 5 seconds: ${e.message}")
+                    } else {
+                        Log.w(
+                            "TransactionVM",
+                            "No authenticated user found. Retrying in 5 seconds."
+                        )
                         delay(5000)
                     }
-                } else {
-                    Log.w("TransactionVM", "No authenticated user found. Retrying in 5 seconds.")
-                    delay(5000)
                 }
             }
             // Fetch transactions stored in room
