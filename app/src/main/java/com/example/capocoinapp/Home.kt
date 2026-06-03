@@ -18,6 +18,9 @@ import com.example.capocoinapp.designUI.components.PageSubTitleText
 import com.example.capocoinapp.designUI.components.TopNavBar
 import com.example.capocoinapp.designUI.components.rememberCategoryUI
 import com.example.capocoinapp.ui.theme.CapoCoinAppTheme
+import androidx.compose.runtime.LaunchedEffect
+import java.time.LocalDate
+import java.time.YearMonth
 
 @Composable
 fun HomeScreen(
@@ -25,6 +28,16 @@ fun HomeScreen(
     categoryViewModel: CategoryViewModel,
     transactionViewModel: TransactionViewModel
 ) {
+
+    val today = LocalDate.now()
+    val currentMonth = YearMonth.now()
+
+    val daysRemaining =
+        currentMonth.lengthOfMonth() - today.dayOfMonth
+
+    LaunchedEffect(Unit) {
+        transactionViewModel.loadHomeBudgetFromSupabase()
+    }
 
     val transactions by remember (transactionViewModel)
     {
@@ -40,7 +53,13 @@ fun HomeScreen(
 
             CardBox(
                 cards = listOf(
-                    { HomeCard(1300.0, 2000.0, 15) },
+                    {
+                        HomeCard(
+                            totalSpent = transactionViewModel.monthlySpentFromSupabase,
+                            budget = transactionViewModel.totalMaxBudgetFromSupabase,
+                            daysRemaining =  daysRemaining.coerceAtLeast(0)
+                        )
+                    },
                     { PageSubTitleText("Recent Transactions") }
                 )
             )
