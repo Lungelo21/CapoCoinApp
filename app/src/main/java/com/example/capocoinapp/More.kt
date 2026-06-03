@@ -3,6 +3,7 @@ package com.example.capocoinapp
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.ContentPaste
+import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.FileDownload
 import androidx.compose.material.icons.filled.FileUpload
 import androidx.compose.material.icons.filled.Settings
@@ -50,6 +51,14 @@ fun MoreScreen(navController: NavController) {
                             "View and add transaction categories",
                             Icons.Default.Category,
                             { navController.navigate("Categories") })
+                    },
+                    {
+                        MoreCard(
+                            "User Achievements",
+                            "A list of achievements that the user has received",
+                            Icons.Default.EmojiEvents,
+                            { navController.navigate("Achievements")}
+                        )
                     },
                     {
                         MoreCard(
